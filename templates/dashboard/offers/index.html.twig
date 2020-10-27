@@ -1,0 +1,63 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Offers | {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{% trans %}Offers{% endtrans %}</li>
+            </ol>
+        </nav>
+    </div>
+    <header role="heading">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-sm-6 col-xs-6">
+                    <h1 class="h2">{% trans %}Offer{% endtrans %}</h1>
+                    <p class="hidden-xs">{% trans %}See your offers{% endtrans %}</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <fieldset class="section">
+        <div class="container">
+            {% include 'includes/flashMessages.html.twig' %}
+            <div class="card">
+                <div class="table-responsive">
+                    <table id="datatable" class="table" data-url="{{ path("dashboard_offers_index") }}">
+                        <thead>
+                            <tr>
+                                <th class="bdwT-0">{% trans %}Created at{% endtrans %}</th>
+                                <th class="bdwT-0">{% trans %}Tenant{% endtrans %}</th>
+                                <th class="bdwT-0">{% trans %}Resource{% endtrans %}</th>
+                                <th class="bdwT-0">{% trans %}Original value{% endtrans %}</th>
+                                <th class="bdwT-0">{% trans %}Offer{% endtrans %}</th>
+                                <th class="bdwT-0">{% trans %}Status{% endtrans %}</th>
+                                <th class="bdwT-0"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('dashboard/offers/index') }}
+    <script>
+        var formatter = new Intl.NumberFormat('en-UK', {
+            style: 'currency',
+            currency: 'GBP'
+        });
+    </script>
+{% endblock %}

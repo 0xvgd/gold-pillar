@@ -1,0 +1,66 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Project Investments | {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item">Projects</li>
+                <li class="breadcrumb-item active" aria-current="page">Investments</li>
+            </ol>
+        </nav>
+    </div>
+
+    <header role="heading">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-4 col-sm-6 col-xs-6">
+                    <h1 class="h2">Investments</h1>
+                    <p class="hidden-xs">Projects investments</p>
+                </div>
+                <div class="col-12 col-md-8 col-sm-6 col-xs-6 btn-action">
+                    <div class="d-flex justify-content-around">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <fieldset class="section">
+        <div class="container">
+            {% include 'includes/flashMessages.html.twig' %}
+            <div class="card mb-3">
+                <div class="table-responsive">
+                    <table id="datatable" class="table" data-url="{{ path('dashboard_projects_investments_index') }}">
+                        <thead>
+                            <tr>
+                                <th>{{ 'Date' | trans }}</th>
+                                <th>{{ 'Transaction ID' | trans }}</th>
+                                <th>{{ 'Amount' | trans }}</th>
+                                <th>Transaction Status</th>
+                                <th>Invest Status</th>
+                                <th>Project</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('dashboard/investments/index') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('dashboard/investments/index') }}
+{% endblock %}

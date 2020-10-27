@@ -1,0 +1,421 @@
+@import url('https://fonts.googleapis.com/css?family=Fira+Sans:300');
+div.payzone-loading-wrap {
+  width: 100vh;
+  width: 100vw;
+  position: absolute;
+}
+
+div.payzone-loading-wrap img {
+  height: 34vh;
+  margin: 33vh auto;
+  display: block;
+}
+
+form.payzone-form *, div.payzone-transaction-results *, div.payzone-about * , .payzone-alert *{
+  font-family: 'Fira Sans', sans-serif;
+  color: #434343;
+  /*font-size: 14px*/
+  word-wrap: break-word;
+}
+div.payzone-alert{
+  width:calc( 100% - 5px - 5px - 20px - 20px);
+  background-color: #f4f4f4;
+  padding:10px 20px 5px ;
+  border-radius: 2px;
+  margin: 10px auto;
+  box-shadow: 1px 2px 3px 0 rgba(0, 0, 0, .25);
+  text-align: left;
+  border-left:5px solid #cb9900;  
+}
+div.payzone-alert.payzone-version-error{  border-left:5px solid #cb9900;}
+div.payzone-alert.payzone-version-warning{  border-left:5px solid #0C3158;}
+div.payzone-alert.payzone-version-info{  border-left:5px solid #434343;;}
+
+
+div#debug_active, div#payzone_warning {
+  background-color: #cb9900;
+  padding: 20px;
+  color: #fff;
+  line-height: 24px;
+  font-size: 20px;
+  border-radius: 2px;
+  border: 5px solid #cb9900;
+  margin: 10px auto;
+  max-width: 800px;
+  text-align: center;
+}
+
+form.payzone-form, div.payzone-transaction-results {
+  width: 90%;
+  max-width: 360px;
+  height: auto;
+  margin: 20px auto;
+  border: 0.5px solid #ddd;
+  border-radius: 2px;
+  box-shadow: 1px 2px 3px 0 rgba(0, 0, 0, .25);
+  padding: 10px 15px;
+  text-align: left;
+  background-color: #fff;
+  position: relative;
+}
+
+div.payzone-transaction-results {
+  text-align: center;
+}
+
+form.payzone-form hr, div.payzone-transaction-results hr {
+  border: 0.5px solid #ddd;
+  margin: 20px;
+}
+
+form.payzone-form>div.payzone-form-section>a>img.payzone-logo, div.payzone-transaction-results>div.payzone-results-section>a>img.payzone-logo {
+  width: 50%;
+}
+
+.pz-left {
+  text-align: left;
+}
+
+div.payzone-transaction-results>div.payzone-results-section>a>img.payzone-logo-footer {
+  width: 50%;
+  margin: auto;
+  display: block;
+}
+
+form.payzone-form>div.payzone-form-section>a>img.payzone-footer-image {
+  width: 100%;
+  opacity: 0.5;
+  transition: opacity 0.5s;
+}
+
+form.payzone-form>div.payzone-form-section>a>img.payzone-footer-image:hover {
+  opacity: 0.9
+}
+
+form.payzone-form>div.payzone-form-section>p.payzone-form-header, div.payzone-transaction-results>div.payzone-results-section>p.payzone-results-header {
+  font-size: 22px;
+  margin: 15px 0;
+  padding: 0;
+  color: #0C3158;
+  font-variant: small-caps;
+  font-weight: 600;
+}
+
+div.payzone-results-section.payzone-success>p {
+  color: #5a913d;
+}
+
+div.payzone-transaction-results>div.payzone-results-section>p.payzone-results-sub-header {
+  font-size: 18px;
+  margin: 15px 0;
+  padding: 0;
+  color: #0C3158;
+  font-variant: small-caps;
+  font-weight: 600;
+}
+
+form.payzone-form>div.payzone-form-section label {
+  font-size: 12px;
+  margin: 0 0 5px 0;
+  padding: 0;
+  clear: both;
+  color: #0C3158;
+  display: block;
+}
+
+form.payzone-form>div.payzone-form-section input[type="text"], form.payzone-form>div.payzone-form-section input[type="tel"], form.payzone-form>div.payzone-form-section input[type="number"], form.payzone-form>div.payzone-form-section input[type="submit"], form.payzone-form>div.payzone-form-section select,form.payzone-form>div.payzone-form-section textarea {
+  display: block;
+  width: calc( 100% - 10px - 10px);
+  font-size: 12px;
+  line-height: 20px;
+  margin: 0 0 10px 0;
+  padding: 5px 10px;
+  border: 1px #ddd solid;
+  border-radius: 2px;
+  background-image: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+
+form.payzone-form>div.payzone-form-section select {
+  line-height: 20px;
+  height: 30px;
+}
+
+form.payzone-form>div.payzone-form-section select.select-30 {
+  display: inline-block;
+  width: calc( 40% - 10px - 3px);
+}
+
+form.payzone-form>div.payzone-form-section select.select-70 {
+  display: inline-block;
+  width: calc( 60% - 3px);
+  margin-left: 10px;
+}
+
+form.payzone-form>div.payzone-form-section input[type="submit"]:hover {
+  cursor: pointer;
+}
+
+form.payzone-form>div.payzone-form-section input[type="text"] {
+  transition: background-color 0.5s, color 0.5s, outline 0.5s;
+}
+
+form.payzone-form>div.payzone-form-section input[type="submit"], a.payzone-btn, input.payzone-btn {
+  width: 150px;
+  margin: 20px auto 10px;
+  background-color: #cb9900;
+  color: #fff;
+  transition: background-color 0.5s, color 0.5s, outline 0.5s;
+  display: block;
+  font-size: 12px;
+  line-height: 20px;
+  padding: 5px 10px;
+  box-shadow: none;
+  border: 1px #ddd solid;
+  border-radius: 2px;
+  background-image: none;
+  text-decoration: none;
+}
+
+form.payzone-form>div.payzone-form-section input[type="submit"]:hover, a.payzone-btn:hover, input.payzone-btn:hover {
+  background-color: #cb9900;
+  color: #fff;
+}
+
+#payzone-payment-modal-background, #payzone-loading-modal-background {
+  display: none;
+  z-index: 999;
+  background-color: #434343;
+  opacity: 0.8;
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  transition: opacity 0.5s;
+}
+
+#payzone-payment-modal, #payzone-loading-modal {
+  display: none;
+  z-index: 1000;
+  background-color: #fff;
+  position: fixed;
+  height: 80%;
+  width: 80%;
+  margin: 10%;
+  top: 0;
+  left: 0;
+  transition: all 0.5s;
+  border-radius: 2px;
+  /*overflow: hidden;*/
+  box-shadow: 1px 2px 3px 0 rgba(0, 0, 0, .25);
+  border: 5px solid #cb9900;
+}
+
+#payzone-loading-modal div.payzone-loading-wrap {
+  width: 100%;
+  height: 100%;
+}
+
+#payzone-loading-modal div.payzone-loading-wrap img {
+  height: 100%;
+  margin: 0;
+  display: block;
+}
+
+#payzone-payment-modal>a#payzone-modal-close {
+  background-color: #cb9900;
+  height: 40px;
+  width: 40px;
+  font-size: 20px;
+  display: block;
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  text-align: center;
+  line-height: 40px;
+  border-radius: 50%;
+  text-decoration: none;
+  color: #fff;
+  transition: all 0.5s;
+}
+
+#payzone-payment-modal>a#payzone-modal-close:hover {
+  background-color: #cb9900;
+  transform: scale(1.2);
+}
+
+#payzone-payment-modal>iframe {
+  height: 100%;
+  width: 100%;
+  transition: all 0.5s;
+}
+
+form.payzone-form>span#form_errors>p {
+  font-size: 12px;
+  color: #cb9900;
+  line-height: 12px;
+  margin: 5px;
+  text-align: center;
+}
+
+form.payzone-form>span#form_errors>p.error_title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+span.cvv-wrap::after {
+  content: "";
+  background-image: url(images/cvv-tooltip.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 98%;
+  height: 0;
+  width: 0;
+  opacity: 0;
+  display: block;
+  transition: all 0.25s linear;
+  position: absolute;
+  background-color: #fff;
+  border: 0.5px solid #ddd;
+  border-radius: 2px;
+  box-shadow: 1px 2px 3px 0 rgba(0, 0, 0, .25);
+  margin-top: -8px;
+}
+
+span.cvv-wrap:hover::after {
+  height: 70px;
+  width: 200px;
+  opacity: 1;
+}
+
+.collapsed {
+  display: none
+}
+
+
+.mask-wrap {
+  position: relative;
+  line-height: 1;
+}
+
+.mask-wrap span {
+  position: absolute;
+  left: 3px;
+  top: 1px;
+  color: #ccc;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.mask-wrap span i {
+  font-style: normal;
+  /* any of these 3 will work */
+  color: transparent;
+  opacity: 0;
+  visibility: hidden;
+}
+div.payzone-warning{
+  border: 2px solid #cb9900;
+  text-align: center;
+  font-weight: 600;
+}
+@media only screen and (max-width: 500px) {
+  div.payzone-configuration, div.payzone-about-section {
+    width: calc( 100% - 10px - 10px - 10px - 10px);
+  }
+}
+
+
+
+
+
+
+div.payzone-about {
+  margin: auto;
+  max-width: 800px;
+  font-size:14px;
+  text-align: center;
+}
+
+div.payzone-about-section {
+  width: calc( 33% - 10px - 10px - 10px - 10px);
+  float: left;
+  padding: 10px;
+  margin: 10px;
+  border: 0.5px solid #ddd;
+  border-radius: 2px;
+  box-shadow: 1px 2px 3px 0 rgba(0, 0, 0, .25);
+  background-color: #fff;
+}
+
+div.payzone-configuration {
+  width: calc( 50% - 10px - 10px - 10px - 10px - 2px);
+}
+
+div.payzone-fullwidth {
+  width: calc( 100% - 10px - 10px - 10px - 10px - 2px);
+}
+
+div.payzone-configuration table {
+  text-align: right;
+  border-collapse: collapse;
+  word-wrap: break-word;
+  word-break: break-all;
+  width: 100%;
+}
+
+div.payzone-configuration table tr:nth-child(odd) {
+  background-color: #f4f4f4;
+}
+
+div.payzone-configuration table th {
+  width: 60%;
+  text-align: left;
+}
+
+div.payzone-fullwidth table th {
+  width: 25%;
+}
+
+div.payzone-fullwidth table td {
+  text-align: left;
+}
+
+div.payzone-about>h1, div.payzone-about>h2, div.payzone-about>h3 {
+  font-size: 22px;
+  margin: 15px 0;
+  padding: 0;
+  color: #0C3158;
+  font-variant: small-caps;
+  font-weight: 600;
+}
+
+div.payzone-about>h2 {
+  font-size: 18px;
+}
+
+div.payzone-about>h3 {
+  font-size: 14px;
+}
+
+div.payzone-about-section>h1, div.payzone-about-section>h2, div.payzone-about-section>h3 {
+  font-size: 22px;
+  margin: 15px 0;
+  padding: 0;
+  color: #0C3158;
+  font-variant: small-caps;
+  font-weight: 600;
+}
+div.payzone-about>ol,div.payzone-about>ul {
+  text-align: left
+}
+
+hr.payzone-clear-float {
+  clear: both;
+  border: 0.5px solid #ddd;
+  margin: 10px;
+}

@@ -1,0 +1,23 @@
+{% for flashMessage in app.session.flashbag.get('success') %}
+    <div class="alert alert-success">
+        <span class="fas fa-check-circle" aria-hidden="true"></span>
+        <span class="sr-only">Success</span>
+        {{ flashMessage|raw }}
+    </div>
+{% endfor %}
+
+{% for flashMessage in app.session.flashbag.get('error') %}
+    <div class="alert alert-danger">
+        <span class="fas fa-exclamation-circle" aria-hidden="true"></span>
+        <span class="sr-only">Error</span>
+        {{ flashMessage|raw }}
+    </div>
+{% endfor %}
+
+{% for flashMessage in app.session.flashbag.get('info') %}
+    <div class="alert alert-info">
+        <span class="fas fa-info-circle" aria-hidden="true"></span>
+        <span class="sr-only">Info</span>
+        {{ flashMessage|raw }}
+    </div>
+{% endfor %}

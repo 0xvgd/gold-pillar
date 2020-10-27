@@ -1,0 +1,396 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Assets | {{ parent() }}{% endblock %}
+
+{% block body %}
+	{% set baseUrl = path('dashboard_resource_finance_index', { id: entity.id }) %}
+	<div id="app"
+		v-cloak
+		data-balance="{{ entity.account.balance }}"
+		data-base-url="{{ baseUrl }}"
+		data-total-invested={{ entity.totalInvested.amount }}>
+		<div class="container">
+			<nav aria-label="breadcrumb">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item">
+						<a href="{{ path('dashboard_assets_assets_index') }}">Dashboard</a>
+					</li>
+					<li class="breadcrumb-item">
+						<a href="{{path('dashboard_assets_assets_index')}}">{% trans %}Assets{% endtrans %}</a>
+					</li>
+					<li class="breadcrumb-item active" aria-current="page">
+						{% trans %}Finance{% endtrans %}
+					</li>
+				</ol>
+			</nav>
+		</div>
+		<header role="heading">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-4 col-sm-6 col-xs-6">
+						<h1 class="h2">{{ entity.name }}</h2>
+						<p class="hidden-xs">{% trans %}Financial information{% endtrans %}</p>
+					</div>
+					<div class="col-md-8 col-sm-12 col-xs-12">
+						<div class="text-right">
+							<form
+								method="post"
+								action="{{ path('dashboard_resource_finance_index', { id: entity.id }) }}/distribute-dividend"
+								onsubmit="return confirm('Do you really wanna to distribute dividend?')">
+								<button
+									type="submit"
+									class="btn btn-info"
+									:disabled="dividendBalance <= 0">
+									<i class="fas fa-calculator"></i>
+									{% trans %}Distribute dividends{% endtrans %}
+								</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</header>
+		<fieldset class="section">
+			<div class="container">
+
+				{% include 'includes/flashMessages.html.twig' %}
+				
+				<div class="card mb-3">
+					<div class="card-body">
+						<div class="row">
+							<div class="col-md-4">
+								<div class="layers bd bgc-white p-20">
+									<div class="layer w-100 mB-10 text-right">
+										<h6 class="lh-1">{% trans %}Asset status{% endtrans %}</h6>
+									</div>
+									<div class="layer w-100">
+										<div class="peers ai-sb fxw-nw">
+											<div class="peer peer-greed">
+												{% if  entity.postStatus.label == 'Approved' %}
+													<label>
+														<i class="fa fa-check  c-green-500 fa-2x"></i>
+													</label>
+												{% endif %}
+												{% if entity.postStatus.label == 'Pending approval' %}
+													<label>
+														<i class="fas fa-clock c-orange-300 fa-2x"></i>
+													</label>
+												{% endif %}
+												{% if entity.postStatus.label == 'Denied' %}
+													<label>
+														<i class="fas fa-exclamation-triangle c-red-500 fa-2x"></i>
+													</label>
+												{% endif %}
+												{% if entity.postStatus.label == 'Sold' %}
+													<label>
+														<i class="fas fa-shopping-cart c-blue-500 fa-2x"></i>
+													</label>
+												{% endif %}
+											</div>
+											<div class="peer">
+												<h2 id='totalBalance' class="h4 text-muted mb-0 totalBalance text-right">
+													<span class=''>
+														{{ entity.postStatus.label }}
+													</span>
+												</h2>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="layers bd bgc-white p-20">
+									<div class="layer w-100 mB-10 text-right">
+										<h6 class="lh-1">{% trans %}Account balance{% endtrans %}</h6>
+									</div>
+									<div class="layer w-100">
+										<div class="peers ai-sb fxw-nw">
+											<div class="peer peer-greed">
+												<span id="balance-bar-chart"></span>
+											</div>
+											<div class="peer">
+												{% trans %}Account:{% endtrans %} {{ entity.account }}
+												<h2 class="h4 text-muted mb-0 totalBalance text-right">
+													<balance-value
+														currency="£"
+														:amount="balance"
+														:loading="balanceLoading"
+														/>
+												</h2>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="layers bd bgc-white p-20">
+									<div class="layer w-100 mB-10 text-right">
+										<h6 class="lh-1">{% trans %}Dividend balance{% endtrans %}</h6>
+									</div>
+									<div class="layer w-100">
+										<div class="peers ai-sb fxw-nw">
+											<div class="peer peer-greed">
+												<span id="balance-bar-chart"></span>
+											</div>
+											<div class="peer text-right">
+												{% trans %}Total invested:{% endtrans %} {{ entity.totalInvested.amount|number_format(2) }}
+												<h2 id='investmentBalance' class="h4 text-muted mb-0 totalBalance text-right">
+													<small>{% trans %}Available{% endtrans %}</small>
+													<balance-value
+														currency="£"
+														:amount="dividendBalance"
+														:loading="balanceLoading"
+														/>
+												</h2>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="card">
+					<div class="card-header">
+						<ul class="nav nav-tabs card-header-tabs" role="tablist">
+							<li role="presentation" class="nav-item">
+								<a href="#tab-recurring" class="nav-link active" role="tab" data-toggle="tab">{% trans %}Recurring{% endtrans %}</a>
+							</li>
+							<li role="presentation" class="nav-item">
+								<a href="#tab-incomes" class="nav-link" role="tab" data-toggle="tab">{% trans %}Incomes{% endtrans %}</a>
+							</li>
+							<li role="presentation" class="nav-item">
+								<a href="#tab-expenses" class="nav-link" role="tab" data-toggle="tab">{% trans %}Expenses{% endtrans %}</a>
+							</li>
+							<li role="presentation" class="nav-item">
+								<a href="#tab-investments" class="nav-link" role="tab" data-toggle="tab">{% trans %}Investments{% endtrans %}</a>
+							</li>
+							<li role="presentation" class="nav-item">
+								<a href="#tab-dividends" class="nav-link" role="tab" data-toggle="tab">{% trans %}Dividends{% endtrans %}</a>
+							</li>
+							<li role="presentation" class="nav-item">
+								<a href="#tab-transactions" class="nav-link" role="tab" data-toggle="tab">{% trans %}Transactions{% endtrans %}</a>
+							</li>
+						</ul>
+					</div>
+					<div class="card-body">
+						<div class="tab-content">
+							<div role="tabpanel" class="tab-pane active" id="tab-recurring">
+								<fieldset>
+									<legend>{% trans %}Recurring income{% endtrans %}</legend>
+									<p>
+										{% trans %}Recurring income will generate credit automatically at the period defined.{% endtrans %}
+									</p>
+									<recurring-list
+										ref="recurringIncomeList"
+										type="income"
+										base-url="{{ baseUrl }}"
+										:page-size="15"
+										@new="resetAndOpenModal('#recurring-income-modal', 'recurringIncomeForm')"
+										@edit="editRecurring('#recurring-income-modal', 'recurringIncomeForm', $event)"
+										/>
+								</fieldset>
+								<fieldset>
+									<legend>{% trans %}Recurring expense{% endtrans %}</legend>
+									<p>
+										{% trans %}Recurring expense will generate debit automatically at the period defined.{% endtrans %}
+									</p>
+									<recurring-list
+										ref="recurringExpenseList"
+										type="expense"
+										base-url="{{ baseUrl }}"
+										:page-size="15"
+										@new="resetAndOpenModal('#recurring-expense-modal', 'recurringExpenseForm')"
+										@edit="editRecurring('#recurring-expense-modal', 'recurringExpenseForm', $event)"
+										/>
+								</fieldset>
+							</div>
+							<div role="tabpanel" class="tab-pane" id="tab-incomes">
+								<p>
+									{% trans %}See below all asset incomes.{% endtrans %}
+								</p>
+								<payment-list
+									ref="incomeList"
+									type="income"
+									base-url="{{ baseUrl }}"
+									:page-size="15"
+									@new="resetAndOpenModal('#income-modal', 'incomeForm')"
+									/>
+							</div>
+							<div role="tabpanel" class="tab-pane" id="tab-expenses">
+								<p>
+									{% trans %}See below all asset expenses.{% endtrans %}
+								</p>
+								<payment-list
+									ref="expenseList"
+									type="expense"
+									base-url="{{ baseUrl }}"
+									:page-size="15"
+									@new="resetAndOpenModal('#expense-modal', 'expenseForm')"
+									/>
+							</div>
+							<div role="tabpanel" class="tab-pane" id="tab-investments">
+								<p>
+									{% trans %}See below all investment made in this asset.{% endtrans %}
+								</p>
+								<investment-list
+									ref="investmentList"
+									base-url="{{ baseUrl }}"
+									:page-size="15"
+									/>
+							</div>
+							<div role="tabpanel" class="tab-pane" id="tab-dividends">
+								<p>
+									{% trans %}See below all paid dividends.{% endtrans %}
+								</p>
+								<dividend-list
+									ref="dividendList"
+									base-url="{{ baseUrl }}"
+									:page-size="15"
+									/>
+							</div>
+							<div role="tabpanel" class="tab-pane" id="tab-transactions">
+								<p>
+									{% trans %}See below all asset account transactions.{% endtrans %}
+								</p>
+								<transaction-list
+									ref="transactionList"
+									base-url="{{ baseUrl }}"
+									:page-size="15"
+									/>
+							</div>
+						</div>
+					</div>
+					<div class="card-footer">
+						<div class="d-flex">
+							<a href="{{ path('dashboard_assets_assets_edit', { id: entity.id }) }}" class="btn btn-link text-dark">
+								<i class="fa fa-chevron-left"></i>
+								{% trans %}Back to edit{% endtrans %}
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		
+			<div id="recurring-income-modal" class="modal fade" tabindex="-1" role="dialog">
+				<form v-on:submit="handleSubmit($event, 'recurringIncomeForm')">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title">{% trans %}New recurring income{% endtrans %}</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<recurring-form
+									ref="recurringIncomeForm"
+									type="income"
+									base-url="{{ baseUrl }}"
+									@save="closeAndReload('#recurring-income-modal', 'recurringIncomeList')"
+									/>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans %}Close{% endtrans %}</button>
+								<button type="submit" class="btn btn-primary">{% trans %}Save{% endtrans %}</button>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		
+			<div id="recurring-expense-modal" class="modal fade" tabindex="-1" role="dialog">
+				<form v-on:submit="handleSubmit($event, 'recurringExpenseForm')">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title">{% trans %}New recurring expense{% endtrans %}</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<recurring-form
+									ref="recurringExpenseForm"
+									type="expense"
+									base-url="{{ baseUrl }}"
+									@save="closeAndReload('#recurring-expense-modal', 'recurringExpenseList')"
+									/>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans %}Close{% endtrans %}</button>
+								<button type="submit" class="btn btn-primary">{% trans %}Save{% endtrans %}</button>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		
+			<div id="income-modal" class="modal fade" tabindex="-1" role="dialog">
+				<form v-on:submit="handleSubmit($event, 'incomeForm')">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title">{% trans %}New manual income{% endtrans %}</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<payment-form
+									ref="incomeForm"
+									type="income"
+									base-url="{{ baseUrl }}"
+									@save="onAddPayment('#income-modal', 'incomeList')"
+									/>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans %}Close{% endtrans %}</button>
+								<button type="submit" class="btn btn-primary">{% trans %}Save{% endtrans %}</button>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		
+			<div id="expense-modal" class="modal fade" tabindex="-1" role="dialog">
+				<form v-on:submit="handleSubmit($event, 'expenseForm')">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title">{% trans %}New manual expense{% endtrans %}</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<payment-form
+									ref="expenseForm"
+									type="expense"
+									base-url="{{ baseUrl }}"
+									@save="onAddPayment('#expense-modal', 'expenseList')"
+									/>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans %}Close{% endtrans %}</button>
+								<button type="submit" class="btn btn-primary">{% trans %}Save{% endtrans %}</button>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</fieldset>
+	</div>
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	{{ encore_entry_link_tags('dashboard/assets/assets/finance') }}
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('js/dashboard/symfony-collection.js') }}"></script>
+	{{ encore_entry_script_tags('dashboard/assets/assets/finance') }}
+{% endblock %}

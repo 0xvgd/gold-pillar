@@ -1,0 +1,205 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Pages | {{ parent() }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .banners .banner {
+            position: relative;
+        }
+
+        .banners .banner button {
+            top: 5px;
+            right: 30px;
+            position: absolute;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('dashboard_index') }}">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    <a href="{{path('dashboard_config_pages_index')}}">Pages</a>
+                </li>
+            </ol>
+        </nav>
+    </div>
+
+    <header role="heading">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-sm-6 col-xs-6">
+                    <h2>
+                        Pages
+                    </h2>
+                    <p class="hidden-xs">System frontend pages</p>
+                </div>
+                {% if entity.id %}
+                    {# <div class="col-md-4 col-sm-12 col-xs-12 btn-action">
+                        <form id="form-delete" action="{{ path('dashboard_config_categoria_delete', { id: entity.id }) }}" method="post">
+                            <button type="button" id="btn-delete" class="btn btn-danger pull-right botao-mobile" name="_method" value="DELETE">
+                                <span class="fa fa-trash"></span>
+                                Delete category
+                            </button>
+                        </form>
+                    </div> #}
+                {% endif %}
+            </div>
+        </div>
+    </header>
+    <fieldset class="section">
+        <div class="container" id="app">
+            <hr>
+            <div class="card">
+                {{ form_start(form, { 'attr': { 'data-parsley-validate': 'true' } }) }}
+                    <div class="card-body card-block">
+                        {% include 'includes/flashMessages.html.twig' %}
+                        {% if not form.vars.valid %}
+                            <div class="alert alert-danger alert-dismissible" role="alert">
+                                <ul>
+                                    {% for error in errors %}
+                                        <li>
+                                            <p class="text-danger">
+                                                <b>{{ error.message }}</b>
+                                            </p>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form_row(form.name) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(form.title) }}
+                            </div>
+                            <div class="col-md-12">
+                                {{ form_row(form.description) }}
+                            </div>
+
+                            <div id="banners">
+                                <div class="col-md-12">
+                                    {{ form_row(form.banners, { type: 'hidden', attr: { ':value': 'bannersJson' } }) }}
+                                </div>
+                                <div class="row banners px-3">
+                                    <div class="banner col-sm-6 mb-3" v-for="banner in banners" :key="banner">
+                                        <img :src="banner" class="w-100 img-thumbnail">
+                                        <button type="button" class="close" @click="removeBanner(banner)">
+                                            x
+                                        </button>
+                                    </div>
+                                </div>
+                                <input type="file" class="form-control" @change="addBanner" accept="image/*">
+                            </div>
+
+                        </div>
+                        <fieldset>
+                            <legend>{% trans %}Video{% endtrans %}</legend>
+                            {% if form.youtubeUrl.vars.data %}
+                                <iframe
+                                    width="100%"
+                                    height="400"
+                                    src="https://www.youtube.com/embed/{{ form.youtubeUrl.vars.data|split('?v=')[1] }}"
+                                    frameborder="0"
+                                    allow="encrypted-media; picture-in-picture" allowfullscreen>
+                                </iframe>
+                            {% endif %}
+                            {{ form_row(form.youtubeUrl) }}
+                        </fieldset>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary btn-sm">
+                            <i class="fas fa-save"></i>
+                            Save
+                        </button>
+                        <button type="reset" class="btn btn-secondary btn-sm">
+                            <i class="fa fa-eraser"></i>
+                            Reset
+                        </button>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </fieldset>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        const doRequest = ({ url, method, formData, onload }) => {
+            const req = new XMLHttpRequest();
+            req.open(method, url)
+            req.onload = (event) => {
+                onload(req, event)
+            }
+            req.send(formData)
+        }
+        new Vue({
+            el: '#banners',
+            data() {
+                return {
+                    banners: JSON.parse('{{ form.banners.vars.data|raw }}')
+                }
+            },
+            computed: {
+                bannersJson() {
+                    return JSON.stringify(this.banners)
+                }
+            },
+            methods: {
+                addBanner(event) {
+                    const self = this
+                    event.target.disabled = true
+                    try {
+                        const formData = new FormData()
+                        formData.append('file', event.target.files[0])
+
+                        doRequest({
+                            method: 'POST',
+                            url: "{{ path('dashboard_upload') }}",
+                            formData: formData,
+                            onload(req) {
+                                if (req.status == 200) {
+                                    const res = JSON.parse(req.responseText)
+                                    if (res.response && res.response.files && res.response.files.length) {
+                                        self.banners.push(res.response.files[0].url)
+                                    }
+                                } else {
+                                    alert('Erro ao fazer upload')
+                                }
+                                event.target.disabled = false
+                            }
+                        })
+                    } catch (e)  {
+                        event.target.disabled = false
+                    }
+                },
+                removeBanner(url) {
+                    this.banners.splice(this.banners.indexOf(url), 1)
+                }
+            }
+        })
+
+        $('#btn-delete').click(function (e) {
+            e.preventDefault();
+            $("#form-delete").submit();
+            return false;
+        });
+
+        $("#form-delete").on("submit", function () {
+            if (confirm(MSG_DELETE_ITEM)) {
+                return true;
+            } else {
+                $('form-delete').find('[type=submit],submit').prop('disabled', false);
+                return false;
+            }
+        });
+    </script>
+{% endblock %}

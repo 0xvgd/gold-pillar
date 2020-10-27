@@ -1,0 +1,28 @@
+monolog:
+    handlers:
+        main:
+            type: fingers_crossed
+            action_level: error
+            excluded_http_codes: [ 400, 403, 404 ]
+            handler:      grouped
+        console:
+            type:  console
+            handler: grouped
+        grouped:
+            type:    group
+            members: [streamed, deduplicated]
+        streamed:
+            type:  stream
+            path:  "%kernel.logs_dir%/%kernel.environment%.log"
+            level: debug
+        deduplicated:
+            type:    deduplication
+            handler: swift
+        swift:
+            type:       swift_mailer
+            from_email: 'goldpillar@goldpillar.global'
+            to_email:   [ 'laertejjunior@gmail.com' ]
+            subject:    '[goldpillar.global][Production] Log'
+            level:      debug
+            formatter:  monolog.formatter.html
+            content_type: text/html

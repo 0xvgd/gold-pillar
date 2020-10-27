@@ -1,0 +1,37 @@
+{% if not showHeader is defined %}
+    {% set showHeader = true %}
+{% endif %}
+{% if not showFooter is defined %}
+    {% set showFooter = true %}
+{% endif %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block pageTitle -%}Report{%- endblock %}</title>
+        <link rel="shortcut icon" type="image/x-icon" href="#" />
+         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" crossorigin="anonymous">
+      
+       
+        {% block stylesheets %}
+            {% include "report/stylesheet.html.twig" %}
+        {% endblock %}
+    </head>
+    <body>
+        {% if showHeader %}
+            <header>
+                {% include "report/header.html.twig" with { subtitle: block('company') } %}
+            </header>
+        {% endif %}
+        
+        {% block body %}{% endblock %}
+        
+        {% if showFooter %}
+            <footer>
+                {% include "report/footer.html.twig" %}
+            </footer>
+        {% endif %}
+    </body>
+</html>

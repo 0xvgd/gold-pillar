@@ -1,0 +1,839 @@
+{% block app_money_row %}
+    {% set label = label|default(name|humanize) %}
+    <div class="form-group">
+        <label>{{ label }}</label>
+        <div class="input-group">
+            {{ form_widget(form.currency) }}
+            {{ form_widget(form.amount) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block _schedule_shifts_row %}
+    <div
+        id="{{ form.vars.id }}" 
+        data-prototype="{{ form_row(form.vars.prototype)|e('html_attr') }}"
+        data-target=".items"
+        data-btn-add=".btn-add"
+        data-btn-remove=".btn-remove">
+        <div class="items">
+            {% for child in form %}
+                {{ form_row(child) }}
+            {% endfor %}
+        </div>
+        <div class="text-right pt-3">
+            <button type="button" class="btn btn-secondary btn-add">
+                <span class="fa fa-plus"></span>
+                {{ 'Add work shift' | trans }}
+            </button>
+        </div>
+    </div>
+{% endblock %}
+
+{% block _schedule_shifts_entry_row %}
+    <div class="card mb-3">
+        <div class="card-header">
+            {{ 'Shift' | trans }}
+
+            <button type="button" class="close btn-remove" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-xs-12 col-3">
+                    {{ form_row(form.duration, { help: 'Minutes' }) }}
+                </div>
+                <div class="col-xs-12 col-3">
+                    {{ form_row(form.position, { help: 'Shift order' }) }}
+                </div>
+            </div>
+            {{ form_row(form.days) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block _schedule_shifts_entry_days_row %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>{{ 'Day' | trans }}</th>
+                <th>{{ 'Start' | trans }}</th>
+                <th>{{ 'End' | trans }}</th>
+                <th>{{ 'Max' | trans }} </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for child in form %}
+                {{ form_row(child) }}
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block _schedule_shifts_entry_days_entry_row %}
+    <tr>
+        <td>
+            {{ form_row(form.enabled, { label: false }) }}
+            {{ form_row(form.weekDay, { label: false }) }}
+        </td>
+        <td>
+            {{ form.vars.data.name }}
+        </td>
+        <td>
+            {{ form_row(form.startTime, { label: false }) }}
+        </td>
+        <td>
+            {{ form_row(form.endTime, { label: false }) }}
+        </td>
+        <td>
+            {{ form_row(form.max, { label: false }) }}
+        </td>
+    </tr>
+{% endblock %}
+
+{% block fontawesome_widget -%}
+    {%- if icon is defined -%}
+        <div class="input-group">
+            {%- set icon_position = icon_position|default('prepend') -%}
+            {% if icon_position == 'prepend' %}
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        <i class="fa {{ icon }}"></i>
+                    </span>
+                </div>
+            {% endif %}
+            {{- block('form_widget') -}}
+            {% if icon_position == 'append' %}
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        <i class="fa {{ icon }}"></i>
+                    </span>
+                </div>
+            {% endif %}
+        </div>
+    {%- else -%}
+        {{- block('form_widget') -}}
+    {%- endif -%}
+{%- endblock %}
+
+{% block text_widget -%}
+    {{- block('fontawesome_widget') -}}
+{%- endblock %}
+
+{% block password_widget -%}
+    {%- set type = type|default('password') -%}
+    {{- block('fontawesome_widget') -}}
+{%- endblock %}
+
+{% block email_widget -%}
+    {%- set type = type|default('email') -%}
+    {{- block('fontawesome_widget') -}}
+{%- endblock %}
+
+{% block tel_widget -%}
+    {%- set type = type|default('tel') -%}
+    {{- block('fontawesome_widget') -}}
+{%- endblock %}
+
+{% block _application_roles_row %}
+    <div id="itens" data-prototype="{{ form_widget(form.vars.prototype)|e('html_attr') }}" data-btn-add="#addrole" data-btn-remove=".btn-remove">
+        {% for child in form %}
+            {{ form_row(child, { label: false }) }}
+        {% endfor %}
+    </div>
+
+    <div class="text-right">
+        <button id="addrole" type="button" class="btn btn-info">
+            <span class="fa fa-plus"></span>
+            {{ 'New Role'| trans }}
+        </button>
+    </div>
+{% endblock %}
+
+{% block _application_roles_entry_widget %}
+    <div class="row">
+        <div class="col-md-3">
+            {{ form_widget(form.name) }}
+        </div>
+        <div class="col-md-3">
+            {{ form_widget(form.code) }}
+        </div>
+        <div class="col-md-5">
+            {{ form_widget(form.description, { attr: { rows: 1 } }) }}
+        </div>
+        <div class="col-md-1">
+            <button type="button" class="btn btn-link text-danger btn-remove" title="remove" onclick="removeRole($(this))">
+                <span class="fa fa-trash"></span>
+            </button>
+        </div>
+        <div class="col-xs-12 default-margin-top">
+            <hr>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block _application_features_row %}
+    <div id="itens" data-prototype="{{ form_widget(form.vars.prototype)|e('html_attr') }}" data-btn-add="#addfeatures" data-btn-remove=".btn-remove">
+        {% for child in form %}
+            {{ form_row(child, { label: false }) }}
+        {% endfor %}
+    </div>
+    <div class="text-right">
+        <button id="addfeature" type="button" class="btn btn-info">
+            <span class="fa fa-plus"></span>
+            {{ 'New Feature' | trans }}
+        </button>
+    </div>
+{% endblock %}
+
+{% block _application_features_entry_widget %}
+    <div class="row">
+        <div class="col-md-3">
+            {{ form_row(form.name) }}
+        </div>
+        <div class="col-md-4">
+            {{ form_row(form.path) }}
+        </div>
+        <div class="col-md-3">
+            {{ form_row(form.parent) }}
+        </div>
+        <div class="col-md-2">
+            {{ form_row(form.menuOrder) }}
+        </div>
+        <div class="col-md-8">
+            {{ form_row(form.roles) }}
+        </div>
+        <div class="col-md-4">
+            {{ form_row(form.icon) }}
+        </div>
+        <div class="col-md-12">
+            {{ form_row(form.menuItem) }}
+        </div>
+        <div class="col-md-12">
+            <button type="button" class="btn btn-link text-danger btn-remove" title="Remove" onclick="removeFeature($(this))">
+                <span class="fa fa-trash"></span>
+            </button>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <hr>
+    </div>
+{% endblock %}
+
+{% block _user_permissions_row %}
+    <div id="itens" data-prototype="{{ form_widget(form.vars.prototype)|e('html_attr') }}" data-btn-add="#addpermission" data-btn-remove=".btn-remove">
+        {% for child in form %}
+            {{ form_row(child, { label: false }) }}
+        {% endfor %}
+    </div>
+    <div class="text-right">
+        <button id="addpermission" type="button" class="btn btn-info">
+            <span class="fa fa-plus"></span>
+            {{ 'new permission' | trans }}
+        </button>
+    </div>
+{% endblock %}
+
+{% block _reserve_people_row %}
+    <table class="table border"
+        id="{{ form.vars.id }}" 
+        data-prototype="{{ form_row(form.vars.prototype)|e('html_attr') }}"
+        data-target="tbody"
+        data-btn-add=".btn-add"
+        data-btn-remove=".btn-remove">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>{{ 'Name' | trans }}</th>
+                <th>{{ 'Phone' | trans }}</th>
+                <th>{{ 'E-mail' | trans }}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for person in form %}
+                {{ form_row(person) }}
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                    <button type="button" class="btn btn-link btn-add" title="Add person">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+{% endblock %}
+
+{% block _reserve_people_entry_row %}
+<tr>
+    <td>
+        <span class="mt-2 counter badge badge-secondary">&nbsp;</span>
+    </td>
+    <td>
+        {{ form_row(form.name, { label: false, attr: { placeholder: 'Name' } }) }}
+    </td>
+    <td>
+        {{ form_row(form.phone, { label: false, attr: { placeholder: 'Phone' }  }) }}
+    </td>
+    <td>
+        {{ form_row(form.email, { label: false, attr: { placeholder: 'E-mail' }  }) }}
+    </td>
+    <td class="pt-2">
+        <button type="button" class="btn btn-link text-danger btn-remove" title="Remove person">
+            <i class="fa fa-trash"></i>
+        </button>
+    </td>
+</tr>
+{% endblock %}
+
+
+{% block _table_key_tableValues_row %}
+    <div id="itens" data-prototype="{{ form_widget(form.vars.prototype)|e('html_attr') }}" data-btn-add="#addtablevalue" data-btn-remove=".btn-remove">
+        {% for child in form %}
+            {{ form_row(child, { label: false }) }}
+        {% endfor %}
+    </div>
+    <div class="text-right">
+        <button id="addtablevalue" type="button" class="btn btn-info">
+            <span class="fa fa-plus"></span>
+            {{ 'New item' | trans }}
+        </button>
+    </div>
+{% endblock %}
+
+{% block _table_key_tableValues_entry_widget %}
+    <div class="row">
+        <div class="col-md-5">
+            {{ form_widget(form.id) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_widget(form.description) }}
+        </div>
+        <div class="col-md-1">
+            <button type="button" class="btn btn-link text-danger btn-remove" title="Remove" onclick="removeTableValue($(this))">
+                <span class="fa fa-trash"></span>
+            </button>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <hr>
+    </div>
+{% endblock %}
+
+{% block address_row %}
+  <div class="row">
+        <div class="col-md-12">
+            {{ form_row(form.addressLine1, { label: 'Address line 1' | trans}, { 'attr': { 'placeholder': 'Address line 1'} }) }}
+        </div>
+        <div class="col-md-12">
+            {{ form_row(form.addressLine2, { label: 'Address line 2' | trans}, { 'attr': { 'placeholder': 'Address line 2'} }) }}  
+        </div>
+        <div class="col-md-6">
+            {{ form_row(form.postcode, { label: 'Postcode' | trans}, { 'attr': { 'placeholder': 'Postcode'} }) }}   
+        </div>
+        <div class="col-md-6">           
+            {{ form_row(form.town, { label: 'Town' | trans}, { 'attr': { 'placeholder': 'Town'} }) }}    
+        </div>
+        <div class="col-md-12">     
+            {{ form_row(form.city, { label: 'City' | trans}, { 'attr': { 'placeholder': 'City'} }) }}
+        </div>
+        <div class="col-md-12">           
+            {{ form_row(form.country, { label: 'Country' | trans}, { 'attr': { 'placeholder': 'Country'} }) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block resource_address_row %}
+    <div class="row">
+        <div class="col-md-6">
+            {{ form_row(form.addressLine1, { label: 'Address line 1' | trans}, { 'attr': { 'placeholder': 'Address line 1'} }) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_row(form.addressLine2, { label: 'Address line 2' | trans}, { 'attr': { 'placeholder': 'Address line 2'} }) }}  
+        </div>
+        <div class="col-md-3">
+            {{ form_row(form.postcode, { label: 'Postcode' | trans}, { 'attr': { 'placeholder': 'Postcode'} }) }}   
+        </div>
+        <div class="col-md-3">           
+            {{ form_row(form.town, { label: 'Town' | trans}, { 'attr': { 'placeholder': 'Town'} }) }}    
+        </div>
+        <div class="col-md-3">     
+            {{ form_row(form.city, { label: 'City' | trans},  { 'attr': { 'placeholder': 'City'} }) }}
+        </div>
+        <div class="col-md-3">           
+            {{ form_row(form.country, { label: 'Country' | trans}, { 'attr': { 'placeholder': 'Country'} }) }}
+        </div>
+        <div class="col-md-3">           
+            {{ form_row(form.lat, { 'attr': { 'placeholder': 'Lat'} }) }}
+        </div>
+        <div class="col-md-3">           
+            {{ form_row(form.lng, { 'attr': { 'placeholder': 'lng'} }) }}
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block _status_widget %}
+    {% for child in form %}
+        {{ form_widget(child, { 'label_attr': {'class': 'checkbox-inline'}, attr: {'v-on:change':'search', 'class':'buscarVagas' } }) }}
+    {% endfor %}
+{% endblock %}
+
+{% block resource_photos_row %}
+    <div
+        id="{{ form.vars.id }}" 
+        data-prototype="{{ form_widget(form.vars.prototype)|e('html_attr') }}"
+        data-target=".row"
+        data-btn-add=".btn-add"
+        data-btn-remove=".btn-remove">
+        <div class="row">
+            {% for child in form %}
+                {{ form_widget(child, { label: false }) }}
+            {% endfor %}
+        </div>
+        <div class="text-right">
+            <span id="large-file-msg">(Maximum Size: 5MB per photo)</span>
+            <button type="button" class="btn btn-info btn-add">
+                <span class="fa fa-plus"></span>
+                {{ 'Add photo' | trans }}
+            </button>
+        </div>
+    </div>
+{% endblock %}
+
+{% block resource_photos_entry_widget %}
+    <div class="col-sm-3">
+        {{ form_row(form) }}
+        <button type="button" class="btn btn-default btn-remove" title="Remove">
+            <span class="fa fa-trash"></span>
+        </button>
+    </div>
+{% endblock %}
+
+{% block app_photo_row %}
+    <label style="position:relative">
+        {% set imageSrc = form.vars.data|default(asset('images/back-foto.jpg')) %}
+        <img src="{{ asset('images/home/waiting.gif') }}" alt="Wait" id="{{ form.vars.id }}_loading" class="resource-photo-loading" style="display:none" /> 
+        <img id="{{ form.vars.id }}-preview" class="img-property" width="150" height="200" src="{{ imageSrc }}" alt="" />
+        {{ form_widget(form) }}
+        <input type="file" 
+            data-preview="#{{ form.vars.id }}-preview" 
+            data-target="#{{ form.vars.id }}" 
+            data-loading="#{{ form.vars.id }}_loading"
+            data-aspect-ratio="{{ form.vars.aspect_ratio|json_encode }}">
+    </label>
+{% endblock %}
+
+
+{% block _accommodation_accommodationPhotos_row %}
+    <div id="itens" data-prototype="{{ form_widget(form.vars.prototype)|e('html_attr') }}" data-btn-add="#addphoto" data-btn-remove=".btn-remove" class="row">
+        {% for child in form %}
+            {{ form_row(child, { label: false }) }}
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block _accommodation_accommodationPhotos_entry_widget %}
+    <div class="col-sm property-photo-item">
+        {% set path = form.vars.data ? form.vars.data.path : asset('images/back-foto.jpg')  %}
+        <div>
+            <div class="btn-group">
+                {{ form_widget(form.path) }}
+                <label class="">
+                    <img class="img-property" width="150" height="200" src="{{ path }}" accept="image/*" alt=""/>
+                    {{ form_widget(form.file, { 'attr': {'class': 'file-photo', 'style': 'display:none' }, 'label_attr': {'style': 'display:none'} }) }}
+                    {{ form_row(form.photo) }}
+                </label>
+                <button type="button" class="btn btn-default" title="Remover" onclick="removePhoto($(this))">
+                    <span class="fa fa-trash"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block _asset_assetEquities_row %}
+    <table
+        class="table"
+        id="{{ form.vars.id }}"
+        data-prototype="{{ form_widget(form.vars.prototype)|e('html_attr') }}"
+        data-target="tbody"
+        data-btn-add="#addmarketvalue"
+        data-btn-remove=".btn-remove"
+        >
+        <thead>
+            <tr>
+                <th>{{ 'Equity Available' | trans }}</th>
+                <th>{{ 'Year' | trans }}</th>
+                <th>{{ 'Month' | trans }}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for child in form %}
+                {{ form_widget(child, { label: false }) }}
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <td colspan="4" class="text-right">
+                <button id="addmarketvalue" type="button" class="btn btn-info btn-sm">
+                    <span class="fa fa-plus"></span>
+                   {{ 'New equity' | trans }}
+                </button>
+            </td>
+        </tfoot>
+    </table>
+{% endblock %}
+
+{% block _asset_assetEquities_entry_widget %}
+    <tr>
+        <td>
+            <div class="input-group">
+                {{ form_widget(form.price.currency) }}
+                {{ form_widget(form.price.amount) }}
+            </div>
+        </td>
+        <td>
+            {{ form_widget(form.yearRef) }}
+        </td>
+        <td>
+            {{ form_widget(form.monthRef) }}
+        </td>
+        <td>
+            <button type="button" class="btn btn-link text-danger btn-remove" title="Remove">
+                <span class="fa fa-trash"></span>
+            </button>
+        </td>
+    </tr>
+{% endblock %}
+
+{% block _asset_credit_transactions_row %}
+    <tbody id="itens" data-prototype="{{ form_widget(form.vars.prototype)|e('html_attr') }}" data-btn-add="#addcredit" data-btn-remove=".btn-remove">
+        {% for child in form %}
+            {{ form_row(child, { label: false }) }}
+        {% endfor %}
+    </tbody>
+
+    <div class="text-right">
+        <button id="addcredit" type="button" class="btn btn-info">
+            <span class="fa fa-plus"></span>
+            {{ 'Add new credit' | trans }}
+        </button>
+    </div>
+{% endblock %}
+
+{% block _asset_credit_transactions_entry_widget %}
+    <tr>
+        <td data-th="Type">
+            {{ form_widget(form.transactionType) }}
+        </td>
+        <td data-th="Amount">
+            {{ form_widget(form.amount) }}
+        </td>
+        <td data-th="Date">
+            {{ form_widget(form.dateRef) }}
+        </td>
+        <td data-th="Description">
+            {{ form_widget(form.description) }}
+        </td>
+        <td>
+            <button type="button" class="btn btn-link text-danger btn-remove" title="remove" onclick="$(this).parent().parent().remove()">
+                <span class="fa fa-trash"></span>
+            </button>
+        </td>
+    </tr>
+{% endblock %}
+
+{% block _project_credit_transactions_row %}
+    <tbody id="itens" data-prototype="{{ form_widget(form.vars.prototype)|e('html_attr') }}" data-btn-add="#addcredit" data-btn-remove=".btn-remove">
+        {% for child in form %}
+            {{ form_row(child, { label: false }) }}
+        {% endfor %}
+    </tbody>
+
+    <div class="text-right">
+        <button id="addcredit" type="button" class="btn btn-info">
+            <span class="fa fa-plus"></span>
+            {{'Add new credit' | trans }}
+        </button>
+    </div>
+{% endblock %}
+
+{% block _project_credit_transactions_entry_widget %}
+    <tr>
+        <td>
+            {{ form_widget(form.transactionType) }}
+        </td>
+        <td>
+            {{ form_widget(form.amount) }}
+        </td>
+        <td>
+            {{ form_widget(form.dateRef) }}
+        </td>
+        <td>
+            {{ form_widget(form.description) }}
+        </td>
+        <td>
+            <button type="button" class="btn btn-link text-danger btn-remove" title="remove" onclick="$(this).parent().parent().remove()">
+                <span class="fa fa-trash"></span>
+            </button>
+        </td>
+    </tr>
+{% endblock %}
+
+
+
+{% block _project_debit_transactions_row %}
+    <tbody id="itens" data-prototype="{{ form_widget(form.vars.prototype)|e('html_attr') }}" data-btn-add="#adddebit" data-btn-remove=".btn-remove">
+        {% for child in form %}
+            {{ form_row(child, { label: false }) }}
+        {% endfor %}
+    </tbody>
+
+    <div class="text-right">
+        <button id="adddebit" type="button" class="btn btn-info">
+            <span class="fa fa-plus"></span>
+            Add new debit
+        </button>
+    </div>
+{% endblock %}
+
+{% block _project_debit_transactions_entry_widget %}
+    <tr>
+        <td>
+            {{ form_widget(form.transactionType) }}
+        </td>
+        <td>
+            {{ form_widget(form.amount) }}
+        </td>
+        <td>
+            {{ form_widget(form.dateRef) }}
+        </td>
+        <td>
+            {{ form_widget(form.description) }}
+        </td>
+        <td>
+            <button type="button" class="btn btn-link text-danger btn-remove" title="remove" onclick="$(this).parent().parent().remove()">
+                <span class="fa fa-trash"></span>
+            </button>
+        </td>
+    </tr>
+{% endblock %}
+
+{% block _asset_recurring_debit_transactions_row %}
+    <tbody id="itens" data-prototype="{{ form_widget(form.vars.prototype)|e('html_attr') }}" data-btn-add="#addrecurringdebit" data-btn-remove=".btn-remove">
+        {% for child in form %}
+            {{ form_row(child, { label: false }) }}
+        {% endfor %}
+    </tbody>
+{% endblock %}
+
+{% block _asset_recurring_debit_transactions_entry_widget %}
+    <tr>
+        <td>
+            {{ form_widget(form.transactionType) }}
+        </td>
+        <td>
+            {{ form_widget(form.amount) }}
+        </td>
+        <td>
+            {{ form_widget(form.dateRef) }}
+        </td>
+        <td>
+            {{ form_widget(form.description) }}
+        </td>
+        <td>
+            <button type="button" class="btn btn-link text-danger btn-remove" title="remove" onclick="$(this).parent().parent().remove()">
+                <span class="fa fa-trash"></span>
+            </button>
+        </td>
+    </tr>
+{% endblock %}
+
+{% block _asset_debit_transactions_row %}
+    <tbody id="itens" data-prototype="{{ form_widget(form.vars.prototype)|e('html_attr') }}" data-btn-add="#adddebit" data-btn-remove=".btn-remove">
+        {% for child in form %}
+            {{ form_row(child, { label: false }) }}
+        {% endfor %}
+    </tbody>
+
+    <div class="text-right">
+        <button id="adddebit" type="button" class="btn btn-info">
+            <span class="fa fa-plus"></span>
+            Add new debit
+        </button>
+    </div>
+{% endblock %}
+
+{% block _asset_debit_transactions_entry_widget %}
+    <tr>
+        <td>
+            {{ form_widget(form.transactionType) }}
+        </td>
+        <td>
+            {{ form_widget(form.amount) }}
+        </td>
+        <td>
+            {{ form_widget(form.dateRef) }}
+        </td>
+        <td>
+            {{ form_widget(form.description) }}
+        </td>
+        <td>
+            <button type="button" class="btn btn-link text-danger btn-remove" title="remove" onclick="$(this).parent().parent().remove()">
+                <span class="fa fa-trash"></span>
+            </button>
+        </td>
+    </tr>
+{% endblock %}
+
+{% block resource_documents_row %}
+    <table class="table border"
+        id="{{ form.vars.id }}" 
+        data-prototype="{{ form_row(form.vars.prototype)|e('html_attr') }}"
+        data-target="tbody"
+        data-btn-add=".btn-add"
+        data-btn-remove=".btn-remove">
+        <thead>
+            <tr>
+                <th>{% trans %}Name{% endtrans %}</th>
+                <th class="text-center"> {{ 'Download' | trans }}</th>
+                <th class="text-center">{{ 'Choose file' | trans }}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for document in form %}
+                {{ form_row(document) }}
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                    <button type="button" class="btn btn-link btn-add" title="Add person">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+{% endblock %}
+
+{% block resource_documents_entry_row %}
+<tr>
+    <td class="w-auto">
+        {{ form_row(form.name, { label: false, attr: { placeholder: 'Name' } }) }}
+    </td>
+    <td class="w-auto text-center">
+        {{ form_row(form.path) }}
+        {% if form.path.vars.data %}
+            <a  class="btn btn-primary pull-right" href="{{ form.path.vars.data }}" target="_blank">
+                <span class="fa fa-download"></span>
+                {{ 'Download file' | trans }}
+            </a>
+        {% endif %}
+        <a class="btn btn-primary pull-right" href="" target="_blank" id="{{ form.vars.id }}_download" style="display:none;">
+                <span class="fa fa-download"></span>
+                {{ 'Download file' | trans }}
+        </a>
+        <img src="{{ asset('images/home/waiting.gif') }}" alt="Wait" id="{{ form.vars.id }}_loading" style="display:none;" />
+    </td>
+    <td class="w-auto text-right">
+        <input type="file" class="document-path" 
+            data-target="#{{ form.vars.id }}_path" 
+            data-loading="#{{ form.vars.id }}_loading"
+            data-download="#{{ form.vars.id }}_download">
+    </td>
+    <td class="pt-2">
+        <button type="button" class="btn btn-link text-danger btn-remove" title="Remove person">
+            <i class="fa fa-trash"></i>
+        </button>
+    </td>
+</tr>
+{% endblock %}
+
+
+{% block _registration_parentInviteCode_row %}
+    <div class="form-group">
+        {{ form_label(form) }}
+        <div class="input-group">
+            {{ form_widget(form) }}        
+        </div>
+        <small>{{ form_help(form) }}</small>
+        <div class="form-error">
+            {{ form_errors(form) }}
+        </div>
+        <a href="{{ path('frontend_subscribe_agent_pre_registration') }}" class="float-right">{{ "Don't have an invite code yet?" | trans }}</a>
+    </div>
+{% endblock %}
+
+{% block locale_translations_row %}
+    <table class="table border"
+        id="{{ form.vars.id }}" 
+        data-prototype="{{ form_row(form.vars.prototype)|e('html_attr') }}"
+        data-target="tbody"
+        data-btn-add=".btn-add"
+        data-btn-remove=".btn-remove">
+        <thead>
+            <tr>
+                <th>{{ 'Source' | trans }}</th>
+                <th class="text-center">{{ 'Target' | trans }}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for translation in form %}
+                {{ form_row(translation) }}
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td></td>
+                <td></td>
+                <td>
+                    {% if form.vars.data | length > 0  %}
+                        {% if form.vars.data[0].locale.defaultLocale %}
+                        <button type="button" class="btn btn-link btn-add" title="Add translation">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+{% endblock %}
+
+{% block locale_translations_entry_row %}
+<tr>
+    <td class="w-auto">
+        {{ form_row(form.source, { label: false, attr: { placeholder: 'Source' } }) }}
+    </td>
+    <td class="w-auto">
+        {{ form_row(form.target, { label: false, attr: { placeholder: 'Target' } }) }}
+    </td>
+    <td class="pt-2">
+    
+    {% if form.parent.vars.data | length > 0  %}
+        {% if form.parent.vars.data[0].locale.defaultLocale %}
+            <button type="button" class="btn btn-link text-danger btn-remove" title="{{ 'Remove translation' | trans }}">
+                <i class="fa fa-trash"></i>
+            </button>
+        {% endif %}
+    {% endif %}
+    </td>
+</tr>
+{% endblock %}

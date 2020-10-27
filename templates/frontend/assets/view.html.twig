@@ -1,0 +1,280 @@
+{% extends 'frontend/base.html.twig' %}
+
+{% set currentPath = absolute_url(path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params'))) %}
+
+{% block body %}
+    {% include 'includes/flashMessages.html.twig' %}
+    
+	<div class="page navbar-offset">
+		<div class="container">
+			<div class="row mt-5 mb-5">
+				<div class="col-lg-8 col-md-6">
+					<div class="py-3 d-flex">
+						<div>
+							<h1 class="mega-title h4 m-0 p-0">{{ entity.name }}</h1>
+						</div>
+					</div>
+					<div>
+						<div id="productCarousel" class="frontend-carousel carousel slide" data-ride="carousel" data-interval="5000">
+							<div class="carousel-inner">
+								{% for photo in entity.photos %}
+									<div class="carousel-item {{ loop.index == 1 ? 'active' : ''  }} h-100">
+										<div class="d-block w-100 h-100" style="background-image: url({{ photo }}/thumb:803*400*inset)"></div>
+									</div>
+								{% endfor %}
+							</div>
+							<div class="layer-1 backdrop-bottom"></div>
+							<a class="carousel-control-prev layer-2" href="#productCarousel" role="button" data-slide="prev">
+								<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+								<span class="sr-only">{% trans %}Previous{% endtrans %}</span>
+							</a>
+							<a class="carousel-control-next layer-2" href="#productCarousel" role="button" data-slide="next">
+								<span class="carousel-control-next-icon" aria-hidden="true"></span>
+								<span class="sr-only">{% trans %}Next{% endtrans %}</span>
+							</a>
+							<ol class="carousel-indicators layer-1 mx-auto">
+								{% for photo in entity.photos %}
+									<li {% if loop.index == 1 %} class="active" {% endif %} data-slide-to="{{ loop.index - 1 }}" data-target="#productCarousel">
+										<div class="d-block w-100 h-100" style="background-image: url({{ photo }}/thumb:70*outbound)"></div>
+									</li>
+								{% endfor %}
+							</ol>
+						</div>
+					</div>
+
+					<div class="pt-3">
+						<ul class="nav nav-tabs">
+							<li class="nav-item mr-1">
+								<a class="nav-link active" id="description-tab" data-toggle="tab" href="#description" role="tab" aria-controls="description" aria-selected="true">{% trans %}Description{% endtrans %}</a>
+							</li>
+							<li class="nav-item mr-1">
+								<a class="nav-link" id="floorplans-tab" data-toggle="tab" href="#floorplans" role="tab" aria-controls="floorplans" aria-selected="true">{% trans %}Floorplans{% endtrans %}</a>
+							</li>
+							<li class="nav-item mr-1">
+								<a class="nav-link" id="map-tab" data-toggle="tab" href="#map" role="tab" aria-controls="map" aria-selected="true">{% trans %}Map & Street View{% endtrans %}</a>
+							</li>
+							<li class="nav-item mr-1">
+								<a class="nav-link" id="schoolchecker-tab" data-toggle="tab" href="#schoolchecker" role="tab" aria-controls="schoolchecker" aria-selected="true">{% trans %}SchoolChecker{% endtrans %}</a>
+							</li>
+							<li class="nav-item mr-1">
+								<a class="nav-link" id="marketinfo-tab" data-toggle="tab" href="#marketinfo" role="tab" aria-controls="marketinfo" aria-selected="true">{% trans %}Market Info{% endtrans %}</a>
+							</li>
+							{% if not entity.documents is empty %}
+								<li class="nav-item mr-1">
+									<a class="nav-link" id="documents-tab" data-toggle="tab" href="#documents" role="tab" aria-controls="documents" aria-selected="true">Documents</a>
+								</li>
+							{% endif %}
+						</ul>
+						<div class="tab-content p-3 border-left border-bottom border-right">
+							<div class="tab-pane active" id="description" role="tabpanel" aria-labelledby="description-tab">
+								<div class="pb-4">
+									<h4 class="h5 text-dark">Key features</h4>
+									<ul>
+										<li>Contemporary two bedroom flat</li>
+										<li>Private development with porter and undergorund parking</li>
+										<li>Reception room with dining space</li>
+										<li>Open-plan integrated kitchen</li>
+										<li>Private balcony with Dock views</li>
+										<li>Master bedroom with fitted wardrobes and en-suite</li>
+										<li>Sleek bathroom with white suite</li>
+										<li>Good-sized second bedroom</li>
+									</ul>
+									<div class="pb-4">
+										<h4 class="h5 text-dark">Full description</h4>
+										<div id="property-html">
+											{{ entity.description | raw }}
+										</div>
+									</div>
+								</div>
+								{{ _self.agent_info(entity) }}
+							</div>
+							<div class="tab-pane" id="floorplans" role="tabpanel" aria-labelledby="floorplans-tab">
+								<div class="pb-2">
+									<div id="floorPlanCarousel" class="frontend-carousel carousel slide" data-interval="false">
+										<div class="carousel-inner">
+											{% for floorPlan in entity.floorPlans %}
+												<div class="carousel-item carousel-image {{ loop.index == 1 ? 'active' : ''  }} h-100">
+													<img  class="d-block h-100" src='{{ floorPlan }}'/>
+												</div>
+											{% endfor %}
+										</div>
+										<ol class="carousel-indicators layer-1 mx-auto">
+											{% for floorPlan in entity.floorPlans %}
+												<li {% if loop.index == 1 %} class="active" {% endif %} data-slide-to="{{ loop.index - 1 }}" data-target="#floorPlanCarousel">
+													<div class="d-block w-100 h-100" style="background-image: url({{ floorPlan }}/thumb:70*outbound)"></div>
+												</li>
+											{% endfor %}
+										</ol>
+									</div>	
+								</div>
+								{{ _self.agent_info(entity) }}
+							</div>
+							<div class="tab-pane" id="map" role="tabpanel" aria-labelledby="map-tab">
+								<div class="pb-2">
+									<div 
+										id="map-view"
+										data-lat="{{ entity.address.lat|default(0) }}"
+										data-lng="{{ entity.address.lng|default(0) }}"
+										style="width: 100%; height: 500px">
+									</div>
+								</div>
+								{{ _self.agent_info(entity) }}
+							</div>
+							<div class="tab-pane" id="schoolchecker" role="tabpanel" aria-labelledby="schoolchecker-tab">
+								<div class="pb-2">
+									<div
+										id="schools-view"
+										data-lat="{{ entity.address.lat|default(0) }}"
+										data-lng="{{ entity.address.lng|default(0) }}"
+										style="width: 100%; height: 500px">
+									</div>
+								</div>
+								{{ _self.agent_info(entity) }}
+							</div>
+							<div class="tab-pane" id="marketinfo" role="tabpanel" aria-labelledby="marketinfo-tab">
+								{{ _self.agent_info(entity) }}
+							</div>
+							{% if not entity.documents is empty %}
+							<div class="tab-pane" id="documents" role="tabpanel" aria-labelledby="documents-tab">
+								<ul>
+									{% for document in entity.documents %}
+										<li><a href="{{ document.path }}" target="_blank">{{ document.name }}</a></li>
+									{% endfor %}
+								</ul>
+							</div>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4 col-md-6">
+					<div class="pt-3 pb-5">
+						<a href="#">{% trans %}See more properties like this one{% endtrans %}
+							<i class="fa fa-chevron-right"></i>
+						</a>
+					</div>
+					<div class="container-box mb-3 p-0">
+						<div class="seller p-2">
+							<div class="text-center p-3">
+								<img src="{{ entity.agent.user.avatar|default(asset('images/nobody_m.original.jpg')) }}" class="img-thumbnail w-100">
+							</div>
+							<p class="text-center">{% trans %}My name is{% endtrans %}
+								<a href="#">{{ entity.agent.user.name }}</a>. {% trans %}I Welcome you!{% endtrans %}</p>
+                                <p class="text-center">{% trans %}I will be you personal agent for this entity.{% endtrans %}</p>
+						</div>
+						<div class="request p-3 border-top">
+                            <div class="row">
+                                <div class="col-md-12">
+									<p>
+										<i class="fa fa-map-marker"></i>&nbsp;{{ entity.address ? entity.address.description: "" }}
+									</p>
+							 	</div>
+                            </div>
+						</div>
+						<div class="request p-3 border-top">
+                            <div class="row">
+                                <div class="col-md-6 ">
+                                    {% trans %}Market value{% endtrans %}
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <strong class="h5">£{{ entity.marketValue.amount | number_format(2, '.', ',')}}</strong>
+                                </div>
+                            </div>
+						</div>
+						<div class="request p-3 border-top">
+                            <div class="row">
+                                <div class="col-md-6">
+                                	{% trans %}Equity available{% endtrans %}
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <strong class="h5">£{{ entity.lastEquity.price.amount  | number_format(2, '.', ',')}}</strong>
+                                </div>
+                            </div>
+						</div>
+						<div class="request p-3 border-top">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {% trans %}Gross yield{% endtrans %}
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <strong class="h5">{{ (entity.grossYield * 100) | number_format(2, '.', ',')}}%</strong>
+                                </div>
+                            </div>
+						</div>
+						<div class="request p-3 border-top">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {% trans %}Year Income{% endtrans %}
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <strong class="h5">£{{ entity.yearlyIncome | number_format(2, '.', ',')}}</strong>
+                                </div>
+                            </div>
+						</div>
+						<div class="request text-center p-3 border-top">
+                        	<div class="px-2 pb-1 pt-3">
+								<a href="#{{ is_granted('ROLE_USER') ? 'book-a-view-modal' : 'sign-in-modal' }}" class="btn btn-primary btn-block" data-toggle="modal">
+									{% trans %}Book a meeting{% endtrans %}
+								</a>
+							</div>
+							<div class="px-2 pb-1 pt-3">
+								<a href="{{ path('dashboard_investor_assets_index') }}" class="btn btn-primary btn-block">
+									 {% trans %}Invest now{% endtrans %}
+								</a>
+							</div>
+						</div>
+                        <div class="request p-3 border-top">
+							<a href="#" class="text-dark">
+								<i class="fa fa-heart mr-2"></i>
+								{% trans %}Add to favorites{% endtrans %}
+							</a>
+						</div>
+					</div>
+					{% include 'frontend/includes/social-media.html.twig' %}
+				</div>
+			</div>
+			<p class="text-muted">{% trans %}To learn more about the property purchase process, please refer to our{% endtrans%}
+				<a href="#">{% trans %}Terms and Conditions{% endtrans %}</a>.
+			</p>
+		</div>
+	</div>
+    
+    {{ render(controller('App\\Controller\\Frontend\\BookingController::modal', { resource: entity.id, livingInfo: false })) }}
+{% endblock %}
+
+{% macro agent_info(entity) %}
+	<div class="bg-light p-2">
+		<p class="p-2">
+			<strong>{% trans %}To view this property or request more details, contact:{% endtrans %}</strong>
+		</p>
+		<div class="d-flex">
+			<div class="p-2">
+				<img src="{{ entity.agent.user.avatar|default(asset('images/nobody_m.original.jpg')) }}" alt="" style="width: 100px">
+			</div>
+			<div class="p-2">
+				<a title="{{ entity.agent.user.name }}" rel="nofollow" href="#">
+					<strong>{{ entity.agent.user.name }}</strong>
+				</a>
+				<address class="pad-0">{{ entity.agent.user.address }}</address>
+				<a href="tel:{{ entity.agent.user.phone }}" class="branch-telephone-number">
+					<strong>{{ entity.agent.user.phone }}</strong>
+				</a>
+			</div>
+		</div>
+	</div>
+{% endmacro %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .nav-primary-color {
+            background: #000;	
+        }
+    </style>
+    {{ encore_entry_link_tags('assets/view') }}
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('assets/view') }}
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCpf4oQdgBGb-AK1Ak2tVcrqQDI03zeKI&libraries=places&callback=initMaps" async defer></script>
+{% endblock %}

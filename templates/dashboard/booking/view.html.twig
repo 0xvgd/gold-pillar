@@ -1,0 +1,143 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}{% trans %}Booking{% endtrans %} | {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    <a href="{{path('dashboard_booking_index')}}">{% trans %}Booking{% endtrans %}</a>
+                </li>
+            </ol>
+        </nav>
+    </div>
+    <header role="heading">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-sm-6 col-xs-6">
+                    <h1 class="h2">{% trans %}Booked views{% endtrans %}</h1>
+                    <p class="hidden-xs">{% trans %}See your booked views{% endtrans %}</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <fieldset class="section">
+        <div class="container">
+            <div class="card mb-3">
+                <div class="card-header">
+                    {% trans %}Calendar Event{% endtrans %}
+                </div>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th>{{ 'Date' | trans }}</th>
+                            <td>
+                                {{ view.event.date | date('d/m/Y')}}
+                                <b>Start:</b>{{ view.event.start | date('H:i')}}
+                                 <b>End:</b>{{ view.event.end | date('H:i')}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            {% trans %}Customer{% endtrans %}
+                        </div>
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <th>{% trans %}Name{% endtrans %}</th>
+                                    <td>
+                                        {{ view.customer.name }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>{% trans %}Phone{% endtrans %}</th>
+                                    <td>
+                                        {{ view.customer.phone }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>{% trans %}E-mail{% endtrans %}</th>
+                                    <td>
+                                        {{ view.customer.email }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            {% trans %}Agent{% endtrans %}
+                        </div>
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <th>{% trans %}Name{% endtrans %}</th>
+                                    <td>
+                                        {{ view.agent.user.name }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>{% trans %}Phone{% endtrans %}</th>
+                                    <td>
+                                        {{ view.agent.user.phone }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>{% trans %}E-mail{% endtrans %}</th>
+                                    <td>
+                                        {{ view.agent.user.email }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-header">
+                    {% trans %}Property{% endtrans %}
+                </div>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th>{% trans %}Name{% endtrans %}</th>
+                            <td>
+                                {{ view.resource.name }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>{% trans %}Tag{% endtrans %}</th>
+                            <td>
+                                {{ view.resource.tag }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>{% trans %}Address{% endtrans %}</th>
+                            <td>
+                                {{ view.resource.address }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </fieldset>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

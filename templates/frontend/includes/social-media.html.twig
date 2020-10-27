@@ -1,0 +1,31 @@
+<div class="container-box mb-3 p-2">
+    <div class="px-2">
+        <p>{% trans %}Share this property via{% endtrans %}</p>
+    </div>
+    <div class="d-flex justify-content-between">
+        <div class="p-3 text-center">
+            <a target="_blank" href="https://api.whatsapp.com/send?text=Hi%21%20I%20found%20this%20property%20at%20Gold%20Pillar.%20Take%20a%20look%3A%0A{{ currentPath }}">
+                <i class="fab fa-whatsapp fa-2x text-secondary"></i>
+                <small class="text-dark">WhatsApp</small>
+            </a>
+        </div>
+        <div class="p-3 text-center">
+            <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{ currentPath }};src=sdkpreparse">
+                <i class="fab fa-facebook-f fa-2x text-secondary"></i>
+                <small class="text-dark">Facebook</small>
+            </a>
+        </div>
+        <div class="p-3 text-center">
+            <a target="_blank" href="mailto:?subject=Amazing%20property%20at%20Gold%20Pillar&body=Hi%21%20I%20found%20this%20property%20at%20Gold%20Pillar.%20Take%20a%20look%3A%0A{{ currentPath }}">
+                <i class="fa fa-envelope fa-2x text-secondary"></i>
+                <small class="text-dark">Email</small>
+            </a>
+        </div>
+        <div class="p-3 text-center">
+            <a target="_blank" href="https://instagram.com">
+                <i class="fab fa-instagram fa-2x text-secondary"></i>
+                <small class="text-dark">Instagram</small>
+            </a>
+        </div>
+    </div>
+</div>

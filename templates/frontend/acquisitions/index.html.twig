@@ -1,0 +1,16 @@
+{% extends 'frontend/base.html.twig' %}
+{% block title %}
+    Acquisitions | {{ parent() }}
+{% endblock %}
+
+{% set currentPath = absolute_url(path(app.request.attributes.get('_route'),
+                       app.request.attributes.get('_route_params'))) %}
+
+{% block body %}
+    <div class="page" id="app" v-cloak></div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('sales') }}
+{% endblock %}

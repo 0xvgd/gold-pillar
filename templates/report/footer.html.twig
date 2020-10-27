@@ -1,0 +1,11 @@
+{%- block footer -%}
+    <p>
+        Printed 
+        {% if user %}
+            by <strong>{{ user.name }}</strong>
+        {% else %}
+            by <strong>system</strong>
+        {% endif %}
+         on {{ now|format_datetime() }}
+    </p>
+{%- endblock -%}

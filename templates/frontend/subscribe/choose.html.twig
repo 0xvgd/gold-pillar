@@ -1,0 +1,61 @@
+{% extends 'frontend/base.html.twig' %}
+
+{% block title %}Subscribe | {{ parent() }}{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<style>body { background-color: #333; }</style>
+{% endblock %}
+
+{% block body %}
+	<div class="page navbar-offset">
+		<hr>
+		<h1 class="mega-title text-center">{{ 'Create account' | trans }}</h1>
+		<section class="pricing py-5">
+			<div class="container">
+				<div class="card-deck">
+					<div class="card mb-5 mb-lg-0">
+						<div class="card-body">
+							<h5 class="text-uppercase text-center mb-3">{{ 'POTENTIAL TENANT' | trans }}</h5>
+							<img class="d-block w-100" src="{{ asset('images/subscription/tenant.jpg') }}"></img>
+							<h5 class="card-subtitle text-uppercase text-center">{{ 'Register your tenant account for free' | trans }}</h5>
+							<hr>
+							<a href="{{ path('frontend_subscribe_tenant') }}" class="button-default  btn-block text-center button-filled">{{ 'Sign up Here' | trans }}</a>
+						</div>
+					</div>
+					<div class="card mb-5 mb-lg-0">
+						<div class="card-body">
+							<h5 class="text-uppercase text-center mb-3">{{ 'SALES EXECUTIVE' | trans }}</h5>
+							<img class="d-block w-100" src="{{ asset('images/subscription/agent.jpg') }}"></img>
+							<h5 class="card-subtitle text-uppercase text-center">{{ 'Become a property agent' | trans }}</h5>
+							<hr>
+							<a href="{{ path('frontend_subscribe_agent') }}" class="button-default  btn-block text-center button-filled">{{'Sign up Here' | trans }}</a>
+						</div>
+					</div>
+					<div class="card mb-5 mb-lg-0">
+						<div class="card-body">
+							<h5 class="text-uppercase text-center mb-3">{{ 'INVESTOR CLUB' | trans }}</h5>
+								<img class="d-block w-100" src="{{ asset('images/subscription/investor.jpg') }}"></img>
+							<h5 class="card-subtitle text-uppercase text-center">{{ 'Invest in projects and assets' | trans }}</h5>
+							<hr>
+							<a href="{{ path('frontend_subscribe_investor') }}" class="button-default  btn-block text-center button-filled">{{ 'Sign up Here' | trans }}</a>
+						</div>
+					</div>
+					<div class="card">
+						<div class="card-body">
+							<h5 class="text-uppercase text-center mb-3">{{ 'BROKER' | trans }}</h5>
+								<img class="d-block w-100" src="{{ asset('images/subscription/broker.jpg') }}"></img>
+							<h5 class="card-subtitle text-uppercase text-center">{{ 'Register your profitable project' | trans }}</h5>
+							<hr>
+							<a href="{{ path('frontend_subscribe_broker') }}" class="button-default  btn-block text-center button-filled">{{ 'Sign up Here' | trans }}</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+{% endblock %}

@@ -1,0 +1,101 @@
+{% extends 'frontend/base.html.twig' %}
+
+{% set currentPath = absolute_url(path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params'))) %}
+
+{% block body %}
+	{% include 'includes/flashMessages.html.twig' %}
+
+	<div class="page navbar-offset">
+        <div class="container">
+            <div class="py-4">
+                <h1>My reserve</h1>
+
+                {% if validate is defined and validate is not empty %}
+                    <div class="alert alert-{{ validate['Notification']['Type'] == 'Success' ? 'success' : 'danger'  }}">
+                        {{ render(controller(validate['responsePage'], { 'payzoneGateway' : payzoneGateway, 'validate': validate })) }}
+                    </div>
+                {% endif %}
+
+                <div class="card mb-3">
+                    <div class="row no-gutters">
+                        <div class="col-md-3">
+                            <img src="{{ accommodation.mainPhoto }}" class="card-img" alt="">
+                        </div>
+                        <div class="col-md-9">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ accommodation.name }}</h5>
+                                <p class="card-text">{{ accommodation.address }}</p>
+                                <p class="card-text">
+                                    <small class="text-muted">
+                                        <b>Tag:</b> {{ accommodation.tag }}
+                                    </small>
+                                    <br>
+                                    <small class="text-muted">
+                                        <b>Agent:</b> {{ accommodation.agent }}
+                                    </small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 class="mt-4">{% trans %}How many people want to move in{% endtrans %}</h3>
+
+                <div class="my-4">
+                    <table class="table border">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>{% trans %}Name{% endtrans %}</th>
+                                <th>{% trans %}Phone{% endtrans %}</th>
+                                <th>{% trans %}E-mail{% endtrans %}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for person in reserve.people %}
+                                <tr>
+                                    <td>
+                                        <span class="mt-2 counter badge badge-secondary">{{ loop.index }}</span>
+                                    </td>
+                                    <td>{{ person.name }}</td>
+                                    <td>{{ person.phone }}</td>
+                                    <td>{{ person.email }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/payzone_gateway.css?v2') }}">
+    <style>
+        .counter {
+            font-size: 11pt;
+        }
+
+        .modal-dialog {
+            max-width: 371px;
+            max-height: 371px;
+        }
+
+        .modal-body {
+            padding: 0;
+        }
+
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(window).on('load',function(){
+            $('#order-modal').modal('show');
+        });
+    </script>
+{% endblock %}

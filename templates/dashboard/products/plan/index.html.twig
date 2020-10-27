@@ -1,0 +1,114 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %} Plans | {{ parent() }} {% endblock %}
+
+{% block body %}
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Plans</li>
+            </ol>
+        </nav>
+    </div>
+
+    <header role="heading">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-sm-6 col-xs-6">
+                    <h2>
+                        Plans
+                    </h2>
+                    <p class="hidden-xs">Avaliable plans</p>
+                </div>
+                <div class="col-md-8 col-sm-6 col-xs-6 btn-action">
+                    {{ form_start(searchForm, { attr: { 'data-type': 'basic', 'id': 'search-form' } }) }}
+                    <div class="col-xs-8">
+                        <div class="form-group">
+                            <div class="input-group">
+                                {{ form_widget(searchForm.description, { attr: {'v-on:change':'search(true)', 'id': 'search-primary' } }) }}
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-primary">
+                                        <span class="fa fa-search"></span> 
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-4">
+                        <a href="{{ path('dashboard_product_plan_new') }}" class="btn btn-danger pull-right">
+                            <span class="fa fa-plus"></span> 
+                            {% trans %}New{% endtrans %} Plan
+                        </a>
+                    </div>
+                    {{ form_end(searchForm) }}
+                </div>
+            </div>
+        </div>
+    </header>
+    <fieldset class="section mt-3">
+        <div class="container">
+            <div class="row">
+                <div class="masonry-item col-md-12">
+                    {% include 'includes/flashMessages.html.twig' %}
+                    <div class="bd bgc-white">
+                        <div class="table-responsive">
+                            <table id="datatable" class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="bdwT-0">Id</th>
+                                        <th class="bdwT-0">{% trans %}Description{% endtrans %}</th>
+                                        <th class="bdwT-0">&nbsp;</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        datatable = $('#datatable').dataTable({
+            ajax: '{{ path("dashboard_product_plan_search")}}',
+            processing: true,
+            serverSide: true,
+            searching: false,
+            columns: [
+                {
+                    data: 'id'
+                },
+                {
+                    data: 'description'
+                },
+                {
+                    data: 'id',
+                    className: 'text-right',
+                    render: function (id) {
+                        return '<a href="{{ path("dashboard_product_plan_index")}}' + id + '" class="btn btn-default" title="Edit"><span class="fas fa-pen"></span></a>';
+                    }
+                }
+            ]
+        })
+                .on('preXhr.dt', function (e, settings, data) {
+                    $('#search-form').each(function (i, e) {
+                        var form = $(e),
+                                type = form.data('type');
+                        data.search[type] = form.serialize();
+                    });
+                })
+                .on('xhr.dt', function (e, settings, data) {
+                    $('[type=submit]').prop('disabled', false);
+                });
+
+        $('#search-form').on('submit', function () {
+            datatable.DataTable().ajax.reload();
+
+            return false;
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,335 @@
+@import 'spec/settings/index';
+@import 'spec/tools/index';
+@import 'spec/index';
+@import 'vendor/index';
+
+.tab-pane {
+    padding-top: 10px;
+}
+
+.default-margin-top {
+    margin-top: 10px !important;
+}
+
+.logo-size {
+    margin-top: 2px;
+    margin-left: 10px;
+    width: 250px;
+    height: auto;
+}
+
+.container {
+    position: relative;
+}
+
+#logo-gold-pillar-left {
+    margin-top: 10px;
+    width: 150px;
+    margin-left: 20px;
+    position: absolute;
+    clip: rect(0, 23px, 35px, 0);
+    /* clip: shape(top, right, bottom, left); NB 'rect' is the only available option */
+}
+
+#logo-gold-pillar-right {
+    margin-top: 10px;
+    width: 150px;
+    margin-left: 0px;
+    padding-left: 0px !important;
+    position: absolute;
+    left: 46px;
+    clip: rect(0, 200px, 100px, 23px);
+    /* clip: shape(top, right, bottom, left); NB 'rect' is the only available option */
+}
+
+a {
+    color: #946b00;
+}
+
+a:hover {
+    color: #ca990d;
+}
+
+.img-property {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    width: auto !important;
+    height: 150px !important;
+    margin-bottom: 5px;
+}
+
+.resource-photo-loading {
+    position:absolute;
+    left:45px;
+    top:121px;
+}
+
+.cropper-img-container {
+    width: auto;
+    height: 450px;
+}
+
+.modal.in .modal-dialog {
+    padding-top: 10% !important;
+}
+
+.balance-transactions .property-name {
+    font-size: 1.33333em;
+    line-height: 1.33333em;
+    margin-bottom: 4px;
+    width: 225px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.balance-transactions .property-price {
+    margin-bottom: 7px;
+}
+
+.balance-transactions .property-fee {
+    margin-bottom: 7px;
+}
+
+.click-to-copy {
+    cursor: pointer
+}
+
+.click-to-copy.no-copy {
+    cursor: default
+}
+
+.click-to-copy.show-copy-button {
+    width: calc(100% - 190px);
+    background: #fafafa;
+    padding: 10px 12px;
+    border-radius: 3px;
+    position: relative
+}
+
+.click-to-copy.show-copy-button .click-to-copy-text {
+    max-width: calc(100% - 35px)
+}
+
+.click-to-copy.show-copy-button .Button,
+.click-to-copy.show-copy-button manifold-data-provision-button button,
+.click-to-copy.show-copy-button manifold-data-sso-button button,
+manifold-data-provision-button .click-to-copy.show-copy-button button,
+manifold-data-sso-button .click-to-copy.show-copy-button button {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 175px;
+    transform: translate(calc(100% + 15px), 0);
+    height: 45px;
+    line-height: 45px
+}
+
+.click-to-copy.show-copy-button.inline-button {
+    width: 100%;
+    background: #f1f1f1;
+    min-height: 42px
+}
+
+.click-to-copy.show-copy-button.inline-button .click-to-copy-text {
+    max-width: calc(100% - 70px)
+}
+
+.click-to-copy.show-copy-button.inline-button .Button,
+.click-to-copy.show-copy-button.inline-button manifold-data-provision-button button,
+.click-to-copy.show-copy-button.inline-button manifold-data-sso-button button,
+manifold-data-provision-button .click-to-copy.show-copy-button.inline-button button,
+manifold-data-sso-button .click-to-copy.show-copy-button.inline-button button {
+    height: 32px;
+    line-height: 32px;
+    top: 5px;
+    width: 65px;
+    padding: 0;
+    right: 88px;
+    background-color: #dfdfdf;
+    border-color: #dfdfdf;
+    color: #676767
+}
+
+.click-to-copy.show-copy-button.inline-button:hover .Button,
+.click-to-copy.show-copy-button.inline-button:hover manifold-data-provision-button button,
+.click-to-copy.show-copy-button.inline-button:hover manifold-data-sso-button button,
+manifold-data-provision-button .click-to-copy.show-copy-button.inline-button:hover button,
+manifold-data-sso-button .click-to-copy.show-copy-button.inline-button:hover button {
+    background-color: #cbcbcb
+}
+
+.click-to-copy .copy-loader {
+    position: absolute;
+    top: 10px;
+    left: 10px
+}
+
+.click-to-copy .Icon--arrowDown {
+    color: #0069ff
+}
+
+.click-to-copy .click-to-copy-text.Highlighted {
+    background-color: #0069ff;
+    color: #fff
+}
+
+.click-to-copy .Label {
+    color: #0069ff;
+    display: inline-block;
+    font-size: 13px;
+    line-height: 100%;
+    position: relative;
+    opacity: .999;
+    transition: opacity .2s ease-in-out;
+    top: -1px
+}
+
+.click-to-copy .Label.hidden {
+    opacity: .001
+}
+
+.click-to-copy .Label::after {
+    content: attr(data-label);
+    color: #0069ff;
+    display: inline-block;
+    position: absolute;
+    top: -2px;
+    left: 50%;
+    opacity: .001;
+    text-align: center;
+    transform: translate3d(-50%, 0, 0);
+    -webkit-backface-visibility: hidden;
+    white-space: nowrap
+}
+
+.click-to-copy.inline-button .Label {
+    z-index: 1;
+    position: absolute;
+    right: 23px;
+    top: 15px;
+    color: transparent;
+    pointer-events: none;
+    font-size: .9rem
+}
+
+.click-to-copy.copying .Label::after {
+    animation: floatup .5s ease-in-out
+}
+
+.click-to-copy.copying.inline-button .Label::after {
+    color: #676767
+}
+
+.click-to-copy .Tooltip {
+    top: -21px
+}
+
+.click-to-copy.truncate .click-to-copy-text {
+    max-width: calc(100% - 40px)
+}
+
+
+/* Animações de entrada e saída podem utilizar diferentes  */
+
+
+/* funções de duração e de tempo.                          */
+
+.slide-fade-enter-active {
+    transition: all .3s ease;
+}
+
+.slide-fade-leave-active {
+    transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+
+.slide-fade-enter,
+.slide-fade-leave-to
+/* .slide-fade-leave-active em versões anteriores a 2.1.8 */
+
+{
+    transform: translateX(10px);
+    opacity: 0;
+}
+
+.modal-mask {
+    position: fixed;
+    z-index: 9998;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .5);
+    display: table;
+    transition: opacity .3s ease;
+}
+
+.modal-wrapper {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.container-box {
+    border: 1px solid #e8e8e8;
+    border-radius: 3px;
+    padding: 15px;
+    width: 100%;
+}
+
+.bg-default {
+    background-color: rgb(203, 153, 0);
+    color: white;
+    padding: 5px;
+}
+
+.backdrop-bottom {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 180px;
+    background: linear-gradient(transparent, black);
+}
+
+h3,
+legend {
+    font-family: 'poppins-medium', Arial;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 20px;
+    border-bottom: 1px solid #ccc;
+    letter-spacing: -1px;
+    margin: 0 0 10px;
+    padding-top: 30px;
+    padding-bottom: 8px
+}
+
+
+/* MEDIA QUERY BREAKPOINT */
+
+
+/********* Smartphone ******/
+
+@media screen and (min-width: 120px) and (max-width: 767px) {
+    .col-hidden {
+        display: none !important
+    }
+}
+
+@media(max-width: 768px) {
+    button.full-width {
+        width: 100%;
+    }
+}
+
+.card {
+    .dataTables_length {
+        padding: 1rem;
+    }
+    .dataTables_info {
+        padding: 1rem;
+    }
+    .dataTables_paginate {
+        padding: 1rem;
+    }
+}

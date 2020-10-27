@@ -1,0 +1,22 @@
+{% if not subtitle is defined %}
+    {% set subtitle = '' %}
+{% endif %}
+
+<div class="header-goldpillar">
+    <table>
+        <tr>
+            <td width="20%">
+                <img class="logo" width="200px" src="{{ asset('images/logo-v2.png') }}">
+            </td>
+            <td class="text-center">
+            <h3> {{ subtitle|raw }}</h3>
+            </td>
+            <td width="20%" class="text-right">
+                <a href="javascript:void()" onclick="window.print()" class="hide-on-print">
+                   <i class="fas fa-print"></i>
+                    Print
+                </a>
+            </td>
+        </tr>
+    </table>
+</div>

@@ -1,0 +1,86 @@
+<ul class="sidebar-menu scrollable pos-r">
+	<li class="nav-item">
+		<a class="sidebar-link text-muted" href="{{ path('dashboard_index') }}">
+			<span class="icon-holder">
+				<i class="fas fa-home"></i>
+			</span>
+			<span class="title">Dashboard</span>
+		</a>
+	</li>
+	<li class="nav-item">
+		<a class="sidebar-link" href="{{ path('dashboard_booking_index') }}">
+			<span class="icon-holder">
+				<i class="fas fa-clock"></i>
+			</span>
+			<span class="title">{% trans %}Booking{% endtrans %}</span>
+		</a>
+	</li>
+	<li class="nav-item">
+		<a class="sidebar-link" href="{{ path('dashboard_tenant_offers_index') }}">
+			<span class="icon-holder fa-layers fa-fw">
+				<i class="fas fa-handshake"></i>
+				<i class="shrink-11 fas fa-pound-sign" data-fa-transform="shrink-5 down-15"></i>
+			</span>
+			<span class="title">{% trans %}Offers{% endtrans %}</span>
+		</a>
+	</li>
+
+
+
+	{% if is_granted('ROLE_ADMIN') %}
+		<li class="nav-item dropdown">
+			<a class="dropdown-toggle" href="javascript:void(0);">
+				<span class="icon-holder">
+					<i class="fas fa-shopping-cart"></i>
+				</span>
+				<span class="title">{% trans %}Sales core{% endtrans %}</span>
+				<span class="arrow">
+					<i class="ti-angle-right"></i>
+				</span>
+			</a>
+			<ul class="dropdown-menu">
+				<li class="nav-item">
+					<a class="sidebar-link" href="{{ path('dashboard_sales_properties_index') }}">
+						<span class="icon-holder">
+							<i class="fas fa-city"></i>
+						</span>
+						<span class="title">{% trans %}Properties{% endtrans %}</span>
+					</a>
+				</li>
+			</ul>
+		</li>
+	{% endif %}
+	
+		<li class="nav-item dropdown">
+			<a class="dropdown-toggle" href="javascript:void(0);">
+				<span class="icon-holder">
+					<i class="fas fa-truck-loading"></i>
+				</span>
+				<span class="title">{% trans %}Renting core{% endtrans %}</span>
+				<span class="arrow">
+					<i class="ti-angle-right"></i>
+				</span>
+			</a>
+			<ul class="dropdown-menu">
+				<li class="nav-item">
+					<a class="sidebar-link" href="{{ path('dashboard_renting_reserves_index') }}">
+						<span class="icon-holder">
+							<i class="fas fa-city"></i>
+						</span>
+						<span class="title">{% trans %}Reserves{% endtrans %}</span>
+					</a>
+				</li>
+			</ul>
+		</li>
+
+	{% if is_granted('ROLE_PREVIOUS_ADMIN') %}
+		<li class="nav-item mT-30 actived">
+			<a class="sidebar-link" href="{{ path('dashboard_index', {'_switch_user': '_exit'}) }}">
+				<span class="icon-holder">
+					<i class="fas fa-user-secret"></i>
+				</span>
+				<span class="title">Exit impersonation</span>
+			</a>
+		</li>
+	{% endif %}
+</ul>

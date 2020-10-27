@@ -1,0 +1,44 @@
+<?php
+
+namespace App\Form\Dashboard\Project;
+
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+/**
+ * ProjectCreditType.
+ */
+class ProjectCreditType extends AbstractType
+{
+    /**
+     * @var EntityManagerInterface
+     */
+    private $em;
+
+    public function __construct(
+        EntityManagerInterface $em
+    ) {
+        $this->em = $em;
+    }
+
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('transactions', CollectionType::class, [
+                'required' => false,
+                'label' => 'Transactions',
+                'entry_type' => ProjectNoteItemType::class,
+                'by_reference' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+            ]);
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([]);
+    }
+}

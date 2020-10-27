@@ -1,0 +1,64 @@
+{% set route = app.request.get('_route') %}
+
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav-content" aria-controls="nav-content" aria-expanded="false" aria-label="Toggle navigation">
+	<span class="navbar-toggler-icon"></span>
+</button>
+
+<!-- Brand -->
+<a class="navbar-brand" href="{{ path('app_home') }}"><img id="navbar-logo" alt="Gold Pillar" src="{{ asset('images/logo-v2.png') }}"></a>
+
+<!-- Links -->
+<div class="collapse navbar-collapse" id="nav-content">
+	<ul class="nav navbar-nav ml-auto">
+		<li class="nav-item">
+			<a class="nav-link nav-link-group {{ app.request.get('_route') starts with 'app_sales_' ? 'nav-link-active' }}" href="{{ path('app_sales_index') }}">
+				{% trans %}Buying{% endtrans %}
+			</a>
+			&
+			<a class="nav-link nav-link-group {{ app.request.get('_route')  starts with 'app_renting_' ? 'nav-link-active' }}" href="{{ path('app_renting_index') }}">
+				{% trans %}Renting{% endtrans %}
+			</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link nav-link-group {{ app.request.get('_route') starts with 'app_selling_' ? 'nav-link-active' }}" href="{{ path('app_selling_index') }}">
+				{% trans %}Selling{% endtrans %} 
+			</a>
+			&
+			<a class="nav-link nav-link-group {{ app.request.get('_route')  starts with 'app_letting_' ? 'nav-link-active' }}" href="{{ path('app_letting_index') }}">
+				{% trans %}Letting{% endtrans %}
+			</a>
+		</li>
+		<li class="nav-item nav-item-last">
+			<a class="nav-link nav-link-group {{ app.request.get('_route') starts with 'app_projects_' ? 'nav-link-active' }}" href="{{ path('app_projects_index') }}">
+				{% trans %}Projects{% endtrans %}
+			</a>
+			&
+			<a class="nav-link nav-link-group {{ app.request.get('_route') starts with 'app_assets_' ? 'nav-link-active' }}" href="{{ path('app_assets_index') }}">
+				{% trans %}Assets{% endtrans %}
+			</a>
+		</li>
+		{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+			<li class="nav-item pt-2">
+				<a href="{{ path('logout') }}" class="button-default button-clear">
+					{% trans %}LOGOUT{% endtrans %}
+				</a>
+			</li>
+			<li class="nav-item pt-2">
+				<a href="{{ path('dashboard_index') }}" class="button-default button-filled">
+					{% trans %}DASHBOARD{% endtrans %}
+				</a>
+			</li>
+		{% else %}
+			<li class="nav-item pt-2">
+				<a href="{{ path('frontend_subscribe_choose') }}" class="button-default button-clear">
+					{% trans %}SIGN UP{% endtrans %}
+				</a>
+			</li>
+			<li class="nav-item pt-2">
+				<a href="{{ path('dashboard_login') }}" class="button-default button-filled">
+					{% trans %}LOGIN{% endtrans %}
+				</a>
+			</li>
+		{% endif %}
+	</ul>
+</div>

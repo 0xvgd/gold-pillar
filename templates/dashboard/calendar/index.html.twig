@@ -1,0 +1,139 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}{{ 'Calendar' | trans }} / {{ 'My Agenda' | trans }} | {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">{{ 'Calendar' | trans }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ 'My Agenda' | trans }}</li>
+            </ol>
+        </nav>
+    </div>
+    <header role="heading">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-sm-6 col-xs-6">
+                    <h1 class="h2">{{ 'My Agenda' | trans }}</h1>
+                    <p class="hidden-xs">{{ 'See your calendar events' | trans }}</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <fieldset class="section">
+        <div class="container">
+            <div id="calendar" data-feed-url="{{ path('dashboard_calendar_events') }}"></div>
+        </div>
+    </fieldset>
+
+    <div id="view-event-modal" class="modal fade" id="remove-modal" tabindex="-1" role="dialog">
+        <form v-on:submit.prevent="removeEvent">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Event</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body p-0">
+                        <table class="table m-0">
+                            <tbody v-if="event">
+                                <tr>
+                                    <th>Type</th>
+                                    <td v-text="event.type.label"></td>
+                                </tr>
+                                <tr v-if="view">
+                                    <th>Property</th>
+                                    <td>
+                                        <a v-bind:href="'{{ path('app_resources_index') }}' + view.resource.id" v-text="view.resource.name" target="_blank"></a>
+                                    </td>
+                                </tr>
+                                <tr v-if="!view">
+                                    <th>Title</th>
+                                    <td v-text="event.title"></td>
+                                </tr>
+                                <tr v-if="!view">
+                                    <th>{{ 'Description' | trans }}</th>
+                                    <td v-text="event.description"></td>
+                                </tr>
+                                <tr>
+                                    <th>Date/time</th>
+                                    <td>
+                                        <span v-text="event.date"></span>,
+                                        <span v-if="event.allDay">all day</span>
+                                        <span v-if="!event.allDay">
+                                            <span v-text="event.start"></span> - <span v-text="event.end"></span>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Participants</th>
+                                    <td>
+                                        <div v-for="user in event.participants" class="pb-3">
+                                            <img width="24" v-bind:src="user.avatar" v-if="user.avatar">
+                                            <img width="24" src="{{ asset('images/nobody_m.original.jpg') }}" v-if="!user.avatar">
+                                            <span v-text="user.name"></span>
+                                            <br>
+                                            <a v-bind:href="'tel:' + user.phone" v-text="user.phone"></a> | <a v-bind:href="'mailto:' + user.email" v-text="user.email"></a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-danger">Remove event</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ 'Close' | trans }}</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div id="new-event-modal" class="modal fade" id="remove-modal" tabindex="-1" role="dialog">
+        {{ form_start(form, { 'attr': { 'data-parsley-validate': 'true' } }) }}
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ 'New event' | trans }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        {{ form_row(form.type) }}
+                        {{ form_row(form.title) }}
+                        {{ form_row(form.description) }}
+                        {{ form_row(form.date) }}
+                        {{ form_row(form.allDay) }}
+                        <div id="time-selection" class="row">
+                            <div class="col-6">
+                                {{ form_row(form.startTime) }}
+                            </div>
+                            <div class="col-6">
+                                {{ form_row(form.endTime) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">{{ 'Add event' | trans }}</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ 'Close' | trans }}</button>
+                    </div>
+                </div>
+            </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('dashboard/calendar') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('dashboard/calendar') }}
+{% endblock %}

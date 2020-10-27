@@ -1,0 +1,54 @@
+<div class='payzone-tranfsaction-results'>
+	<div class='payzone-results-section {{ validate["Notification"]["Class"] }}'>
+		{% if (validate["Notification"]["Type"] == constant('App\\Utils\\TakePayments\\Gateway\\Constants\\PayzoneResponseOutcomes::DUPLICATE') ) %}
+			<p class='payzone-results-sub-header'>
+				{{ validate["Notification"]["Title"] }}
+			</p>
+			<p>
+				{{  validate["Notification"]["Message"] }}
+			</p>
+			<p class='payzone-results-details'>
+				Previous Response:
+				{{ validate["Response"]["PreviousResponse"]["PreviousMessage"] }}
+			</p>
+		{% else %}
+			<p class='payzone-results-sub-header'>
+				{{ validate["Notification"]["Title"] }}
+			</p>
+			<p>
+				{{ validate["Notification"]["Message"] }}
+			</p>
+			<p class='payzone-results-details'>
+				{{ validate["Response"]["Message"] }}
+			</p>
+			{% if( validate["Notification"]["Type"] == constant('App\\Utils\\TakePayments\\Gateway\\Constants\\PayzoneResponseOutcomes::ERROR') or validate["Notification"]["Type"] == constant('App\\Utils\\TakePayments\\Gateway\\Constants\\PayzoneResponseOutcomes::UNKNOWN')) %}
+				<p class='payzone-results-details'>
+					{{ validate["Response"]["ErrorMessages"] }}
+				</p>
+			{% endif %}
+        {% endif %}
+		</div>
+		{% if ( payzoneGateway.orderDetails and not(validate["Notification"]["Type"] == constant('App\\Utils\\TakePayments\\Gateway\\Constants\\PayzoneResponseOutcomes::THREED'))) %}
+			<hr>
+			<div class='payzone-results-section'>
+				<p class='payzone-results-sub-header'>
+					Order Details
+				</p>
+				<p class='payzone-results-details'>
+					Order ID:
+					{{ validate["Order"]["OrderID"] }}
+				</p>
+				<p class='payzone-results-details'>
+					Amount:
+					{{ validate["Order"]["Amount"] }}
+					{{ validate["Order"]["TransactionType"] == constant('App\\Utils\\TakePayments\\Gateway\\Constants\\TransactionType::PREAUTH') and validate["Notification"]["Type"]==constant('App\\Utils\\TakePayments\\Gateway\\Constants\\PayzoneResponseOutcomes::SUCCESS') ? " (Pre-authorised)": "" }}
+				</p>
+				{% if (validate["Notification"]["Type"] != "Refund")  %}
+					<p class='payzone-results-details'>
+						Description:
+						{{ validate["Order"]["OrderDescription"] }}
+					</p>
+				{% endif %}
+			</div>
+		{% endif %}
+	</div>

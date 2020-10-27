@@ -1,0 +1,318 @@
+{% extends 'frontend/base.html.twig' %}
+
+{% set currentPath = absolute_url(path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params'))) %}
+
+{% block body %}
+	{% include 'includes/flashMessages.html.twig' %}
+
+	<div class="page navbar-offset">
+		<div class="container">
+			<div class="row mt-5 mb-5">
+				<div class="col-lg-8 col-md-6">
+					<div class="py-3 d-flex">
+						<div>
+							<h1 class="mega-title h4 m-0 p-0">{{ entity.name }}</h1>
+						</div>
+					</div>
+					<div>
+						{% include 'frontend/includes/carousel.html.twig' %}
+					</div>
+
+					<div class="pt-3">
+						<ul class="nav nav-tabs">
+							<li class="nav-item mr-1">
+								<a class="nav-link active" id="description-tab" data-toggle="tab" href="#description" role="tab" aria-controls="description" aria-selected="true">{{ 'Description'| trans }}</a>
+							</li>
+							<li class="nav-item mr-1">
+								<a class="nav-link" id="floorplans-tab" data-toggle="tab" href="#floorplans" role="tab" aria-controls="floorplans" aria-selected="true">{{ 'Floorplans'| trans }}</a>
+							</li>
+							<li class="nav-item mr-1">
+								<a class="nav-link" id="tenancyinformation-tab" data-toggle="tab" href="#tenancyinformations" role="tab" aria-controls="tenancyinformations" aria-selected="true">Tenancy Information/fee</a>
+							</li>
+							<li class="nav-item mr-1">
+								<a class="nav-link" id="map-tab" data-toggle="tab" href="#map" role="tab" aria-controls="map" aria-selected="true">{{ 'Map & Street View'| trans }}</a>
+							</li>
+							<li class="nav-item mr-1">
+								<a class="nav-link" id="schoolchecker-tab" data-toggle="tab" href="#schoolchecker" role="tab" aria-controls="schoolchecker" aria-selected="true">{{ 'SchoolChecker'| trans }}</a>
+							</li>
+							<li class="nav-item mr-1">
+								<a class="nav-link" id="marketinfo-tab" data-toggle="tab" href="#marketinfo" role="tab" aria-controls="marketinfo" aria-selected="true">{{ 'Market Info'| trans }}</a>
+							</li>
+							{% if not entity.documents is empty %}
+								<li class="nav-item mr-1">
+									<a class="nav-link" id="documents-tab" data-toggle="tab" href="#documents" role="tab" aria-controls="documents" aria-selected="true">{{ 'Documents' | trans }}</a>
+								</li>
+							{% endif %}
+						</ul>
+						<div class="tab-content p-3 border-left border-bottom border-right">
+							<div class="tab-pane active" id="description" role="tabpanel" aria-labelledby="description-tab">
+								<div class="pb-4">
+									<h4 class="h5 text-dark">Key features</h4>
+									<ul>
+										<li>Contemporary two bedroom flat</li>
+										<li>Private development with porter and undergorund parking</li>
+										<li>Reception room with dining space</li>
+										<li>Open-plan integrated kitchen</li>
+										<li>Private balcony with Dock views</li>
+										<li>Master bedroom with fitted wardrobes and en-suite</li>
+										<li>Sleek bathroom with white suite</li>
+										<li>Good-sized second bedroom</li>
+									</ul>
+									<div class="pb-4">
+										<h4 class="h5 text-dark">{{ 'Full description'| trans }}</h4>
+										<div id="property-html">
+											{{ entity.description | raw }}
+										</div>
+									</div>
+								</div>
+								{{ _self.agent_info(entity) }}
+							</div>
+							<div class="tab-pane" id="floorplans" role="tabpanel" aria-labelledby="floorplans-tab">
+								<div class="pb-2">
+									<div id="floorPlanCarousel" class="frontend-carousel carousel slide" data-interval="false">
+										<div class="carousel-inner">
+											{% for floorPlan in entity.floorPlans %}
+												<div class="carousel-item carousel-image {{ loop.index == 1 ? 'active' : ''  }} h-100">
+													<img  class="d-block h-100" src='{{ floorPlan }}'/>
+												</div>
+											{% endfor %}
+										</div>
+										<ol class="carousel-indicators layer-1 mx-auto">
+											{% for floorPlan in entity.floorPlans %}
+												<li {% if loop.index == 1 %} class="active" {% endif %} data-slide-to="{{ loop.index - 1 }}" data-target="#floorPlanCarousel">
+													<div class="d-block w-100 h-100" style="background-image: url({{ floorPlan }}/thumb:70*outbound)"></div>
+												</li>
+											{% endfor %}
+										</ol>
+									</div>	
+								</div>
+								{{ _self.agent_info(entity) }}
+							</div>
+							<div class="tab-pane" id="tenancyinformations" role="tabpanel" aria-labelledby="tenancyinformation-tab">
+								
+							</div>
+							<div class="tab-pane" id="map" role="tabpanel" aria-labelledby="map-tab">
+								<div class="pb-2">
+									<div 
+										id="map-view"
+										data-lat="{{ entity.address.lat|default(0) }}"
+										data-lng="{{ entity.address.lng|default(0) }}"
+										style="width: 100%; height: 500px">
+									</div>
+								</div>
+								{{ _self.agent_info(entity) }}
+							</div>
+							<div class="tab-pane" id="schoolchecker" role="tabpanel" aria-labelledby="schoolchecker-tab">
+								<div class="pb-2">
+									<div
+										id="schools-view"
+										data-lat="{{ entity.address.lat|default(0) }}"
+										data-lng="{{ entity.address.lng|default(0) }}"
+										style="width: 100%; height: 500px">
+									</div>
+								</div>
+								{{ _self.agent_info(entity) }}
+							</div>
+							<div class="tab-pane" id="marketinfo" role="tabpanel" aria-labelledby="marketinfo-tab">
+								{{ _self.agent_info(entity) }}
+							</div>
+							{% if not entity.documents is empty %}
+								<div class="tab-pane" id="documents" role="tabpanel" aria-labelledby="documents-tab">
+									<ul>
+										{% for document in entity.documents %}
+											<li><a href="{{ document.path }}" target="_blank">{{ document.name }}</a></li>
+										{% endfor %}
+									</ul>
+								</div>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4 col-md-6">
+					<div class="pt-3 pb-5">
+						<a href="#">{{ 'See more properties like this one'| trans }}
+							<i class="fa fa-chevron-right"></i>
+						</a>
+					</div>
+					<div class="container-box mb-3 p-0">
+						<div class="seller p-2">
+							<div class="text-center p-3">
+								<img src="{{ entity.agent.user.avatar|default(asset('images/nobody_m.original.jpg')) }}" class="img-thumbnail w-100">
+							</div>
+							<p class="text-center">{{ 'My name is'| trans }}
+								<a href="#">{{ entity.agent.user.name }}</a>. {{ 'I Welcome you!'| trans }}</p>
+                                <p class="text-center">{{ 'I will be you personal agent for this entity.'| trans }}</p>
+						</div>
+						<div class="request p-3 border-top">
+                            <div class="row">
+                                <div class="col-md-12">
+									<p>
+										<i class="fa fa-map-marker"></i>&nbsp;{{ entity.address ? entity.address.description: "" }}
+									</p>
+							 	</div>
+                            </div>
+						</div>
+						<div class="request p-3 border-top {{ (offer and tenant) and offer.tenant.id == tenant.id ? 'offer-declined' : '' }}">
+                            <div class="row">
+                                <div class="col-md-6 ">
+                                    {{ 'Rent'| trans }}
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <strong class="h5">£{{ entity.rent.amount | number_format(2, '.', ',')}}</strong>
+                                </div>
+                            </div>
+						</div>
+						{% if (offer and tenant) and offer.tenant.id == tenant.id %}
+							<div class="request p-3 border-top">
+								<div class="row">
+									<div class="col-md-6">
+										{{ 'Agreed value'| trans }}
+									</div>
+									<div class="col-md-6 text-right">
+										{% if (offer and tenant) and offer.tenant.id == tenant.id %}
+											<strong class="h5">£{{ offer.agreedValue | number_format(2, '.', ',')}}</strong>
+										{% endif %}
+									</div>
+								</div>
+							</div>
+						{% endif %}
+						<div class="request p-3 border-top">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{ 'Deposit'| trans }}
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <strong class="h5">£{{ entity.deposit.amount | number_format(2, '.', ',')}}</strong>
+                                </div>
+                            </div>
+						</div>
+						<div class="request p-3 border-top">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{ 'Contract'| trans }}
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <strong class="h5">{{ entity.terms }} {{ entity.termType }}</strong>
+                                </div>
+                            </div>
+						</div>
+						<div class="request p-3 border-top">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{ 'Let available'| trans }}
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <strong class="h5">{{ entity.letAvailableFor }} {{ entity.letAvailableFor == 1 ? 'person' : 'people'}}</strong>
+                                </div>
+                            </div>
+						</div>
+						<div class="request p-3 border-top">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{ 'Available from'| trans }}
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <strong class="h5">{{ entity.availableAt | format_datetime('short', 'none', locale='en_GB') }}</strong>
+                                </div>
+                            </div>
+						</div>
+						<div class="request p-3 border-top">
+							<a href="#" class="text-dark">
+								<i class="fa fa-heart mr-2"></i>
+								{{ 'Add to favorites'| trans }}
+						</div>
+						<div class="request text-center p-3 border-top">
+							{% if entity.status.value == 'to_rent' %}
+								<div class="px-2 pb-1 pt-3">
+									<a href="#{{ is_granted('ROLE_USER') ? 'book-a-view-modal' : 'sign-in-modal' }}" class="btn btn-primary btn-block" data-toggle="modal">
+										{{ 'Book a view'| trans }}
+									</a>
+								</div>
+								<div class="px-2 pb-1 pt-3">
+									{% if not offer or (tenant and offer.tenant.id == tenant.id ) %}
+										{% if is_granted('ROLE_USER') %}
+											{% if reserve %}
+												<a {% if not is_granted('ROLE_TENANT') %}disabled href="#"{% else %}href="{{ path('dashboard_renting_reserves_view', { id: reserve.id }) }}"{% endif %} class="btn btn-primary btn-block">
+												{{ 'To reserve'| trans }}
+												</a>
+											{% else %}
+												<a {% if not is_granted('ROLE_TENANT') %}disabled href="#"{% else %}href="{{ path('app_renting_reserve', { slug: entity.slug }) }}"{% endif %} class="btn btn-primary btn-block">
+													{{ 'To reserve'| trans }}
+												</a>
+											{% endif %}
+										{% else %}
+											<a href="#sign-in-modal" class="btn btn-primary btn-block" data-toggle="modal">
+												{{ 'To reserve'| trans }}
+											</a>
+										{% endif %}
+									{% endif %}
+								</div>
+								<div class="px-2 pb-1 pt-3">
+									{% if not offer %}
+										<a href="#{{ is_granted('ROLE_USER') ? 'make-an-offer-modal' : 'sign-in-modal' }}" class="btn btn-primary btn-block" data-toggle="modal">
+											{{ 'Make an offer'| trans }}
+										</a>
+									{% endif %}
+									<small class="text-dark">{{ 'to book a view or reserve or make offer, must be registered'| trans }}</small>
+								</div>
+							{% else %}
+								<div class="px-2 pb-1 pt-3">
+									<div class="alert alert-info">
+										<span class="fas fa-info-circle" aria-hidden="true"></span>
+										<span class="sr-only">Info</span>
+										{{ 'This accommodation is'| trans }} {{ entity.status.label }}
+									</div>
+								</div>
+							{% endif %}
+						</div>
+					</div>
+					{% include 'frontend/includes/social-media.html.twig' %}
+				</div>
+			</div>
+			<p class="text-muted">{{ 'To learn more about the property purchase process, please refer to our' | trans }}
+				<a href="#">{{ 'Terms and Conditions'| trans }}</a>.
+			</p>
+		</div>
+	</div>
+
+	{{ render(controller('App\\Controller\\Frontend\\BookingController::modal', { resource: entity.id })) }}
+	{{ render(controller('App\\Controller\\Frontend\\OffersController::modal', { resource: entity.id })) }}
+{% endblock %}
+
+{% macro agent_info(entity) %}
+	<div class="bg-light p-2">
+		<p class="p-2">
+			<strong>{{ 'To view this property or request more details, contact:'| trans }}</strong>
+		</p>
+		<div class="d-flex">
+			<div class="p-2">
+				<img src="{{ entity.agent.user.avatar|default(asset('images/nobody_m.original.jpg')) }}" alt="" style="width: 100px">
+			</div>
+			<div class="p-2">
+				<a title="{{ entity.agent.user.name }}" rel="nofollow" href="#">
+					<strong>{{ entity.agent.user.name }}</strong>
+				</a>
+				<address class="pad-0">{{ entity.agent.user.address }}</address>
+				<a href="tel:{{ entity.agent.user.phone }}" class="branch-telephone-number">
+					<strong>{{ entity.agent.user.phone }}</strong>
+				</a>
+			</div>
+		</div>
+	</div>
+{% endmacro %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<style>
+        .nav-primary-color {
+            background: #000;	
+        }
+    </style>
+	{{ encore_entry_link_tags('renting/view') }}
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('renting/view') }}
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCpf4oQdgBGb-AK1Ak2tVcrqQDI03zeKI&libraries=places&callback=initMaps" async defer></script>
+{% endblock %}

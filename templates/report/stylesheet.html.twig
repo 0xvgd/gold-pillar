@@ -1,0 +1,123 @@
+<style>
+    @page {
+        size: A4;
+        margin: 0;
+        padding: 0;
+    }
+
+    @media all {
+        .header-pmv * {
+            text-align: center;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        .header-custom * {
+            text-align: center;
+        }
+
+        .header-custom h1 {
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: right;
+        }
+    }
+
+    @media screen {
+        body {
+            padding: 2rem 10rem;
+        }
+        
+        article {
+            border-bottom: 2px dashed #ddd;
+        }
+        
+        .show-on-print {
+            display: none;
+        }
+    }
+
+    @media print {
+        html, body {
+            width: 210mm;
+            max-height: 297mm;
+        }
+        
+        article {
+            margin: 0;
+            border: initial;
+            border-radius: initial;
+            width: initial;
+            min-height: initial;
+            box-shadow: initial;
+            background: initial;
+            page-break-after: always;
+        }
+        
+        article,
+        body>header, 
+        body>section, 
+        body>footer {
+            padding: 5mm 10mm;
+        }
+
+        a:after { content:''; }
+        a[href]:after { content: none !important; }
+
+        .hide-on-print {
+            display: none !important;
+        }
+
+        .show-on-print {
+            display: inherit !important;
+        }
+    }
+
+    body {
+        font-size: 10pt;
+    }
+
+    h1 { 
+        font-size: 18pt; 
+    }
+
+    header .header-pmv {
+        border-bottom: 1px solid #999;
+        padding-bottom: 5mm;
+    }
+
+    header .header-pmv img {
+        height: 60px;
+    }
+
+    header .header-pmv p {
+        text-transform: uppercase;
+    }
+
+    header .header-pmv .logo {
+        padding-left: 5mm;
+    }
+
+    header .header-pmv h2 {
+        font-size: 14pt;
+    }
+
+    header .header-custom h1 {
+        font-size: 14pt;
+    }
+
+    header, section, footer {
+        padding: 5mm;
+    }
+
+    table {
+        width: 100%;
+        border: 0;
+    }
+
+    .show-on-print {
+        display: none;
+    }
+</style>

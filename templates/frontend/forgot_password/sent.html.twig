@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="apple-touch-icon" sizes="57x57" href="{{ asset('images/favicon/apple-icon-57x57.png') }}">
+        <link rel="apple-touch-icon" sizes="60x60" href="{{ asset('images/favicon//apple-icon-60x60.png') }}">
+        <link rel="apple-touch-icon" sizes="72x72" href="{{ asset('images/favicon/apple-icon-72x72.png') }}">
+        <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('images/favicon/apple-icon-76x76.png') }}">
+        <link rel="apple-touch-icon" sizes="114x114" href="{{ asset('images/favicon/apple-icon-114x114.png') }}">
+        <link rel="apple-touch-icon" sizes="120x120" href="{{ asset('images/favicon/apple-icon-120x120.png') }}">
+        <link rel="apple-touch-icon" sizes="144x144" href="{{ asset('images/favicon/apple-icon-144x144.png') }}">
+        <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('images/favicon/apple-icon-152x152.png') }}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/favicon/apple-icon-180x180.png') }}">
+        <title>{% block title %}Sign In | Gold pillar {% endblock %}</title>
+        {% block stylesheets %}
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" rel="stylesheets" type="text/css" />
+            {{ encore_entry_link_tags('main') }} 
+            {{ encore_entry_link_tags('login') }}
+        {% endblock %}
+        <style>
+            .alpha-logo {
+                opacity: 0.8;
+                filter: alpha(opacity=80); /* For IE8 and earlier */
+            }
+
+            @-webkit-keyframes sk-scaleout {
+                0% { -webkit-transform: scale(0) }
+                100% {
+                    -webkit-transform: scale(1.0);
+                    opacity: 0;
+                }
+            }
+
+            @keyframes sk-scaleout {
+                0% {
+                    -webkit-transform: scale(0);
+                    transform: scale(0);
+                } 100% {
+                    -webkit-transform: scale(1.0);
+                    transform: scale(1.0);
+                    opacity: 0;
+                }
+            }
+        </style>
+    </head>
+    <body class="app">
+        <div class="peers ai-s fxw-nw h-100vh">
+            <div class="d-n@sm- peer peer-greed h-100 pos-r bgr-n bgpX-c bgpY-c bgsz-cv" style='background-image: url("{{asset('images/home/tulip-original.jpg')}}")'>
+                <div class="pos-a centerXY">
+                    <div class="bgc-white bdrs-50p pos-r alpha-logo" style='width: 220px; height: 220px;'>
+                        <img class="pos-a centerXY"  style='width: 200px; height: auto;' src="{{asset('images/logo-v2.png')}}" alt="">
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 peer pX-40 pY-80 h-100 bgc-white scrollable pos-r" style='min-width: 320px;'>
+                <h4 class="fw-300 c-grey-900 mB-40 text-center">PLEASE CHECK YOUR EMAIL</h4>
+                <div>
+                    <img src="{{ asset('images/home/sent_mail.svg') }}" alt="sent_mail">
+                    <span class="text-center">
+                     <p class="text-center">We've sent a confirmation link to</p>
+                        <p class="text-center"><b>{{ email }}</b></p>
+                     <p class="text-center">Please click on it to create new password.</p>
+
+                      <p class="text-center">
+                        <a href="{{ path('dashboard_index') }}">Click to Login</a>
+                        </p>
+                    </span>
+                </div>
+            </div>
+        </div>
+        {% block javascripts %}
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
+            {{ encore_entry_script_tags('main') }}
+            {{ encore_entry_script_tags('login') }}
+        {% endblock %}
+    </body>
+</html>

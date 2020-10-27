@@ -1,0 +1,78 @@
+<!-- #Total Sales ==================== -->
+<div class='col-md-3'>
+    <div class="layers bd bgc-white p-20">
+        <div class="layer w-100 mB-10">
+            <h6 class="lh-1">Total Sales</h6>
+        </div>
+        <div class="layer w-100">
+            <div class="peers ai-sb fxw-nw">
+                <div class="peer peer-greed">
+                    <span id="sparklinedash"></span>
+                </div>
+                <div class="peer">
+                    <span class="d-ib lh-0 va-m fw-600 bdrs-10em pX-15 pY-15 bgc-green-50 c-green-500">{{ totalSales }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- #Sales commission balance ==================== -->
+<div class='col-md-3'>
+    <div class="layers bd bgc-white p-20">
+        <div class="layer w-100 mB-10">
+            <h6 class="lh-1">Sales commission balance</h6>
+        </div>
+        <div class="layer w-100">
+            <div class="peers ai-sb fxw-nw">
+                <div class="peer peer-greed">
+                    <span id="sparklinedash2"></span>
+                </div>
+                <div class="peer">
+                    <span class="d-ib lh-0 va-m fw-600 bdrs-10em pX-15 pY-15 bgc-green-50 c-green-500">
+                        £{{ salesBalance | number_format(2)}}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- #Referred Agent Bonus Balance ==================== -->
+<div class='col-md-3'>
+    <div class="layers bd bgc-white p-20">
+        <div class="layer w-100 mB-10">
+            <h6 class="lh-1">Referred Agent Bonus Balance</h6>
+        </div>
+        <div class="layer w-100">
+            <div class="peers ai-sb fxw-nw">
+                <div class="peer peer-greed">
+                    <span id="sparklinedash3"></span>
+                </div>
+                <div class="peer">
+                    <span class="d-ib lh-0 va-m fw-600 bdrs-10em pX-15 pY-15 bgc-green-50 c-green-500">
+                        £{{ referredAgentBonus | number_format(2)}}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- #Bounce Rate ==================== -->
+<div class='col-md-3'>
+    <div class="layers bd bgc-white p-20">
+        <div class="layer w-100 mB-10">
+            <h6 class="lh-1">{% trans %}Account balance{% endtrans %}</h6>
+        </div>
+        <div class="layer w-100">
+            <div class="peers ai-sb fxw-nw">
+                <div class="peer peer-greed">
+                    <span id="sparklinedash4"></span>
+                </div>
+                <div class="peer">
+                    <span class="d-ib lh-0 va-m fw-600 bdrs-10em pX-15 pY-15 bgc-blue-50 c-blue-500">
+                        £{{ app.user.account ? app.user.account.balance : 0 | number_format(2)}}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

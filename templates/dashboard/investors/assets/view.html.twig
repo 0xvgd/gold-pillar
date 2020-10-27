@@ -1,0 +1,372 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}
+	{{ 'Assets' | trans }}
+	|
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('css/payzone_gateway.css?v2') }}">
+	<link rel="stylesheet" href="{{ asset('css/creditcard.css') }}">
+	{{ encore_entry_link_tags('investor/view') }}
+{% endblock %}
+
+{% set currentPath = absolute_url(path(app.request.attributes.get('_route'),
+                       app.request.attributes.get('_route_params'))) %}
+
+{% block body %}
+	<div class="container">
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<a href="{{ path('dashboard_index') }}">Dashboard</a>
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<a href="{{path('dashboard_investor_assets_index')}}">{{ 'Assets' | trans }}</a>
+				</li>
+			</ol>
+		</nav>
+	</div>
+	<header role="heading">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4 col-sm-6 col-xs-6"></div>
+				<div class="col-md-8 col-sm-6 col-xs-6 btn-action"></div>
+			</div>
+		</div>
+	</header>
+	<fieldset class="section">
+		<div class="container" id="app">
+			{% include 'includes/flashMessages.html.twig' %}
+			{% if validation is defined and validation is not empty %}
+				<div class="alert alert-{{ validation['Notification']['Type'] == 'Success' ? 'success' : 'danger'  }}">
+					{{ render(controller(validation['responsePage'], { 'payzoneGateway' : payzoneGateway, 'validate': validation })) }}
+				</div>
+			{% endif %}
+			<div class="card mb-3">
+				<div class="card-header">
+					Asset
+				</div>
+				<div class="card-body">
+					<h3 class="card-title">
+						{{ asset.name }}
+						<small>{{ asset.tag }}</small>
+					</h3>
+					<div class="row mt-5">
+						<div class="col-lg-8 col-md-6 item-container">
+							<div class="w-100 bg-default">
+								<strong>{{ 'NEW LISTING' | trans }}</strong>
+							</div>
+							<div id="productCarousel" class="frontend-carousel carousel slide" data-ride="carousel" data-interval="5000">
+								<ol class="carousel-indicators layer-2">
+									{% for photo in asset.photos %}
+										<li data-target="#productCarousel" data-slide-to="0" class="{{ loop.index == 1 ? 'active' : '' }}"></li>
+									{% endfor %}
+								</ol>
+								<div class="carousel-inner">
+									{% for photo in asset.photos %}
+										<div class="carousel-item {{ loop.index == 1 ? 'active' : ''  }}">
+											<img class="d-block w-100" src="{{ photo }}">
+										</div>
+									{% endfor %}
+								</div>
+								<div class="layer-1 backdrop-bottom"></div>
+								<div class="carousel-caption d-none d-md-block layer-2">
+									<h5>{{ 'Great opportunity for students' | trans }}</h5>
+								</div>
+								<a class="carousel-control-prev layer-2" href="#productCarousel" role="button" data-slide="prev">
+									<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+									<span class="sr-only">{{ 'Previous' | trans }}</span>
+								</a>
+								<a class="carousel-control-next layer-2" href="#productCarousel" role="button" data-slide="next">
+									<span class="carousel-control-next-icon" aria-hidden="true"></span>
+									<span class="sr-only">{{ 'Next' | trans }}</span>
+								</a>
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-6 item-container">
+							<div class="container-box mb-5">
+								<div>
+									<p>
+										<i class="fa fa-map-marker"></i>&nbsp;{{ asset.address ? asset.address.description: "" }}
+									</p>
+									<hr>
+								</div>
+								<div class="text-right">
+									<h5>
+										<small>Total Invested</small>
+										£{{ asset.totalInvested.amount | number_format(2, '.', ',')}}
+									</h5>
+									<h5>
+										<small>Available to invest</small>
+										£{{ asset.maxInvestmentValue | number_format(2, '.', ',')}}
+									</h5>
+									{% set pct = 0 %}
+									{% if asset.totalInvested.amount > 0 and asset.lastEquity and asset.lastEquity.price.amount > 0 %}
+										{% set pct = asset.totalInvested.amount / asset.lastEquity.price.amount * 100  %}
+									{% endif %}
+									<span class="text-right c-grey-600 fsz-sm">{{ pct|number_format(2)}}%</span>
+									<div class="progress">
+										<div class="progress-bar bgc-deep-purple-500" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:{{ pct }}%">
+											<span class="sr-only">{{ pct }}% Complete</span>
+										</div>
+									</div>
+								</div>
+								<p>
+									To learn more about the asset purchase process, please refer to our
+									<a href="#">{{ 'Terms and Conditions' | trans }}</a>.
+								</p>
+							</div>
+						</div>
+					</div>
+					<div id="asset-documents" class="pt-3">
+						<h3>{{ 'Documents' | trans }}</h3>
+						<a href="#">
+							<i class="fa fa-download"></i>
+							{{ 'Asset Report' | trans }}</a>
+						<a href="#">
+							<i class="fa fa-download"></i>
+							{{ 'Floor Plan' | trans }}</a>
+						<hr>
+					</div>
+					<div id="asset-details" class="pt-3">
+						<h3>{{ 'Asset details' | trans }}</h3>
+						<br>
+						<div id="asset-html">
+							{{ asset.description | raw }}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="card-deck">
+				<div class="card mb-3">
+					<div class="card-header">
+						{{ 'My investments' | trans }}
+					</div>
+					<table class="table">
+						<thead>
+							<tr>
+								<th class="col-hidden" scope="col">{{ 'Created At' | trans }}</th>
+								<th scope="col">{{ 'Ref. code' | trans }}</th>
+								<th scope="col">{{ 'Invested' | trans }}</th>
+								<th class="text-right">{{ 'Status' | trans }}</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for investment in investments %}
+								<tr>
+									<td class="col-hidden">
+										{{ investment.transaction.createdAt | format_datetime(pattern='d/M/yy hh:mm:ss') }}
+									</td>
+									<td>
+										{{ investment.referenceCode }}
+										{% if investment.transaction.verified %}
+											<i class="fa fa-check text-success" title="Transaction security verified"></i>
+										{% else %}
+											<i class="fa fa-exclamation-circle text-danger" title="Transaction security NOT verified"></i>
+										{% endif %}
+									</td>
+									<td>
+										£{{ investment.amount | number_format(2)}}
+									</td>
+									<td class="">
+										{% if investment.approved %}
+											<span class="badge badge-pill fl-r badge-success lh-0 p-10">{{ 'Approved' | trans }}</span>
+										{% elseif investment.denied %}
+											<span class="badge badge-pill fl-r badge-danger lh-0 p-10">{{ 'Denied' | trans }}</span>
+										{% else %}
+											<span class="badge badge-pill fl-r badge-warning">{{ investment.status.label | trans }}</span>
+										{% endif %}
+									</td>
+								</tr>
+							{% else %}
+								<tr>
+									<td colspan="4">
+										<p class="text-muted text-center">
+											{{ 'No investment found' | trans }}
+										</p>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+				<div class="card mb-3">
+					<div class="card-header">
+						{{ 'Entry fee' | trans }}
+					</div>
+					<table class="table">
+						<thead>
+							<tr>
+								<th class="col-hidden" scope="col">{{ 'Created At' | trans }}</th>
+								<th scope="col">{{ 'Ref. code' | trans }}</th>
+								<th scope="col">{{ 'Fee' | trans }}</th>
+								<th scope="col">{{ 'Total' | trans }}</th>
+								<th class="text-right">{{ 'Status' | trans }}</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for investment in entryFees %}
+								<tr>
+									<td class="col-hidden">
+										{{ investment.transaction.createdAt | format_datetime(pattern='d/M/yy hh:mm:ss') }}
+									</td>
+									<td>
+										{{ investment.referenceCode }}
+										{% if investment.transaction.verified %}
+											<i class="fa fa-check text-success" title="Transaction security verified"></i>
+										{% else %}
+											<i class="fa fa-exclamation-circle text-danger" title="Transaction security NOT verified"></i>
+										{% endif %}
+									</td>
+									<td>
+										{{ (investment.fee * 100) | number_format(2)}}%
+									</td>
+									<td>
+										£{{ investment.transaction.amount | number_format(2)}}
+									</td>
+									<td class="">
+										{% if investment.approved %}
+											<span class="badge badge-pill fl-r badge-success lh-0 p-10">{{ 'Approved' | trans }}</span>
+										{% elseif investment.denied %}
+											<span class="badge badge-pill fl-r badge-danger lh-0 p-10">{{ 'Denied' | trans }}</span>
+										{% else %}
+											<span class="badge badge-pill fl-r badge-warning">{{ investment.status.label | trans }}</span>
+										{% endif %}
+									</td>
+								</tr>
+							{% else %}
+								<tr>
+									<td colspan="4">
+										<p class="text-muted text-center">
+											{{ 'No investment found' | trans }}
+										</p>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+
+			</div>
+			<div class='text-right'>
+				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#investment-modal">
+					{{ 'Make a investment' | trans }}
+				</button>
+			</div>
+		</div>
+	</fieldset>
+
+	<!-- Modal -->
+	<div class="modal fade" id="investment-modal" tabindex="-1" role="dialog" aria-labelledby="investment-modal-label" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				{{ form_start(form, {'action': path('dashboard_investor_assets_view', { 'slug': slug, 'pzgact':'process' }), 'method': 'POST', 'attr': { 'data-parsley-validate': 'true', 'id': 'add-investment-form' } }) }}
+				<div class="modal-header">
+					<h5 class="modal-title" id="investment-modal-label">{{ 'Investment amount' | trans }}</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p>
+						<b>{{ 'Attention:' | trans }}
+						</b>
+						{{ (assetEntryFee * 100) | number_format(2)}}% 
+						{{ 'investment fee' | trans }}
+					</p>
+					<input type="hidden" id="assetEntryFee" name="assetEntryFee" value="{{ assetEntryFee }}">
+					<div class="form-group">
+						<input id="invest-range" type="range" max="{{ max }}" min="{{ min }}" value="{{ form.amount.vars.data }}" step=".10" class="form-control-range">
+					</div>
+					<div class="form-group">
+						<div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text">£</span>
+							</div>
+							{{ form_widget(form.amount, { attr: { class: 'money' } }) }}
+						</div>
+						<small class="form-text text-muted">
+								<div class='alert-info'>{{ 'Total value:' | trans }}£<span class="totalvalue">0</span></div>
+						</small>
+						<small class="form-text text-muted">
+							{{ 'Minimum'| trans }}
+							{{ min|number_format(2) }}
+							and maximum
+							{{ max|number_format(2) }}
+							available.
+						</small>
+					</div>
+					{{ form_row(form.orderDetail.address) }}
+					<fieldset>
+						<legend>
+							{{ 'Card details' | trans }}
+						</legend>
+						{{ form_row(form.orderDetail.cardName) }}
+						<div class="row">
+							<div class="col-12">
+								{{ form_row(form.orderDetail.cardNumber, { attr: { class: 'card_number ' } }) }}
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-4">
+								{{ form_row(form.orderDetail.cv2) }}
+							</div>
+							<div class="col-4">
+								{{ form_row(form.orderDetail.expiryDateMonth) }}
+							</div>
+							<div class="col-4">
+								{{ form_row(form.orderDetail.expiryDateYear) }}
+							</div>
+						</div>
+
+					</fieldset>
+					<p>
+						<b>
+							{{ 'Total amount:' | trans }}
+						</b>
+						£<span class="totalvalue">0</span>
+					</p>
+					{# {{ form_row(form.transactionType) }} #}
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">{{ 'Close' | trans }}</button>
+					<button type="submit" class="btn btn-primary">
+						<i class="fas fa-save"></i>
+						{{ 'Invest' | trans }}
+					</button>
+				</div>
+				{{ form_row(form.orderDetail.hashDigest) }}
+				{{ form_row(form.orderDetail.transactionDateTime) }}
+				{{ form_row(form.orderDetail.callbackURL) }}
+				{{ form_row(form.orderDetail.orderID) }}
+				{{ form_row(form.orderDetail.orderDescription) }}
+				{{ form_row(form.orderDetail.currencyCode) }}
+				{{ form_row(form.orderDetail.fullAmount) }}
+				{{ form_row(form.orderDetail.amount) }}
+				{{ form_end(form) }}
+			</div>
+		</div>
+	</div>
+	<div id='payzone-payment-modal-background'></div>
+	<div id='payzone-payment-modal'>
+		<a id='payzone-modal-close' href='#'>&times;</a>
+	</div>
+	<div id='payzone-loading-modal-background'></div>
+	<div id='payzone-loading-modal'>
+		<div class='payzone-loading-wrap' id='payzone-loading-wrap'>
+			<img src="{{ asset('images/loading2.gif') }}"/>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script>
+		var amount = 0;
+var iframepage = 'payment';
+	</script>
+	{{ encore_entry_script_tags('investor/view') }}
+{% endblock %}

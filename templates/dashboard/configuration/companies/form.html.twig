@@ -1,0 +1,258 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Companies | {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('dashboard_index') }}">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item">
+                    Configuration
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    <a href="{{path('dashboard_config_companies_index')}}">Company</a>
+                </li>
+            </ol>
+        </nav>
+    </div>
+    <header role="heading">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-4 col-sm-6 col-xs-6">
+                    <h1 class="h2">Companies</h1>
+                    <p class="hidden-xs"> </p>
+                </div>
+                <div class="col-12 col-md-8 col-sm-6 col-xs-6 btn-action">
+                    
+                </div>
+            </div>
+        </div>
+    </header>
+    <fieldset class="section">
+        <div class="container" id="app">
+            {% include 'includes/flashMessages.html.twig' %}
+            {% if not form.vars.valid %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <ul>
+                        {% for error in errors %}
+                            <li>
+                                <p class="text-danger">
+                                    <b>{{ error.message }}</b>
+                                </p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            
+            {{ form_start(form, { 'attr': { 'data-parsley-validate': 'true' } }) }}
+                <div class="card">
+                    <div class="card-header">
+						<ul class="nav nav-tabs card-header-tabs" role="tablist">
+                            <li role="presentation" class="nav-item">
+                                <a href="#tab-settings" class="nav-link active" role="tab" data-toggle="tab">Settings</a>
+                            </li>
+                            {% if entity.id %}
+                                <li role="presentation" class="nav-item">
+                                    <a href="#tab-investor-profits" class="nav-link" role="tab" data-toggle="tab">Investor profits</a>
+                                </li>
+                                <li role="presentation" class="nav-item">
+                                    <a href="#tab-executive-club" class="nav-link" role="tab" data-toggle="tab">Executive club</a>
+                                </li>
+                                <li role="presentation" class="nav-item">
+                                    <a href="#tab-plan" class="nav-link" role="tab" data-toggle="tab">Plan</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+					</div>
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="tab-settings">
+                                <div class="row">
+                                     <div class="col-md-6">
+                                        {{ form_row(form.name) }}
+                                    </div>
+                                    <div class="col-md-3">
+                                        {{ form_row(form.settings.monthlyFee, { attr: { class: 'money' } }) }}
+                                    </div>
+                                    <div class="col-md-3 text-right custom-control custom-switch">
+                                        </br>
+                                        {{ form_row(form.defaultCompany) }}
+                                    </div>
+                                </div>
+                                <fieldset>
+                                    <legend>Property</legend>   
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            {{ form_row(form.settings.companyFee) }}
+                                        </div>
+                                        <div class="col-md-3">
+                                            {{ form_row(form.settings.commissionRate) }}
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <fieldset>
+                                    <legend>Asset</legend>    
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            {{ form_row(form.settings.assetEntryFee) }}
+                                        </div>
+                                        <div class="col-md-2">
+                                            {{ form_row(form.settings.assetExitFee) }}
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                 <fieldset>
+                                    <legend>Project</legend>    
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            {{ form_row(form.settings.projectAgentEarnings) }}
+                                        </div>
+                                        <div class="col-md-2">
+                                            {{ form_row(form.settings.projectEngineerEarnings) }}
+                                        </div>
+                                        <div class="col-md-2">
+                                            {{ form_row(form.settings.projectContractorEarnings) }}
+                                        </div>
+                                        <div class="col-md-2">
+                                            {{ form_row(form.settings.projectBrokerEarnings) }}
+                                        </div>
+                                         <div class="col-md-3">
+                                            {{ form_row(form.settings.projectAdvertisingReserve) }}
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                           
+                           {% if entity.id %}
+                                <div role="tabpanel" class="tab-pane" id="tab-investor-profits">
+                                    <div class="row">
+                                        <div class="col-md-12 text-right" style="margin-bottom: 5px">
+                                            <a href="{{ path('dashboard_companies_investor_profits_create', { 'company_id' : entity.id }) }}" class="btn btn-default btn-sm">
+                                                <i class="fa fa-plus"></i>
+                                                New Investor profit
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <ul class="list-group">
+                                        {% for profit in entity.investorProfits %}
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <a href="{{ path('dashboard_companies_investor_profits_edit', { 'company_id' : entity.id, 'investor_profit_id' : profit.id }) }}">
+                                                    <b>
+                                                        {%- if profit.maxAmount  -%}
+                                                            £{{ profit.minAmount | number_format(2) }} - £{{ profit.maxAmount | number_format(2) }}
+                                                        {% else %}
+                                                            +  £{{ profit.minAmount | number_format(2) }}
+                                                        {%- endif -%}
+                                                    </b>
+                                                </a>
+                                                <span class="badge badge-primary badge-pill">
+                                                    {{- (profit.profit * 100)  | number_format(2) -}}%
+                                                </span>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="tab-executive-club">
+                                    <div class="row">
+                                        <div class="col-md-12 text-right" style="margin-bottom: 5px">
+                                            <a href="{{ path('dashboard_companies_executive_club_create', { 'company_id' : entity.id }) }}" class="btn btn-default btn-sm">
+                                                <i class="fa fa-plus"></i>
+                                                New Executive club
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <ul class="list-group">
+                                        {% for executiveClub in entity.executiveClubs %}
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <a href="{{ path('dashboard_companies_executive_club_edit', { 'club_id' : executiveClub.id }) }}">
+                                                    <b>{{ executiveClub.description }}</b>
+                                                </a>
+                                                <span class="badge badge-primary badge-pill text-center">
+                                                    Sales:
+                                                    {% if executiveClub.maxSales %}
+                                                        {{ executiveClub.minSales }}
+                                                        -
+                                                        {{ executiveClub.maxSales }}
+                                                    {% else %}
+                                                        +{{ executiveClub.minSales }}
+                                                    {% endif %}
+                                                </span>
+                                                <span class="badge badge-primary badge-pill">
+                                                    Company Fee:{{ executiveClub.companyFee * 100}}%
+                                                </span>
+                                                <span class="badge badge-primary badge-pill">
+                                                    Agent take home:{{ executiveClub.fee * 100}}%
+                                                </span>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="tab-plan">
+                                    <div class="row">
+                                        <div class="col-md-12 text-right" style="margin-bottom: 5px">
+                                            <a href="{{ path('dashboard_companies_plan_create', { 'company_id' : entity.id }) }}" class="btn btn-default btn-sm">
+                                                <i class="fa fa-plus"></i>
+                                                New plan
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <ul class="list-group">
+                                        {% for plan in entity.plans %}
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <a href="{{ path('dashboard_companies_plan_edit', { 'plan_id' : plan.id }) }}">
+                                                    <b>{{ plan.name }}</b>
+                                                </a>
+                                                <span class="badge badge-primary badge-pill">£
+                                                    {{ plan.price.amount | number_format(2, '.', ',') }}
+                                                </span>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                <div class="card-footer">
+                    <div class="d-flex">
+                        <a href="{{ path('dashboard_config_companies_index') }}" class="btn btn-link text-dark">
+                            <i class="fa fa-chevron-left"></i>
+                            Back
+                        </a>
+                        <div class="ml-auto">
+                            {% if entity.id and entity.removedAt is null %}
+                                <button type="button" class="btn btn-outline-danger border-0" data-toggle="modal" data-target="#remove-modal">
+                                    <span class="fa fa-trash"></span>
+                                    Remove
+                                </button>
+                            {% endif %}
+                            <button type="submit" class="btn btn-primary ml-2">
+                                <i class="fas fa-save"></i>
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {{ form_end(form) }}
+            </div>
+        </div>
+    </fieldset>
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('dashboard/configuration/companies/form') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/dashboard/symfony-collection.js') }}"></script>
+    <script>
+        $('[href="#{{ tab }}"]').tab('show');
+    </script>
+    {{ encore_entry_script_tags('dashboard/configuration/companies/form') }}
+{% endblock %}

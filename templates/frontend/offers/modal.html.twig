@@ -1,0 +1,53 @@
+<div id="make-an-offer-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="make-an-offer-modal-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="make-an-offer-modal-label">{% trans %}Make an offer{% endtrans %}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% if offer != null %}
+                <div class="modal-body">
+                    <div class="alert alert-success">
+                        Offer created in {{offer.createdAt| format_datetime('short') }}. Please wait for reply.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans %}Close{% endtrans %}</button>
+                </div>
+            {% else %}
+                {{ form_start(form) }}
+                    <div class="modal-body">
+                        <div class="alert alert-success" style="display: none;"></div>
+                        <div class="alert alert-danger" style="display: none;"></div>
+                        <div class="fields">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">£</span>
+                                        </div>
+                                        {{ form_widget(form.offerValue) }}
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="input-group mb-3">
+                                        {{ form_row(form.peopleCount) }}
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    {{ form_row(form.message) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans %}Close{% endtrans %}</button>
+                        <button type="submit" class="btn btn-primary">Send</button>
+                    </div>
+                {{ form_end(form) }}
+            {% endif %}
+        </div>
+    </div>
+</div>

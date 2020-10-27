@@ -1,0 +1,234 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}{% trans %}Accommodations{% endtrans %}| {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('dashboard_index') }}">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item">
+                    {% trans %}Renting{% endtrans %}
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    <a href="{{path('dashboard_renting_accommodations_index')}}">{% trans %}Accommodations{% endtrans %}</a>
+                </li>
+            </ol>
+        </nav>
+    </div>
+    <header role="heading">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-4 col-sm-6 col-xs-6">
+                    <h1 class="h2">{% trans %}Accommodations{% endtrans %}</h1>
+                    <p class="hidden-xs">{% trans %}Properties for renting{% endtrans %}</p>
+                </div>
+                <div class="col-12 col-md-8 col-sm-6 col-xs-6 btn-action">
+                    {% if entity.soldAt %}
+                        <a href="{{ path('dashboard_report_property_index', {propertyId: entity.id }) }}" class="btn btn-secondary full-width mb-3" target="_blank">
+                            {% trans %}Show report{% endtrans %}
+                            <i class="fas fa-file-alt"></i>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+    <fieldset class="section">
+        <div class="container" id="app">
+            {% include 'includes/flashMessages.html.twig' %}
+            {% if not form.vars.valid %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <ul>
+                        {% for error in errors %}
+                            <li>
+                                <p class="text-danger">
+                                    <b>{{ error.message }}</b>
+                                </p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            
+            {{ form_start(form, { 'attr': { 'data-parsley-validate': 'true' } }) }}
+                <div class="card">
+                    <div class="card-header">
+						<ul class="nav nav-tabs card-header-tabs" role="tablist">
+                            <li role="presentation" class="nav-item">
+                                <a href="#tab-general" class="nav-link active" role="tab" data-toggle="tab">{% trans %}Property{% endtrans %}</a>
+                            </li>
+                            <li role="presentation" class="nav-item">
+                                <a href="#tab-media" class="nav-link" role="tab" data-toggle="tab">{% trans %}Media{% endtrans %}</a>
+                            </li>
+                            <li role="presentation" class="nav-item">
+                                <a href="#tab-financial" class="nav-link" role="tab" data-toggle="tab">{% trans %}Financial{% endtrans %}</a>
+                            </li>
+                        </ul>
+					</div>
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="tab-general">
+                                <div class="row">
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <div class="col-md-5">
+                                            {{ form_row(form.agent) }}
+                                        </div>
+                                        <div class="col-md-3">
+                                            {{ form_row(form.postStatus) }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        {{ form_row(form.plan) }}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{ form_row(form.propertyType) }}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{ form_row(form.tag) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        {{ form_row(form.name) }}
+                                    </div>
+                                    <div class="col-md-3">
+                                        {{ form_row(form.deadline) }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <fieldset>
+                                            <legend>
+                                                {% trans %}Address{% endtrans %}
+                                            </legend>
+                                            {{ form_row(form.address) }} 
+                                        </fieldset>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <fieldset>
+                                            <legend>
+                                                {% trans %}Details{% endtrans %}
+                                            </legend>
+
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    {{ form_row(form.bathrooms) }}
+                                                </div>
+                                                <div class="col-md-3">
+                                                    {{ form_row(form.bedrooms) }}
+                                                </div>
+                                                <div class="col-md-3">
+                                                    {{ form_row(form.squareFoot) }}
+                                                </div>
+                                                <div class="col-md-12">
+                                                    {{ form_widget(form.description) }}
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="tab-media">
+                                <fieldset>
+									<legend>{% trans %}Documents{% endtrans %}</legend>
+									{{ form_row(form.documents) }}
+								</fieldset>
+                                <fieldset>
+                                    <legend>{% trans %}Video{% endtrans %}</legend>
+                                    {% if form.youtubeUrl.vars.data %}
+                                        <iframe
+                                            width="100%"
+                                            height="400"
+                                            src="https://www.youtube.com/embed/{{ form.youtubeUrl.vars.data|split('?v=')[1] }}"
+                                            frameborder="0"
+                                            allow="encrypted-media; picture-in-picture" allowfullscreen>
+                                        </iframe>
+                                    {% endif %}
+                                    {{ form_row(form.youtubeUrl) }}
+                                </fieldset>
+                                <fieldset>
+                                    <legend>{% trans %}Main photo{% endtrans %}</legend>
+                                    {{ form_row(form.mainPhoto) }}
+                                    <span id="main-photo-large-file-msg">({% trans %}Maximum Size{% endtrans %}: 5MB)</span>
+                                </fieldset>
+                                <fieldset>
+                                    <legend>{% trans %}Other photos{% endtrans %}</legend>
+                                    <div class="init" id="photos-container">
+                                        {{ form_row(form.photos) }}
+                                    </div>
+                                </fieldset>
+                                <fieldset>
+                                    <legend>{% trans %}Floorplans{% endtrans %}</legend>
+                                    <div class="init" id="floorplans-container">
+                                        {{ form_row(form.floorplans) }}
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="tab-financial">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        {{ form_row(form.rent) }}
+                                    </div>
+                                    <div class="col-md-2">
+                                        {{ form_row(form.deposit) }}
+                                    </div>
+                                    <div class="col-md-1">
+                                        {{ form_row(form.terms) }}
+                                    </div>
+                                    <div class="col-md-2">
+                                        {{ form_row(form.termType) }}
+                                    </div>
+                                    <div class="col-md-2">
+                                        {{ form_row(form.letAvailableFor) }}
+                                    </div>
+                                    <div class="col-md-3">
+                                        {{ form_row(form.availableAt) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex">
+                        <a href="{{ path('dashboard_renting_accommodations_index') }}" class="btn btn-link text-dark">
+                            <i class="fa fa-chevron-left"></i>
+                            {% trans %}Back{% endtrans %}
+                        </a>
+                        <div class="ml-auto">
+                            {% if entity.id and entity.removedAt is null %}
+                                <button type="button" class="btn btn-outline-danger border-0" data-toggle="modal" data-target="#remove-modal">
+                                    <span class="fa fa-trash"></span>
+                                    {% trans %}Remove{% endtrans %}
+                                </button>
+                            {% endif %}
+                            <button type="submit" class="btn btn-primary ml-2">
+                                <i class="fas fa-save"></i>
+                                {% trans %}Save{% endtrans %}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </fieldset>
+    {% include 'dashboard/includes/cropperModal.html.twig' %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('dashboard/renting/accommodations/form') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/dashboard/symfony-collection.js') }}"></script>
+    {{ encore_entry_script_tags('dashboard/renting/accommodations/form') }}
+{% endblock %}

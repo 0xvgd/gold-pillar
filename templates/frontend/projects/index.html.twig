@@ -1,0 +1,33 @@
+{% extends 'frontend/resource-filter.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('projects') }}
+{% endblock %}
+
+{% set currentPath = absolute_url(path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params'))) %}
+{% set filterTitle = 'Featured projects' %}
+
+{% block content %}
+    <div class="page" style="margin-top: -220px">
+        <div class="row mt-5" v-if="loading">
+			<div class="col-lg-4 col-md-6 mb-4" v-for="i in 10">
+				<project-item v-bind:item="placeholder" />
+			</div>
+		</div>
+		<div class="mt-5" v-if="!loading && projects.length === 0">
+			<div class="alert alert-warning p-3 text-center" v-text="propertyErrorMessage">
+			</div>
+		</div>
+        <div class="row mt-5">
+            <div class="col-lg-4 col-md-6 mb-4" v-for="item in projects">
+                <project-item v-bind:item="item"/>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('projects') }}
+{% endblock %}

@@ -1,0 +1,310 @@
+{% extends 'frontend/base.html.twig' %}
+
+{% set pageTitle = 'Letting' %}
+
+{% macro search_form(className) %}
+    <form class="search-form {{ className }}" action="{{ path('app_letting_index') }}" method="get">
+        <h5>{{ 'Search the average rental for your property' | trans }}</h5>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    <i class="fa fa-map-marker-alt"></i>
+                </span>
+            </div>
+            <input type="text" class="form-control" placeholder="Postcode" name="q" value="{{ app.request.get('q') }}">
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-primary">{{ 'Search' | trans }}</button>
+            </div>
+        </div>
+    </form>
+{% endmacro %}
+
+{% block body %}
+    <div class="letting">
+        <div class="filters">
+            {% embed 'frontend/includes/page-banners.html.twig' with { 'search_form': _self.search_form('desktop') } %}
+                {% block content %}
+                    {{ search_form }}
+                {% endblock %}
+            {% endembed %}
+        </div>
+        <div class="page navbar-offset" style="z-index: 999;margin-top: 0 !important;top: 0px;">
+            {% block content %}
+                {{ _self.search_form('mobile') }}
+            {% endblock %}
+            <div class="content">
+                <div class="page">
+                    {% include 'includes/flashMessages.html.twig' %}
+
+                    {% if result %}
+                        <div
+                            id="app"
+                            class="search-result"
+                            data-authenticated="{{ is_granted('ROLE_USER') ? 1 : 0}}"
+                            data-agent="{{form.agent.vars.data ? form.agent.vars.data.id : ''}}"
+                            data-plan="{{form.plan.vars.data}}"
+                            data-find-tenant-fee="499"
+                            data-find-only-charge="0.015"
+                            data-rent-collect-charge="0.065"
+                            data-fully-managed-charge="0.085"
+                            data-rent-value="{{result.price is defined ? result.price : 0}}"
+                            data-agents-url="{{path('app_letting_agents')}}">
+                            {% if result.error is defined %}
+                                <div class="alert alert-danger">
+                                    {{ result.error }}
+                                </div>
+                            {% else %}
+                                <h3>{{ 'Result' | trans }}</h3>
+                                <table class="table table-bordered">
+                                    {% if result.area %}
+                                        <tr>
+                                            <th>{{ 'Area' | trans }}</th>
+                                            <td>{{ result.area }}</td>
+                                        </tr>
+                                    {% endif %}
+                                    {% if result.address %}
+                                        <tr>
+                                            <th> {{ 'Address' | trans }} </th>
+                                            <td>{{ result.address }}</td>
+                                        </tr>
+                                    {% endif %}
+                                    {% if result.region %}
+                                        <tr>
+                                            <th>{{ 'Region' | trans }}</th>
+                                            <td>{{ result.region }}</td>
+                                        </tr>
+                                    {% endif %}
+                                    {% if result.town %}
+                                        <tr>
+                                            <th>{{ 'Town' | trans }}</th>
+                                            <td>{{ result.town }}</td>
+                                        </tr>
+                                    {% endif %}
+                                    {% if result.county %}
+                                        <tr>
+                                            <th>{{ 'County' | trans }}</th>
+                                            <td>{{ result.county }}</td>
+                                        </tr>
+                                    {% endif %}
+                                    {% if result.postcode %}
+                                        <tr>
+                                            <th>{{ 'Postcode'| trans }}</th>
+                                            <td>{{ result.postcode | uk_postcode }}</td>
+                                        </tr>
+                                    {% endif %}
+                                </table>
+                                <div style="
+                                    text-align: center;
+                                    font-size: 24px;
+                                    margin-top: 50px;
+                                    margin-bottom: 50px;
+                                ">
+                                    <p> {{ 'Simulate here how much would it be to let your property with us' | trans }} </p>
+                                    <currency-input v-model="rentValue" class="valuation" style="text-align: center; color: #cb9900" currency="GBP" locale="en-gb" />
+                                </div>
+                                {% verbatim %}
+                                    <div class="leting-card card-deck">
+                                        <div v-bind:class="{'card': true, 'border-primary': plan === 'find_only'}">
+                                            <div class="card-header text-center">
+                                                 {{ 'Find tenant only' | trans }}
+                                            </div>
+                                            <div class="card-body text-center">
+                                                <h3 class="card-title">
+                                                    {{findOnlyFee|currency}}
+                                                </h3>
+                                                {{ 'Tenant fee' | trans }}
+                                            </div>
+                                            <div class="card-footer">
+                                                <button
+                                                    type="button"
+                                                    v-bind:class="{'btn btn-block': true, 'btn-primary': plan === 'find_only', 'btn-secondary': plan !== 'find_only'}" 
+                                                    v-on:click="choosePlan('find_only')">
+                                                    {{ 'Choose' | trans }}
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div v-bind:class="{'card': true, 'border-primary': plan === 'rent_collect'}">
+                                            <div class="card-header text-center">
+                                                {{ 'Let & Rent Collect' | trans }}
+                                            </div>
+                                            <div class="card-body text-center">
+                                                <h3 class="card-title">
+                                                    {{rentCollectFee|currency}}PCM
+                                                </h3>
+                                                {{ 'Plus' | trans }} {{findTenantFee|currency}} ({{'Find tenant' | trans }})
+                                            </div>
+                                            <div class="card-footer">
+                                                <button
+                                                    type="button"
+                                                    v-bind:class="{'btn btn-block': true, 'btn-primary': plan === 'rent_collect', 'btn-secondary': plan !== 'rent_collect'}" 
+                                                    v-on:click="choosePlan('rent_collect')">
+                                                    {{ 'Choose' | trans }}
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div v-bind:class="{'card': true, 'border-primary': plan === 'fully_managed'}">
+                                            <div class="card-header text-center">
+                                                 {{ 'Fully managed' | trans }}
+                                            </div>
+                                            <div class="card-body text-center">
+                                                <h3 class="card-title">
+                                                    {{fullyManagedFee|currency}}PCM
+                                                </h3>
+                                                {{ 'Plus' | trans }} {{findTenantFee|currency}} ({{'Find tenant' | trans }})
+                                            </div>
+                                            <div class="card-footer">
+                                                <button
+                                                    type="button"
+                                                    v-bind:class="{'btn btn-block': true, 'btn-primary': plan === 'fully_managed', 'btn-secondary': plan !== 'fully_managed'}" 
+                                                    v-on:click="choosePlan('fully_managed')">
+                                                    {{ 'Choose' | trans }}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="p-4 text-center">
+                                        <button type="button" class="btn btn-secondary" @click="fetchAgents" :disabled="plan === '' || showAgents || loading"  v-if="!showAgent">
+                                           {{ 'Choose your agent now' | trans }}
+                                        </button>
+                                        <button type="button" class="btn btn-secondary" @click="fetchAgents" v-if="showAgent">
+                                            {{ 'Choose another agent' | trans }}
+                                        </button>
+                                    </div>
+                                    <div ref="agents" class="agents" v-if="showAgents">
+                                        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4">
+                                            <div class="col mb-4" v-for="agent in agents">
+                                                <div class="card">
+                                                    <img :src="agent.user.avatar || '/images/nobody_m.original.jpg'" class="card-img-top" alt="" />
+                                                    <table class="table">
+                                                        <tr>
+                                                            <th>{{ 'Name' | trans }}</th>
+                                                            <td>
+                                                                {{agent.user.name}}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>{{ 'Age' | trans }}</th>
+                                                            <td>
+                                                                {{agent.birthDate|relativeTime}} {{ 'old' | trans }}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>{{ 'Experience' | trans }}</th>
+                                                            <td>
+                                                                {{agent.experience|relativeTime}} {{ 'experience' | trans }}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>{{ 'Reviews' | trans }}</th>
+                                                            <td>
+                                                                <review-stars :stars="agent.stars" />
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                    <div class="card-footer">
+                                                        <button type="button" class="btn btn-primary btn-block" @click="chooseAgent(agent)">
+                                                            {{ 'Choose' | trans }}
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div ref="agent" class="agent" v-if="showAgent && agent">
+                                        <div class="card mb-3">
+                                            <div class="row no-gutters">
+                                                <div class="col-md-4">
+                                                    <img :src="agent.user.avatar || '/images/nobody_m.original.jpg'" class="card-img" alt="">
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <table class="table">
+                                                        <tr>
+                                                            <th>{{ 'Name' | trans }}</th>
+                                                            <td>
+                                                                {{agent.user.name}}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>{{ 'Age' | trans }}</th>
+                                                            <td>
+                                                                {{agent.birthDate|relativeTime}} old
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>{{ 'Experience' | trans }}</th>
+                                                            <td>
+                                                                {{agent.experience|relativeTime}} {{ 'experience' | trans }}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>{{ 'Reviews' | trans }}</th>
+                                                            <td>
+                                                                <review-stars :stars="agent.stars" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>{{ 'Description' | trans }}</th>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="2">{{agent.description}}</td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endverbatim %}
+                                        {{ form_start(form) }}
+                                            <input type="hidden" name="{{ form.agent.vars.full_name }}" v-model="agent.id" />
+                                            {% do form.agent.setRendered(true) %}
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <fieldset>
+                                                        <legend>{{ 'Property to sell' | trans }}</legend>
+                                                        {{ form_row(form.postcode) }}
+                                                        {{ form_row(form.street, { label: 'Street' | trans }) }}
+                                                        {{ form_row(form.town, { label: 'Town' | trans }) }}
+                                                        {{ form_row(form.county, { label: 'County' | trans }) }}
+                                                        {{ form_row(form.price, { label: 'Rent price' | trans }) }}
+                                                        {{ form_row(form.plan, { label: 'Renting plan' | trans, attr: { 'v-model': 'plan' } }) }}
+                                                    </fieldset>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <fieldset>
+                                                        <legend>{{ 'Book a view' | trans }}</legend>
+                                                        {{ form_row(form.view.date, { attr: { ref: 'booking_date', 'v-on:change': 'changeDate' } }) }}
+                                                        {{ form_row(form.view.time, { attr: { ref: 'booking_time' } }) }}
+                                                    </fieldset>
+                                                </div>
+                                            </div>
+
+                                            <button type="submit" class="btn btn-primary btn-lg btn-block" v-if="authenticated">
+                                               {{ 'Submit' | trans }}
+                                            </button>
+                                            <a href="#sign-in-modal" class="btn btn-primary btn-lg btn-block" data-toggle="modal" v-if="!authenticated">
+                                                {{ 'Sign in' | trans }}
+                                            </a>
+                                        {{ form_end(form) }}
+                                        {% verbatim %}
+                                    </div>
+                                {% endverbatim %}
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('letting') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('letting') }}
+{% endblock %}
+
+

@@ -1,0 +1,15 @@
+{% extends 'frontend/base.html.twig' %}
+
+{% block body %}
+    <div id="app" v-cloak>
+        <div class="filters">
+            {% include 'frontend/includes/resource-filter.html.twig' %}
+        </div>
+
+        <div class="page navbar-offset" style="z-index: 999;">
+            <div class="content">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

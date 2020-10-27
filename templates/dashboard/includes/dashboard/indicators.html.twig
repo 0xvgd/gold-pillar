@@ -1,0 +1,12 @@
+{% if is_granted('ROLE_ADMIN') %}
+	{% include "dashboard/includes/dashboard/indicators.admin.html.twig" %}
+{% elseif is_granted('ROLE_AGENT') %}
+	{% include "dashboard/includes/dashboard/indicators.agent.html.twig" %}
+{% elseif is_granted('ROLE_INVESTOR') %}
+	{% include "dashboard/includes/dashboard/indicators.investor.html.twig" %}
+{% elseif is_granted('ROLE_BROKER') %}
+	{% include "dashboard/includes/dashboard/indicators.broker.html.twig" %}
+{% elseif is_granted('ROLE_TENANT') %}
+	{% include "dashboard/includes/dashboard/indicators.tenant.html.twig" %}
+{% endif %}
+

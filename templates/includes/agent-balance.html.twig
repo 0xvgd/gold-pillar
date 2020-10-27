@@ -1,0 +1,52 @@
+<!-- #Sales Report ==================== -->
+<div class="bd bgc-white">
+    <div class="layers">
+        <div class="layer w-100 p-20">
+            <h6 class="lh-1">--</h6>
+        </div>
+        <div class="layer w-100">
+            <div class="bgc-grey-900 c-white p-10">
+                <div class="peers ai-c jc-sb gap-40">
+                    <div class="peer peer-greed">
+                        <h5>Balance</h5>
+                    </div>
+                    <div class="peer">
+                        <h3 class="text-right">£{{ balance | number_format(2) }}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class=" bdwT-0">Type</th>
+                            <th class=" bdwT-0 text-right">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for transaction in transactions %}
+                            {% set amountColor =  transaction.amount > 0 ? "text-success" : "text-danger" %}
+                            <tr>
+                                <td class="fw-600">{{ transaction.type.description }}</td>
+                                <td class="text-right">
+                                    <span class='{{ amountColor }}'>
+                                        <b>
+                                            £{{ transaction.amount | number_format(2)}}
+                                        </b>
+                                    </span>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="ta-c bdT w-100 p-20">
+        <a href="#">Check all the sales</a>
+    </div>
+</div>
+
+
+
+

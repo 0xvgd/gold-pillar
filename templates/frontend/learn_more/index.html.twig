@@ -1,0 +1,37 @@
+{% extends 'frontend/base.html.twig' %}
+{% set description =  '' %}
+{% set youtubeUrl =  '' %}
+
+{% block title %}Subscribe | {{ parent() }}{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<style>body { background-color: #333; }</style>
+{% endblock %}
+{% if page is defined and not page is null %}
+    {% set description = page.description %}
+    {% set youtubeUrl = page.youtubeUrl %}
+    {% if page.banners|length %}
+        {% set banners = page.banners %}
+    {% endif %}
+{% endif %}
+{% block body %}
+	<div class="page navbar-offset">
+        <div class="container">
+            <p class="text-white mt-3 mb-5">
+             {{ description }}
+            </p>
+        </div>
+        <iframe
+            width="100%"
+            height="800"
+            src="https://www.youtube.com/embed/{{ youtubeUrl|split('?v=')[1] }}"
+            frameborder="0"
+            allow="encrypted-media; picture-in-picture" allowfullscreen>
+        </iframe>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+{% endblock %}

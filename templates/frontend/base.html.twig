@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="{{ asset('js/pace.min.js') }}"></script>
+        <style>
+            .pace { -webkit-pointer-events: none; pointer-events: none; -webkit-user-select: none; -moz-user-select: none; user-select: none; }
+            .pace-inactive { display: none; }
+            .pace .pace-progress { background: #e5c61b; position: fixed; top:0; z-index: 20000; right: 100%; width: 100%; height: 2px; }
+        </style>
+
+        {% block stylesheets %}
+            <link rel="icon" type="image/png" href="{{ asset('images/favicon/favicon-16x16.png') }}" />
+            <link rel="icon" type="image/x-icon" href="{{ asset('images/favicon/favicon-16x16.png') }}" />
+            <link rel="apple-touch-icon" sizes="57x57" href="{{ asset('images/favicon/apple-icon-57x57.png') }}">
+            <link rel="apple-touch-icon" sizes="60x60" href="{{ asset('images/favicon//apple-icon-60x60.png') }}">
+            <link rel="apple-touch-icon" sizes="72x72" href="{{ asset('images/favicon/apple-icon-72x72.png') }}">
+            <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('images/favicon/apple-icon-76x76.png') }}">
+            <link rel="apple-touch-icon" sizes="114x114" href="{{ asset('images/favicon/apple-icon-114x114.png') }}">
+            <link rel="apple-touch-icon" sizes="120x120" href="{{ asset('images/favicon/apple-icon-120x120.png') }}">
+            <link rel="apple-touch-icon" sizes="144x144" href="{{ asset('images/favicon/apple-icon-144x144.png') }}">
+            <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('images/favicon/apple-icon-152x152.png') }}">
+            <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/favicon/apple-icon-180x180.png') }}">
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <meta name="msapplication-TileColor" content="#ffffff">
+            <meta name="msapplication-TileImage" content="{{ asset('images/favicon/ms-icon-144x144.png') }}">
+            <meta name="theme-color" content="#ffffff">
+
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" rel="stylesheets" type="text/css" />
+            {{ encore_entry_link_tags('main') }}
+            {{ encore_entry_link_tags('frontend') }}
+        {% endblock %}
+        <title>
+            {% block title %}Gold Pillar &mdash; Invest in Properties, Build Your Wealth{% endblock %}
+        </title>
+    </head>
+    <body>
+        <div class="page-loader"></div>
+        
+        <nav class="navbar fixed-top navbar-expand-xl navbar-dark nav-primary-color">
+            {% include 'frontend/includes/navigation.html.twig' %}
+        </nav>
+
+        {% block body %}{% endblock %}
+
+        <section id="footer">
+            <div class="container">
+                <div class="row text-center">
+                    <div class="col-xs-4 col-sm-4 col-md-4 text-left footer-setup">
+                        <h5>{{ 'Site map' | trans }}</h5>
+                        <ul class="list-unstyled quick-links">
+                            <li>
+                                <a href="#about">
+                                    <i class="fa fa-angle-double-right"></i>{{ 'About'| trans }}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#roadmap">
+                                    <i class="fa fa-angle-double-right"></i>{{ 'Roadmap'| trans }}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#team">
+                                    <i class="fa fa-angle-double-right"></i>{{ 'Team'| trans }}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#partners">
+                                    <i class="fa fa-angle-double-right"></i>{{ 'Partners'| trans }}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#faq">
+                                    <i class="fa fa-angle-double-right"></i>{{ 'FAQs'| trans }}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-4 col-sm-4 col-md-4 text-left footer-setup">
+                        <h5>{{ 'Quick links'| trans }}</h5>
+                        <ul class="list-unstyled quick-links">
+                            <li>
+                                <a data-toggle="modal" href="#cookies-modal">
+                                    <i class="fa fa-angle-double-right"></i>{{ 'Privacy'| trans }} &amp;{{ 'Cookies'| trans }}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-angle-double-right"></i>{{ 'Terms of Use'| trans }}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-angle-double-right"></i>{{ 'Trademarks'| trans }}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-angle-double-right"></i>{{ 'Legal terms'| trans }}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-4 col-sm-4 col-md-4 text-center footer-setup">
+                        <ul class="list-unstyled quick-links text-left">
+                            <li>
+                                <p class="text-white">
+                                    GOLD PILLAR.{{ 'All rights reserved.'| trans }}
+                                    <br><br>
+                                    40 Bank Street<br>
+                                    E14 5NR<br>
+                                    LONDON<br><br>
+                                    Email:
+                                    <a href="mailto:info@goldpillar.global">info@goldpillar.global</a>
+                                </p>
+                                <p class="text-white">Phone: +44 20 7993 5265</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 mt-2 text-center">
+                        <img src="{{ asset('images/logo-v2.png') }}" class="footer-logo" alt="footer logo">
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-12 mt-2 mt-sm-5">
+                        <ul class="list-unstyled list-inline social text-center">
+                            <li class="list-inline-item">
+                                <a href="https://t.me/joinchat/JSdjLxEREYdQp0MLOhtfJw" target="_blank">
+                                    <i class="fab fa-telegram-plane"></i>
+                                </a>
+                            </li>
+
+                            <li class="list-inline-item">
+                                <a href="mailto:info@goldpillar.global" target="_blank">
+                                    <i class="fa fa-envelope"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 mt-2 mt-sm-2 text-center text-white">
+                        <p class="h6">Copyright © 2019 GOLD PILLAR Ltd. {{ 'All rights reserved.' | trans }}</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div id="sign-in-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sign-in-modal-label" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <form action="{{ path('dashboard_login') }}" method="POST">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="sign-in-modal-label">{{ 'Sign in' | trans }}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-danger" style="display: none;">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="text-normal text-dark">{{ 'E-mail' | trans }}</label>
+                                <input type="email" name="email" class="form-control" placeholder="E-mail">
+                            </div>
+                            <div class="form-group">
+                                <label class="text-normal text-dark">{{ 'Password' | trans }}</label>
+                                <input type="password" name="password" class="form-control" placeholder="Password">
+                            </div>
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                            <p>
+                                {{ 'No account?' | trans }} <a href="{{ path('frontend_subscribe_choose') }}">{{ 'Create one' | trans }}</a>
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ 'Close' | trans }}</button>
+                            <button type="submit" class="btn btn-primary">{{ 'Log in' | trans }}</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% block javascripts %}
+            {{ render(controller('App\\Controller\\Frontend\\DefaultController::getTranslations')) }}
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
+            {{ encore_entry_script_tags('main') }}
+            {{ encore_entry_script_tags('frontend') }}
+            <script>
+                const GpApp = {
+                    baseUrl: '{{ app.request.baseUrl() }}/{{ app.request.locale }}',
+                    siteRoot: '{{ app.request.getSchemeAndHttpHost() }}'
+                };
+                if (GpApp.baseUrl.slice(-1) !== '/') {
+                    GpApp.baseUrl = GpApp.baseUrl + '/';
+                }
+                $(document).ready(function () {
+                    $(window).scroll(function () {
+                        if ($(document).scrollTop() > 180) {
+                            $('nav').addClass('nav-secondary-color');
+                            $('nav').removeClass('nav-primary-color');
+                        } else {
+                            $('nav').removeClass('nav-secondary-color');
+                            $('nav').addClass('nav-primary-color');
+                        }
+                    });
+                });
+
+            </script>
+        {% endblock %}
+    </body>
+</html>

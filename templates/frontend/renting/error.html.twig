@@ -1,0 +1,73 @@
+{% extends 'frontend/base.html.twig' %}
+
+{% set currentPath = absolute_url(path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params'))) %}
+
+{% block body %}
+	{% include 'includes/flashMessages.html.twig' %}
+
+	<div class="page navbar-offset">
+        <div class="container">
+            <div class="py-4">
+                <h1>{{ 'New reserve' | trans }}</h1>
+                <div class="card mb-3">
+                    <div class="row no-gutters">
+                        <div class="col-md-3">
+                            <img src="{{ accommodation.mainPhoto }}" class="card-img" alt="">
+                        </div>
+                        <div class="col-md-9">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ accommodation.name }}</h5>
+                                <p class="card-text">{{ accommodation.address }}</p>
+                                <p class="card-text">
+                                    <small class="text-muted">
+                                        <b>{{ 'Tag:' | trans }}</b> {{ accommodation.tag }}
+                                    </small>
+                                    <br>
+                                    <small class="text-muted">
+                                        <b>{{ 'Agent:' | trans }}</b> {{ accommodation.agent }}
+                                    </small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="alert alert-danger">
+                    {{ render(controller(validate['responsePage'], { 'payzoneGateway' : payzoneGateway, 'validate': validate })) }}
+                </div>
+                <a target="_top" href='{{  path('app_renting_reserve', { 'slug': accommodation.slug }) }}'>Try again</a>
+            </div>
+        </div>
+       
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+     <link rel="stylesheet" href="{{ asset('css/payzone_gateway.css?v2') }}">
+    <style>
+        #reserve_people {
+            counter-reset: person;
+        }
+
+        #reserve_people .counter {
+            font-size: 11pt;
+        }
+
+        #reserve_people .counter::before {
+            counter-increment: person;
+            content: counter(person);
+        }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/dashboard/symfony-collection.js') }}"></script>
+    <script>
+        $('[data-prototype').collection()
+        var iframepage='payment';
+    </script>
+   
+    {{ encore_entry_script_tags('renting/add') }}
+
+{% endblock %}

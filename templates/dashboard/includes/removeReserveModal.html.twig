@@ -1,0 +1,23 @@
+{% if removeReserveForm is defined and not removeReserveForm is null %}
+    <div class="modal fade" id="remove-reserve-modal" tabindex="-1" role="dialog">
+        {{ form_start(removeReserveForm, { 'attr': { 'data-parsley-validate': 'true' } }) }}
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{% trans %}Register payment{% endtrans %}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        {{ form_row(removeReserveForm.processedAt) }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">{% trans %}Register payment{% endtrans %}</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans %}Close{% endtrans %}</button>
+                    </div>
+                </div>
+            </div>
+        {{ form_end(removeReserveForm) }}
+    </div>
+{% endif %}

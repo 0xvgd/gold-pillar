@@ -1,0 +1,27 @@
+{% set banners = [asset('/images/home/buildings-with-clouds.jpg')] %}
+{% set pageTitle = pageTitle|default('Title') %}
+
+{% if page is defined and not page is null %}
+	{% set pageTitle = page.title %}
+	{% if page.banners|length %}
+		{% set banners = page.banners %}
+	{% endif %}
+{% endif %}
+
+<div class="carousel slide carousel-fade" data-ride="carousel" data-interval="5000">
+	<div class="carousel-inner" v-bind:class="{ searchExpanded: advancedFilter }">
+		<div class="carousel-content s002">
+			<div class="text-center align-top py-4">
+				<h1 class="filter-title text-center align-top">{{ pageTitle | trans }}</h1>
+			</div>
+			{% block content %}
+				asdfas
+			{% endblock %}
+		</div>
+		{% for banner in banners %}
+			<div class="carousel-item  {% if loop.index == 1 %}active{% endif %}">
+				<img class="d-block w-100 carousel-image backdrop" data-src="{{ banner }}">
+			</div>
+		{% endfor %}
+	</div>
+</div>

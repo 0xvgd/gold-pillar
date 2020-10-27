@@ -1,0 +1,171 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}
+    Balance | {{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('user-balance') }}
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('dashboard_index') }}">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    <a href="{{path('dashboard_balance')}}">User balance</a>
+                </li>
+            </ol>
+        </nav>
+    </div>
+
+    <header role="heading">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9 col-sm-6 col-xs-6">
+                    <h1>
+                        User balance
+                    </h1>
+                </div>
+                <div class='col-md-3  p-20'>
+                    <div class="layers bd bgc-white p-20">
+                        <div class="layer w-100 mB-10">
+                            <h6 class="lh-1">Total balance</h6>
+                        </div>
+                        <div class="layer w-100">
+                            <div class="peers ai-sb fxw-nw">
+                                <div class="peer peer-greed">
+                                    <span id="balance-bar-chart"></span>
+                                </div>
+                                <div class="peer">
+                                    <h2 class="h4 text-muted mb-0 totalBalance">
+                                        {% set balanceColor =   (portalBalance + userBalance)  > 0 ? "text-success" : "text-danger" %}
+                                        <span class='{{ balanceColor }}'>
+                                            £{{  (portalBalance + userBalance)  | number_format(2)}}
+                                        </span>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <fieldset class="section">
+        <div class="container" id="app">
+            {% include 'includes/flashMessages.html.twig' %}
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="nav-item">
+                    <a href="#tab-balance" class="nav-link active" role="tab" data-toggle="tab">User transactions</a>
+                </li>
+                <li role="presentation" class="nav-item">
+                    <a href="#tab-transactions" class="nav-link" role="tab" data-toggle="tab">Subscription fees</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="tab-balance">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-board">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th class=" bdwT-0">Transaction Ref</th>
+                                                    <th class="bdwT-0">{% trans %}Created at{% endtrans %}</th>
+                                                    <th class=" bdwT-0">Type</th>
+                                                    <th class=" bdwT-0">Fee</th>
+                                                    <th class=" bdwT-0 text-right">Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for transaction in userTransactions %}
+                                                    {% set amountColor =  transaction.amount > 0 ? "text-success" : "text-danger" %}
+                                                    <tr>
+                                                        <td class="">{{ transaction.transactionRef }}</td>
+                                                        <td class="">{{ transaction.createdAt|format_datetime() }}</td>
+                                                        <td class="">{{ transaction.type.description }}</td>
+                                                        <td class="">{{ (transaction.fee * 100) | number_format(2)}}%</td>
+                                                        <td class="text-right">
+                                                            <span class='{{ amountColor }}'>
+                                                                £{{ transaction.amount | number_format(2)}}
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                                <tr>
+                                                    <td colspan="4" class=" bdwT-0">Total</td>
+                                                    <td class=" bdwT-0 text-right">
+                                                        {% set balanceColor =  userBalance > 0 ? "text-success" : "text-danger" %}
+                                                        <span class='{{ balanceColor }}'>
+                                                            <b>£{{ userBalance | number_format(2)}}</b>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot></tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div role="tabpanel" class="tab-pane" id="tab-transactions">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-board">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th class=" bdwT-0">{% trans %}Description{% endtrans %}</th>
+                                                    <th class=" bdwT-0">Reference</th>
+                                                    <th class=" bdwT-0">Type</th>
+                                                    <th class=" bdwT-0">Due date</th>
+                                                    <th class=" bdwT-0 text-right">Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for transaction in portalTransactions %}
+                                                    {% set amountColor =  transaction.amount > 0 ? "text-success" : "text-danger" %}
+                                                    <tr>
+                                                        <td class="fw-600">{{ transaction.description }}</td>
+                                                        <td>{{ transaction.monthRef }}/{{ transaction.yearRef }}
+                                                        </td>
+                                                        <td>{{ transaction.type.description }}</td>
+                                                        <td>{{ transaction.dueDate | format_datetime('short') }}</td>
+                                                        <td class="text-right">
+                                                            <span class='{{ amountColor }}'>
+                                                                <b>
+                                                                    £{{ transaction.amount | number_format(2)}}
+                                                                </b>
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ parent() }}
+        {{ encore_entry_script_tags('user-balance') }}
+    {% endblock %}

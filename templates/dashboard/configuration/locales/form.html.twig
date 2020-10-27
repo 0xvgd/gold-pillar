@@ -1,0 +1,145 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Locales | {{ parent() }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .banners .banner {
+            position: relative;
+        }
+
+        .banners .banner button {
+            top: 5px;
+            right: 30px;
+            position: absolute;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('dashboard_index') }}">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    <a href="{{path('dashboard_config_locales_index')}}">{{ 'Locales'| trans }}</a>
+                </li>
+            </ol>
+        </nav>
+    </div>
+
+    <header role="heading">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-sm-6 col-xs-6">
+                    <h2>
+                        {{ 'Locales'| trans }}
+                    </h2>
+                    <p class="hidden-xs">{{ 'System locales'| trans }}</p>
+                </div>
+                {% if entity.id %}
+                    <div class="col-md-4 col-sm-12 col-xs-12 btn-action text-right">
+                        <a href="{{ path('dashboard_config_locales_apply', {'id': entity.id })}}" class="btn btn-default btn-sm">
+                            <i class="fa fa-check-circle"></i>
+                            {{ 'Apply changes'| trans }}
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+    <fieldset class="section">
+        <div class="container" id="app">
+            <hr>
+            <div class="card">
+                {{ form_start(form, { 'attr': { 'data-parsley-validate': 'true' } }) }}
+                    <div class="card-body card-block">
+                        {% include 'includes/flashMessages.html.twig' %}
+                        {% if not form.vars.valid %}
+                            <div class="alert alert-danger alert-dismissible" role="alert">
+                                <ul>
+                                    {% for error in errors %}
+                                        <li>
+                                            <p class="text-danger">
+                                                <b>{{ error.message }}</b>
+                                            </p>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form_row(form.code) }}
+                            </div>
+                            <div class="col-md-6 text-right custom-control custom-switch">
+                                <br />
+                                {{ form_row(form.defaultLocale) }}
+                            </div>
+                        </div>
+                        <fieldset>
+                            <legend>{{ 'Translations' | trans }}</legend>
+                            <div class="my-4">
+                            {{ form_row(form.translations) }}
+                            </div>
+                        </fieldset>                    
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-flex">
+                            <a href="{{ path('dashboard_config_locales_index') }}" class="btn btn-link text-dark">
+                                <i class="fa fa-chevron-left"></i>
+                                {{ 'Back' | trans }}
+                            </a>
+                            <div class="ml-auto">
+                                {% if entity.id %}
+                                    <button type="button" class="btn btn-outline-danger border-0" data-toggle="modal" data-target="#remove-modal">
+                                        <span class="fa fa-trash"></span>
+                                       {{ 'Remove' | trans }}
+                                    </button>
+                                {% endif %}
+                                <button type="submit" class="btn btn-primary ml-2">
+                                    <i class="fas fa-save"></i>
+                                   {{ 'Save' | trans }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+        {% if entity.id %}
+            <div class="modal fade" id="remove-modal" tabindex="-1" role="dialog">
+                <form id="form-delete" action="{{ path('dashboard_config_locales_delete', { id: entity.id }) }}" method="post">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">{{ 'Remove locale' | trans }}</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>{{ 'Do you really want remove the locale?' | trans }}</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ 'Cancel' | trans }}</button>
+                                <button type="submit" class="btn btn-danger">{{ 'Yes, remove it' | trans }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        {% endif %}
+    </fieldset>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('js/dashboard/symfony-collection.js') }}"></script>
+	{{ encore_entry_script_tags('dashboard/configuration/locales/form') }}
+{% endblock %}
+

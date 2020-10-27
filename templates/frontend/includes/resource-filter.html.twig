@@ -1,0 +1,119 @@
+{% set banners = [asset('/images/home/buildings-with-clouds.jpg')] %}
+{% set filterTitle = filterTitle|default('Title') %}
+
+{% if page is defined and not page is null %}
+	{% set filterTitle = page.title %}
+	{% if page.banners|length %}
+		{% set banners = page.banners %}
+	{% endif %}
+{% endif %}
+
+<div class="carousel slide carousel-fade" data-ride="carousel" data-interval="5000">
+	<div class="carousel-inner" v-bind:class="{ searchExpanded: advancedFilter }">
+		<div class="carousel-content s002">
+			{{ form_start(searchForm, { attr: {'id': 'search-form', 'v-on:submit.prevent':'search(true)', 'class': 'hidden-print', 'autocomplete': 'off' } }) }}
+				<div class="ml-auto search-field input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">
+							<i class="fa fa-map-marker-alt"></i>
+						</span>
+					</div>
+					{{ form_widget(searchForm.location, { 'attr': { 'placeholder': 'Location/Postcode' | trans} }) }}
+					<div class="input-group-append">
+						<button type="submit" class="btn btn-outline-secondary button-search-filter" v-on:click="search(true); advancedFilter = true; " type="button" id="button-addon2">{% trans %}Search{% endtrans %}</button>
+					</div>
+				</div>
+				<div class="text-center align-top py-4">
+									
+
+					<h1 class="filter-title text-center align-top"> {{ filterTitle | trans }}</h1>
+				</div>
+				<transition name="fade">
+					<div class="inner-form mt-4" v-show="advancedFilter" style="margin-bottom: 150px;"> 
+						<div class="row">
+							<div class="col-md-4 col-xs-2">
+								<div class="row">
+									<div class="col-md-12 col-xs-12">
+										<label class="text-white">Property type</label>
+									</div>
+									<div class="col-md-12 col-xs-12">
+										<div class="form-group input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text">
+													<i class="fa fa-home"></i>
+												</span>
+											</div>
+											{{ form_widget(searchForm.propertyType, { 'attr': { 'placeholder': 'Property type', 'class': 'select-radius-0', 'v-on:change':'search(true)'} }) }}
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-4 col-xs-4">
+								<div class="row">
+									<div class="col-md-12 col-xs-12">
+										<label class="text-white">Bedrooms</label>
+									</div>
+									<div class="col-md-6 col-xs-6">
+										<div class="form-group input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text">
+													<i class="fa fa-bed"></i>
+												</span>
+											</div>
+											{{ form_widget(searchForm.minBedroom, { attr: {'placeholder': 'No min', 'v-on:change':'search(true)', 'class': 'select-radius-0' } }) }}
+										</div>
+									</div>
+									<div class="col-md-6 col-xs-6">
+										<div class="form-group input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text">
+													<i class="fa fa-bed"></i>
+												</span>
+											</div>
+											{{ form_widget(searchForm.maxBedroom, { attr: {'placeholder': 'No max', 'v-on:change':'search(true)', 'class': 'select-radius-0' } }) }}
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-4 col-xs-4">
+								<div class="row">
+									<div class="col-md-12 col-xs-12">
+										<label class="text-white">{% trans %}Price range{% endtrans %}</label>
+									</div>
+									<div class="col-md-6 col-xs-6">
+										<div class="form-group input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text">
+													<i class="fas fa-pound-sign"></i>
+												</span>
+											</div>
+											{{ form_widget(searchForm.minValue, { attr: {'placeholder': 'No min', 'v-on:change':'search(true)', 'class': 'select-radius-0' } }) }}
+										</div>
+									</div>
+									<div class="col-md-6 col-xs-6">
+										<div class="form-group input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text">
+													<i class="fas fa-pound-sign"></i>
+												</span>
+											</div>
+											{{ form_widget(searchForm.maxValue, { attr: {'placeholder': 'No max', 'v-on:change':'search(true)', 'class': 'select-radius-0' } }) }}
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-12 text-center">
+								<button class="button-default button-filled" v-on:click="search(true)" type="button">{{ 'Search' | trans }}</button>
+							</div>
+						</div>
+					</div>
+				</transition>
+			{{ form_end(searchForm) }}
+		</div>
+		{% for banner in banners %}
+			<div class="carousel-item  {% if loop.index == 1 %}active{% endif %}">
+				<img class="d-block w-100 carousel-image backdrop" data-src="{{ banner }}">
+			</div>
+		{% endfor %}
+	</div>
+</div>

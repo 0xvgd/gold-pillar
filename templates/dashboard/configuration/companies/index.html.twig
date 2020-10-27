@@ -1,0 +1,82 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %} Companies | {{ parent() }} {% endblock %}
+
+{% block body %}
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('dashboard_index') }}">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    <a href="{{path('dashboard_config_companies_index')}}">Companies</a>
+                </li>
+            </ol>
+        </nav>
+    </div>
+
+    <header role="heading">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-sm-6 col-xs-6">
+                    <h2>
+                        Companies
+                    </h2>
+                    <p class="hidden-xs"></p>
+                </div>
+                <div class="col-md-8 col-sm-6 col-xs-6 btn-action">
+                    {{ form_start(searchForm, { attr: { 'data-type': 'basic', 'id': 'search-form' } }) }}
+                    <div class="col-xs-8">
+                        <div class="form-group">
+                            <div class="input-group">
+                                {{ form_widget(searchForm.name) }}
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-primary">
+                                        <span class="fa fa-search"></span> 
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-4">
+                        <a href="{{ path('dashboard_config_companies_new') }}" class="btn btn-danger pull-right">
+                            <span class="fa fa-plus"></span> 
+                            {% trans %}New{% endtrans %} Company
+                        </a>
+                    </div>
+                    {{ form_end(searchForm) }}
+                </div>
+            </div>
+        </div>
+    </header>
+
+<fieldset class="section mt-3">
+        <div class="container">
+            {% include 'includes/flashMessages.html.twig' %}
+            <div class="card">
+                <div class="table-responsive">
+                    <table id="datatable" class="table" data-url="{{ path("dashboard_config_companies_index") }}">
+                        <thead>
+                            <tr>
+                                <th class="bdwT-0">{% trans %}Name{% endtrans %}</th>
+                                <th class="bdwT-0">Is default</th>
+                                <th class="bdwT-0 no-sort"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('dashboard/configuration/companies/index') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('dashboard/configuration/companies/index') }}
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'frontend/base.html.twig' %}
+
+{% block title %}Subscribe | {{ parent() }}{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	{{ encore_entry_link_tags('subscribe') }}
+	<style>body { background-color: #333; }</style>
+{% endblock %}
+
+{% block body %}
+	<div class="page navbar-offset">
+		<div class="container">
+			<div class="card bg-light">
+				<article class="card-body mx-auto" style="max-width: 400px;">
+					<h4 class="card-title mt-3 text-center">{{ 'Pre registration' | trans }}</h4>
+					{{ form_start(form, { 'attr': { 'id': 'user-form'} }) }}
+						<div class="col-md-12">
+							{% include 'includes/flashMessages.html.twig' %}
+							{% if not form.vars.valid %}
+								<ul>
+									{% for error in form.vars.errors %}
+										<li>
+											<p class="text-danger">
+												<b>{{ error.message }}</b>
+											</p>
+										</li>
+									{% endfor %}
+								</ul>
+							{% endif %}
+						</div>
+
+						<p>{{ 'Please fill out the form and we will respond shortly.' | trans }}</p>
+
+						{{ form_row(form.name) }}
+						
+						{{ form_row(form.phone, { 'attr': { 'placeholder': 'Phone number', 'class': 'phone-field'} }) }}
+
+						{{ form_row(form.email.first, { 'attr': { 'placeholder': 'E-mail address'} }) }}
+
+						{{ form_row(form.email.second, { 'attr': { 'placeholder': 'Confirm e-mail address'} }) }}
+
+						<div class="form-group">
+							<button type="submit" class="btn btn-primary btn-block">
+								{{ 'Send' | trans }}
+							</button>
+						</div>
+					{{ form_end(form) }}
+				</article>
+			</div>
+			<!-- card.// -->
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('subscribe') }}
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}{% trans %}Schedule{% endtrans %} / {% trans %}My diary{% endtrans %} | {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">{% trans %}Schedule{% endtrans %}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{% trans %}My diary{% endtrans %}</li>
+            </ol>
+        </nav>
+    </div>
+    <header role="heading">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-sm-6 col-xs-6">
+                    <h1 class="h2">{% trans %}Working Hours{% endtrans %}</h1>
+                    <p class="hidden-xs">{% trans %}Setup your diary{% endtrans %}</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <fieldset class="section">
+        <div class="container">
+            {% include 'includes/flashMessages.html.twig' %}
+
+            {{ form_errors(form) }}
+            
+            {{ form_start(form) }}
+                {{ form_row(form.shifts) }}
+
+                <hr>
+                
+                <button type="submit" class="btn btn-primary">{% trans %}Save{% endtrans %}</button>
+            {{ form_end(form) }}
+        </div>
+    </fieldset>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('dashboard/schedule') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+	<script src="{{ asset('js/dashboard/symfony-collection.js') }}"></script>
+    {{ encore_entry_script_tags('dashboard/schedule') }}
+{% endblock %}

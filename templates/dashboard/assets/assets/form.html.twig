@@ -1,0 +1,244 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Assets |
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<a href="{{ path('dashboard_assets_assets_index') }}">Dashboard</a>
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<a href="{{path('dashboard_assets_assets_index')}}">{{ 'Assets' | trans }}</a>
+				</li>
+			</ol>
+		</nav>
+	</div>
+	<header role="heading">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4 col-sm-6 col-xs-6">
+					<h1 class="h2">{{ 'Assets' | trans }}</h1>
+					<p class="hidden-xs">{{ 'Assets for investments' | trans }}</p>
+				</div>
+				<div class="col-md-8 col-sm-12 col-xs-12">
+					{% if entity and entity.account %}
+						<div class="text-right">
+							<a href="{{ path('dashboard_assets_assets_finance', { id: entity.id }) }}" class="btn btn-secondary">
+								<i class="fas fa-calculator"></i>
+								{{ 'Financial info' | trans }}
+							</a>
+						</div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</header>
+	<fieldset class="section">
+		<div class="container" id="app">
+			{% include 'includes/flashMessages.html.twig' %}
+			{% if not form.vars.valid %}
+				<div class="alert alert-danger alert-dismissible" role="alert">
+					<ul>
+						{% for error in errors %}
+							<li>
+								<p class="text-danger">
+									<b>{{ error.message }}</b>
+								</p>
+							</li>
+						{% endfor %}
+					</ul>
+				</div>
+			{% endif %}
+
+			{{ form_start(form, { 'attr': { 'data-parsley-validate': 'true' } }) }}
+			<div class="card">
+				<div class="card-header">
+					<ul class="nav nav-tabs card-header-tabs" role="tablist">
+						<li role="presentation" class="nav-item">
+							<a href="#tab-general" class="nav-link active" role="tab" data-toggle="tab">{{ 'Asset' | trans }}</a>
+						</li>
+						<li role="presentation" class="nav-item">
+							<a href="#tab-media" class="nav-link" role="tab" data-toggle="tab">{{ 'Media' | trans }}</a>
+						</li>
+						<li role="presentation" class="nav-item">
+							<a href="#tab-equity" class="nav-link" role="tab" data-toggle="tab">
+								{{ 'Equity' | trans }}
+							</a>
+						</li>
+					</ul>
+				</div>
+				<div class="card-body">
+					<div class="tab-content">
+						<div role="tabpanel" class="tab-pane active" id="tab-general">
+
+
+							<div class="row">
+								<div class="col-md-4">
+									{{ form_row(form.name) }}
+								</div>
+								{% if is_granted('ROLE_ADMIN') %}
+									<div class="col-md-3">
+										{{ form_row(form.postStatus) }}
+									</div>
+								{% endif %}
+								<div class="col-md-3">
+									{{ form_row(form.assetStatus) }}
+								</div>
+								<div class="col-md-2">
+									{{ form_row(form.assetType) }}
+								</div>
+							</div>
+							<div class="row">
+								{% if is_granted('ROLE_ADMIN') %}
+									<div class="col-md-4">
+										{{ form_row(form.agent) }}
+									</div>
+								{% endif %}
+								<div class="col-md-4">
+									{{ form_row(form.engineer) }}
+								</div>
+								<div class="col-md-4">
+									{{ form_row(form.contractor) }}
+								</div>
+							</div>
+
+							{{ form_row(form.tag) }}
+
+							<div class="row">
+								<div class="col-md-12">
+									<fieldset>
+										<legend>
+											{{ 'Address' | trans }}
+										</legend>
+										{{ form_row(form.address) }}
+									</fieldset>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12">
+									<fieldset>
+										<legend>
+											{{ 'Details' | trans }}
+										</legend>
+
+										<div class="row">
+											<div class="col-md-3">
+												{{ form_row(form.bathrooms) }}
+											</div>
+											<div class="col-md-3">
+												{{ form_row(form.bedrooms) }}
+											</div>
+										</div>
+										{{ form_widget(form.description) }}
+									</fieldset>
+								</div>
+							</div>
+						</div>
+						<div role="tabpanel" class="tab-pane" id="tab-media">
+							<fieldset>
+								<legend>{{ 'Documents' | trans }}</legend>
+								<div class="my-4" id="documents-container">
+									{{ form_row(form.documents) }}
+								</div>
+							</fieldset>
+							<fieldset>
+								<legend>{{ 'Video' | trans }}</legend>
+								{% if form.youtubeUrl.vars.data %}
+									<iframe width="100%" height="400" src="https://www.youtube.com/embed/{{ form.youtubeUrl.vars.data|split('?v=')[1] }}" frameborder="0" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>
+								{% endif %}
+								{{ form_row(form.youtubeUrl) }}
+							</fieldset>
+							<fieldset>
+								<legend>{{ 'Main photo' | trans }}</legend>
+								{{ form_row(form.mainPhoto) }}
+								<span id="main-photo-large-file-msg">(Maximum Size: 5MB)</span>
+							</fieldset>
+							<fieldset>
+								<legend>{{ 'Other photos' | trans }}</legend>
+								<div class="init" id="photos-container">
+									{{ form_row(form.photos) }}
+								</div>
+							</fieldset>
+							<fieldset>
+								<legend>{{ 'Floorplans' | trans }}</legend>
+								<div class="init" id="floorplans-container">
+									{{ form_row(form.floorplans) }}
+								</div>
+							</fieldset>
+						</div>
+						<div role="tabpanel" class="tab-pane" id="tab-equity">
+							<div class="row">
+								<div class="col-sm-4">
+									{{ form_row(form.marketValue) }}
+								</div>
+								<div class="col-sm-4">
+									{{ form_row(form.birthday) }}
+								</div>
+							</div>
+							<fieldset>
+								<legend>{{ 'Equity history' | trans }}</legend>
+								{% if entity.lastEquity %}
+									<div class="alert alert-info">
+										{% set symbol = entity.lastEquity.price.symbol %}
+										Current equity available
+										<b>{{ symbol }}{{ entity.lastEquity.price.amount |number_format(2) }}</b>. 
+																						Total invested
+										<b>{{ symbol }}{{ entity.totalInvested.amount|number_format(2) }}</b>.
+																						Remaining investment
+										<b>{{ symbol }}{{ entity.maxInvestmentValue|number_format(2) }}</b>
+									</div>
+								{% endif %}
+								<div class="table-responsive">
+									{{ form_row(form.assetEquities) }}
+								</div>
+							</fieldset>
+						</div>
+					</div>
+				</div>
+				<div class="card-footer">
+					<div class="d-flex">
+						<a href="{{ path('dashboard_assets_assets_index') }}" class="btn btn-link text-dark">
+							<i class="fa fa-chevron-left"></i>
+							{{ 'Back' | trans }}
+						</a>
+						<div class="ml-auto">
+							{% if entity.id and entity.removedAt is null %}
+								<button type="button" class="btn btn-outline-danger border-0" data-toggle="modal" data-target="#remove-modal">
+									<span class="fa fa-trash"></span>
+									{{ 'Remove' | trans }}
+								</button>
+							{% endif %}
+							<button type="submit" class="btn btn-primary ml-2">
+								<i class="fas fa-save"></i>
+								{{ 'Save' | trans }}
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			{{ form_end(form) }}
+		</div>
+	</fieldset>
+
+	{% include 'dashboard/includes/cropperModal.html.twig' %}
+	{% include 'dashboard/includes/removeResourceModal.html.twig' %}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	{{ encore_entry_link_tags('dashboard/assets/assets/form') }}
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('js/dashboard/symfony-collection.js') }}"></script>
+	<script>
+		var recurringExpensesValues = 0;
+var unregisteredExpenses = 0;
+	</script>
+	{{ encore_entry_script_tags('dashboard/assets/assets/form') }}
+{% endblock %}

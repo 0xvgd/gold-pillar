@@ -1,0 +1,160 @@
+{% extends 'report/default.html.twig' %}
+{% block company %}
+<p>Property Report</p>
+{% endblock%}
+
+
+{% set showHeader = false %}
+{% set showFooter = false %}
+
+{% block stylesheets %}
+	{{ parent() }}
+
+	<link rel="stylesheet" href="{{ asset('css/report-media-print.css') }}" media="print">
+
+
+	<style>
+		body {
+			margin-left: 2cm;
+		}
+
+		.resumo table tr {
+			height: 70px;
+		}
+
+		table,
+		td:empty,
+		th:empty {
+			border: none !important;
+		}
+
+		table > tbody > tr > td,
+		.table>tbody>tr>th,
+		.table>tfoot>tr>td,
+		.table>tfoot>tr>th,
+		.table>thead>tr>td,
+		.table > thead > tr > th {
+			border-bottom: 1px solid #333;
+		}
+	</style>
+{% endblock %}
+
+{% block pageTitle %}
+Transactions
+{% endblock%}
+
+{% block body %}
+	{% if not agentTransaction %}
+		<div class="alert alert-info">
+			<strong>Empty report</strong>
+			<p>no data.</p>
+		</div>
+	{% else %}
+		{% set k = 0 %}
+		<article>
+			<header>
+				{% include "report/header.html.twig" with { subtitle: block('company') } %}
+				<div class="header-custom mt-3">
+					<h4>{{ property.name }}
+					</h4>
+					<p>#</p>
+				</div>
+			</header>
+			<section>
+				<h5>Company result</h5>
+				<table class="table table-condensed">
+					<tbody>
+						<tr>
+							<th style="width: 25%">Type</th>
+							<th style="width: 25%" class="text-right">Ref value</th>
+							<th style="width: 25%" class="text-right">Percentage</th>
+							<th style="width: 25%" class="text-right">Profit</th>
+						</tr>
+						{% for transaction in companyTransaction %}
+							<tr>
+							    <td>{{ transaction.type.description }}</td>
+								<td class="text-right" >£{{ (transaction.refValue ) | number_format(2) }}</td>
+								<td class="text-right">{{ (transaction.fee * 100) | number_format(2) }}%</td>
+								<td class="text-right">£{{ transaction.amount | number_format(2) }}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</section>
+			<section>
+				<h5>Agent</h5>
+				<table class="table table-condensed">
+					<tbody>
+						<tr>
+							<th style="width: 40%">Name</th>
+							<th style="width: 20%" class="text-right">Ref value</th>
+							<th style="width: 20%" class="text-right">Percentage</th>
+							<th style="width: 20%" class="text-right">Profit</th>
+						</tr>
+						<tr>
+							<td>{{ property.agent.user.name }}</td>
+							<td class="text-right">£{{ (agentTransaction.refValue ) | number_format(2) }}</td>
+							<td class="text-right">{{ (agentTransaction.fee * 100) | number_format(2)}}%</td>
+							<td class="text-right">£{{ agentTransaction.amount | number_format(2) }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</section>
+
+			{% if parentAgentTransaction %}
+				<section>
+					<h5>Parent Agent</h5>
+					<table class="table table-condensed">
+						<tbody>
+							<tr>
+								<th style="width: 40%">Name</th>
+								<th style="width: 20%" class="text-right">Ref value</th>
+								<th style="width: 20%" class="text-right">Percentage</th>
+								<th style="width: 20%" class="text-right">Profit</th>
+							</tr>
+							<tr>
+								<td>{{ property.agent.user.parentUser.name }}</td>
+								<td class="text-right">£{{ (parentAgentTransaction.refValue ) | number_format(2) }}</td>
+								<td class="text-right">{{ (parentAgentTransaction.fee * 100) | number_format(2)}}%</td>
+								<td class="text-right">£{{ parentAgentTransaction.amount | number_format(2) }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+			{% endif %}
+
+			{% if grandparentAgentTransaction %}
+				<section>
+					<h5>Grandparent Agent</h5>
+					<table class="table table-condensed">
+						<tbody>
+							<tr>
+								<th style="width: 40%">Name</th>
+								<th style="width: 20%" class="text-right">Ref value</th>
+								<th style="width: 20%" class="text-right">Percentage</th>
+								<th style="width: 20%" class="text-right">Profit</th>
+							</tr>
+							<tr>
+								<td>{{ property.agent.user.parentUser.parentUser.name }}</td>
+								<td class="text-right">£{{ (grandparentAgentTransaction.refValue ) | number_format(2) }}</td>
+								<td class="text-right">{{ (grandparentAgentTransaction.fee * 100) | number_format(2)}}%</td>
+								<td class="text-right">£{{ grandparentAgentTransaction.amount | number_format(2) }}</td>
+
+							</tr>
+						</tbody>
+					</table>
+				</section>
+			{% endif %}
+
+			<footer>
+				{% include "report/footer.html.twig" %}
+				<center>
+					{#  Report {{ k }} to {{ transactions|length }}#}
+				</center>
+			</footer>
+		</article>
+
+	{% endif %}
+
+
+{% endblock %}

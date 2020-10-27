@@ -1,0 +1,83 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}
+	Assets |
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	{{ encore_entry_link_tags('investor/assets') }}
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<a href="{{ path('dashboard_index') }}">Dashboard</a>
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<a href="{{path('dashboard_investor_assets_index')}}">{{ 'Assets' | trans }}</a>
+				</li>
+			</ol>
+		</nav>
+	</div>
+
+	<header role="heading">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4 col-sm-6 col-xs-6"></div>
+				<div class="col-md-8 col-sm-6 col-xs-6 btn-action"></div>
+			</div>
+		</div>
+	</header>
+	<fieldset class="section">
+		<div class="container" id="app">
+			<hr>
+			<div class="card">
+				{{ form_start(form, { 'attr': { 'data-parsley-validate': 'true' } }) }}
+				<div class="card-body card-block">
+					{% include 'includes/flashMessages.html.twig' %}
+					{% if not form.vars.valid %}
+						<div class="alert alert-danger alert-dismissible" role="alert">
+							<ul>
+								{% for error in errors %}
+									<li>
+										<p class="text-danger">
+											<b>{{ error.message }}</b>
+										</p>
+									</li>
+								{% endfor %}
+							</ul>
+						</div>
+					{% endif %}
+
+					<div class="row">
+						<div class="col-md-6">
+							{{ form_row(form.parentInviteCode) }}
+						</div>
+					</div>
+
+				</div>
+				<div class="card-footer">
+					<button type="submit" class="btn btn-primary btn-sm">
+						<i class="fas fa-save"></i>
+						Save
+					</button>
+					<button type="reset" class="btn btn-secondary btn-sm">
+						<i class="fa fa-eraser"></i>
+						Reset
+					</button>
+				</div>
+				{{ form_end(form) }}
+			</div>
+		</div>
+	</fieldset>
+
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('investor/assets') }}
+{% endblock %}

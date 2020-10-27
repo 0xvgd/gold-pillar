@@ -1,0 +1,154 @@
+{% extends 'frontend/base.html.twig' %}
+
+{% set currentPath = absolute_url(path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params'))) %}
+
+{% block body %}
+	{% include 'includes/flashMessages.html.twig' %}
+
+	<div class="page navbar-offset">
+        <div class="container">
+            <div class="py-4">
+                <h1>{{ 'New reserve' | trans }}</h1>
+                <p>{{ 'Please fill the form bellow to make your reserve.' | trans }}</p>
+
+                <div class="alert alert-warning">
+                    {% if validate is defined %}
+                        {{ render(controller(validate['responsePage'], { 'payzoneGateway' : payzoneGateway, 'validate': validate })) }}
+                    {% endif %}
+                    <b>{{ 'Attention:' | trans }}</b> {{ 'You must pay' | trans }} {{ reserve.fee.symbol }}{{ reserve.fee.amount | number_format(2) }} {{ 'to reserve this accomodation.' | trans }}
+                </div>
+
+                <div class="card mb-3">
+                    <div class="row no-gutters">
+                        <div class="col-md-3">
+                            <img src="{{ accommodation.mainPhoto }}" class="card-img" alt="">
+                        </div>
+                        <div class="col-md-9">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ accommodation.name }}</h5>
+                                <p class="card-text">{{ accommodation.address }}</p>
+                                <p class="card-text">
+                                    <small class="text-muted">
+                                        <b>{{ 'Tag:' | trans }}</b> {{ accommodation.tag }}
+                                    </small>
+                                    <br>
+                                    <small class="text-muted">
+                                        <b>{{ 'Agent:' | trans }}</b> {{ accommodation.agent }}
+                                    </small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                {{ form_start(form, {'action': path('app_renting_reserve', { 'slug': slug, 'pzgact':'process' }), 'method': 'POST', 'attr': { 'data-parsley-validate': 'true', 'id': 'add-reserve-form' } }) }}
+                    {% include "includes/flashMessages.html.twig" %}
+                    {% if not form.vars.valid %}
+                            <div class="alert alert-danger alert-dismissible" role="alert">
+                                <ul>
+                                    {% for error in errors %}
+                                        <li><p class="text-danger"><b>{{ error.message }}</b></p></li>
+                                                {% endfor %}
+                                </ul>
+                            </div>
+                    {% endif %}
+                    <h3 class="mt-4">{{ 'How many people want to move in' | trans }}</h3>
+
+                    <div class="my-4">
+                        {{ form_row(form.people) }}
+                    </div>
+
+                     <h3 class="mt-4">{{ 'Order details' | trans }}</h3>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <fieldset>
+                                <legend>
+                                    {{ 'Address' | trans }}
+                                </legend>
+                                {{ form_row(form.orderDetail.address) }}
+                            </fieldset>
+                        </div>
+                        <div class="col-md-6">
+                            <fieldset>
+                                <legend>
+                                    {{ 'Card details' | trans }}
+                                </legend>
+                                <div class="row">
+                                    <div class="col-12">
+                                        {{ form_row(form.orderDetail.cardName) }}
+                                    </div>
+                                    <div class="col-12">
+                                        {{ form_row(form.orderDetail.cardNumber) }}
+                                    </div>
+                                    <div class="col-4">
+                                        {{ form_row(form.orderDetail.cv2) }}
+                                    </div>
+                                    <div class="col-4">
+                                        {{ form_row(form.orderDetail.expiryDateMonth) }}
+                                    </div>
+                                    <div class="col-4">
+                                        {{ form_row(form.orderDetail.expiryDateYear) }}
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+
+                    <div>
+                        <button type="submit" class="btn btn-primary">{{ 'Reserve house' | trans }}</button>
+                    </div>
+                    {{ form_row(form.orderDetail.hashDigest) }}
+                    {{ form_row(form.orderDetail.transactionDateTime) }}
+                    {{ form_row(form.orderDetail.callbackURL) }}
+                    {{ form_row(form.orderDetail.orderID) }}
+                    {{ form_row(form.orderDetail.orderDescription) }}
+                    {{ form_row(form.orderDetail.currencyCode) }}
+                    {{ form_row(form.orderDetail.fullAmount) }}
+                    {{ form_row(form.orderDetail.amount) }}
+                {{ form_end(form) }}
+            </div>
+        </div>
+        <div id='payzone-payment-modal-background'></div>
+        <div id='payzone-payment-modal'>
+            <a id='payzone-modal-close' href='#'>&times;</a>
+        </div>
+        <div id='payzone-loading-modal-background'></div>
+        <div id='payzone-loading-modal'>
+            <div class='payzone-loading-wrap' id='payzone-loading-wrap'>
+                <img src="{{ asset('images/loading2.gif') }}" />
+            </div>
+        </div>  
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+     <link rel="stylesheet" href="{{ asset('css/payzone_gateway.css?v2') }}">
+    <style>
+        #reserve_people {
+            counter-reset: person;
+        }
+
+        #reserve_people .counter {
+            font-size: 11pt;
+        }
+
+        #reserve_people .counter::before {
+            counter-increment: person;
+            content: counter(person);
+        }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/dashboard/symfony-collection.js') }}"></script>
+    <script>
+        $('[data-prototype').collection()
+        var iframepage='payment';
+    </script>
+   
+    {{ encore_entry_script_tags('renting/add') }}
+
+{% endblock %}

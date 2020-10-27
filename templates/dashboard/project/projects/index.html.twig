@@ -1,0 +1,105 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %} {% trans %}Project{% endtrans %} | {{ parent() }} {% endblock %}
+
+{% block body %}
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">{% trans %}Project{% endtrans %}</li>
+            </ol>
+        </nav>
+    </div>
+    <header role="heading">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-sm-6 col-xs-6">
+                    <h1 class="h2">{% trans %}Projects{% endtrans %}</h1>
+                    <p class="hidden-xs">{% trans %}Projects for investments{% endtrans %}</p>
+                </div>
+                <div class="col-md-8 col-sm-6 col-xs-6 btn-action">
+                    <div class="d-flex">
+                        {{ form_start(searchForm, { attr: { 'data-type': 'basic', id: 'search-form', class: 'ml-auto' } }) }}
+                            <div class="form-group">
+                                <div class="input-group">
+                                    {{ form_widget(searchForm.name, { attr: {'id': 'search-primary' } }) }}
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-secondary">
+                                            <span class="fa fa-search"></span>
+                                        </button>
+                                    </span>
+                                </div>
+                                {{ form_widget(searchForm.status) }}
+                            </div>
+                        {{ form_end(searchForm) }}
+                        <div class="pl-3">
+                            <a href="{{ path('dashboard_projects_projects_new') }}" class="btn btn-primary">
+                                <span class="fa fa-plus"></span>
+                                {% trans %}New Project{% endtrans %}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <fieldset class="section mt-3">
+        <div class="container">
+        {% include 'includes/flashMessages.html.twig' %}
+
+        <div class="row p-5">
+            <div class="col-md-12 text-right">
+                <label>
+                    [
+                    <strong>{% trans %}Approved{% endtrans %}:</strong>
+                    <i class="fa fa-check  c-green-500"></i>
+                    ]
+                </label>
+                <label>
+                    [
+                    <strong>{% trans %}Denied (contact us){% endtrans %}:</strong>
+                    <i class="fas fa-exclamation-triangle c-red-500"></i>
+                    ]
+                </label>
+                <label>
+                    [
+                    <strong>{% trans %}On Approval{% endtrans %}:</strong>
+                    <i class="fas fa-clock c-orange-300"></i>
+                    ]
+                </label>
+            </div>
+            <hr>
+        </div>
+        <div class="card">
+            <div class="table-responsive">
+                <table id="datatable" class="table" data-url="{{ path("dashboard_projects_projects_index") }}" data-is-admin="{{ is_granted('ROLE_ADMIN') ? 'true' : 'false' }}">
+                    <thead>
+                        <tr>
+                            <th class="bdwT-0 no-sort">{% trans %}Photo{% endtrans %}</th>
+                            <th class="bdwT-0">{% trans %}Name{% endtrans %}</th>
+                            <th class="bdwT-0 col-hidden">{% trans %}Purchase Price{% endtrans %}</th>
+                            <th class="bdwT-0 col-hidden" alt="Gross development value">{% trans %}GDV{% endtrans %}</th>
+                            <th class="bdwT-0 col-hidden">{% trans %}Hits{% endtrans %}</th>
+                            <th class="bdwT-0 col-hidden">{% trans %}Post Status{% endtrans %}</th>
+                            <th class="bdwT-0 col-hidden">{% trans %}Project Status{% endtrans %}</th>
+                            <th class="bdwT-0 no-sort"></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </fieldset>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('dashboard/projects/projects/index') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('dashboard/projects/projects/index') }}
+{% endblock %}

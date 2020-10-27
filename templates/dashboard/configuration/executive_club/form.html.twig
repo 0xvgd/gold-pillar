@@ -1,0 +1,146 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %} Executive Club | {{ parent() }} {% endblock %}
+
+{% set executiveClub = form.vars.data %}
+
+{% block body %}
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    <a href="{{ path('dashboard_config_companies_index') }}">Companies</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Executive club</li>
+            </ol>
+        </nav>
+    </div>
+    <header role="heading">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-sm-6 col-xs-6">
+                    <h1 class="h2">Executive club</h1>
+                </div>
+
+                <div class="col-md-8 col-sm-12 col-xs-12">
+                    {% if executiveClub.id %}
+                        <form id="form-delete" action="{{ path('dashboard_companies_executive_club_remove', { 'club_id' : executiveClub.id }) }}" method="post">
+                            <button type="button" id="btn-delete" class="btn btn-danger pull-right botao-mobile" name="_method" value="DELETE">
+                                <span class="fa fa-trash"></span>
+                                Remove Executive club
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <fieldset class="section">
+        <div class="container" id="app">
+             {% include 'includes/flashMessages.html.twig' %}
+             {% if not form.vars.valid %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <ul>
+                        {% for error in errors %}
+                            <li>
+                                <p class="text-danger">
+                                    <b>{{ error.message }}</b>
+                                </p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            {{ form_start(form, { 'attr': { 'data-parsley-validate': 'true' } }) }}
+            <div class="card">
+                <div class="card-header">
+                    <ul class="nav nav-tabs card-header-tabs" role="tablist">
+                        <li role="presentation" class="nav-item">
+                            <a href="#tab-general" class="nav-link active" role="tab" data-toggle="tab">Executive club</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="tab-general">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{ form_row(form.description) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    {{ form_row(form.minSales) }}
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_row(form.maxSales) }}
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_row(form.companyFee) }}
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_row(form.fee) }}
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_row(form.distributableValue) }}
+                                </div>
+                            
+                            </div>
+                            <fieldset>
+                                <legend>Photo</legend>
+                                    {{ form_row(form.pathLogo) }}
+                                <span id="main-photo-large-file-msg">(Maximum Size: 5MB)</span>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary btn-sm pull-right">
+                        <i class="fa fa-save"></i>
+                        Save
+                    </button>
+                     <a href="{{ path('dashboard_config_companies_edit', { 'id': entity.company.id, 'tab':'tab-executive-club' }) }}" class="btn btn-warning btn-sm">
+                            <i class="fa fa-chevron-left"></i> Go back
+                        </a>
+                    <button type="reset" class="btn btn-secondary btn-sm">
+                        <i class="fa fa-eraser"></i>
+                        Reset
+                    </button>
+                </div>
+            </div>
+            {{ form_end(form) }}
+        </fieldset>
+        {% include 'dashboard/includes/cropperModal.html.twig' %}
+    {% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	{{ encore_entry_link_tags('executive-club-form') }}
+{% endblock %}
+
+    {% block javascripts %}
+        {{ parent() }}
+        <script src="{{ asset('js/dashboard/symfony-collection.js') }}"></script>
+        <script>
+
+            $('#btn-delete').click(function (e) {
+                e.preventDefault();
+                $("#form-delete").submit();
+                return false;
+            });
+
+            $("#form-delete").on("submit", function () {
+                if (confirm(MSG_DELETE_ITEM)) {
+                    return true;
+                } else {
+                    $('form-delete').find('[type=submit],submit').prop('disabled', false);
+                    return false;
+                }
+            });
+        </script>
+        {{ encore_entry_script_tags('executive-club-form') }}
+    {% endblock %}

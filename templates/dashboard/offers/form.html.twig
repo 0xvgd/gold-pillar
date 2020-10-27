@@ -1,0 +1,93 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}
+    Offers |
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('dashboard_index') }}">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    <a href="{{path('dashboard_engineers_index')}}">{{ 'Offers' | trans }}</a>
+                </li>
+            </ol>
+        </nav>
+    </div>
+
+    <header role="heading">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-sm-6 col-xs-6">
+                    <h1 class="h2">{{ 'Offers' | trans }}</h1>
+                    <p class="hidden-xs">{{ 'subtitle' | trans }}</p>
+                </div>   
+            </div>
+        </div>
+    </header>
+    <fieldset class="section">
+        <div class="container" id="app">
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Status: {{ entity.status.label }}</h4>
+                </div>
+                 <div class="col-md-6 text-right">
+                    <h4>{{ 'How many people want to move in:' | trans }} {{ entity.peopleCount }}</h4>
+                </div>
+                <div class="col-md-6">
+                    <h4>Tenant: {{ entity.tenant.user.email }}</h4>
+                </div>
+                <div class="col-md-6 text-right">
+                    <h4 class={{ entity.counterOfferValue > 0 ? 'offer-declined': '' }}>{{ 'Offer:'| trans }} £{{ entity.offerValue | number_format(2)}}</h4>
+                </div>
+                {% if entity.counterOfferValue %}
+                    <div class="col-md-12 text-right">
+                        <h4>{{ 'Counter offer:' | trans }} £{{  entity.counterOfferValue | number_format(2)}}</h4>
+                    </div>
+                {% endif %}
+                <div class="col-md-12">
+                    <label>{{ 'Message:' | trans }} </label><span>{{ entity.message }}</span>
+                </div>
+                <div class="col-md-12 text-right">
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        {% if not entity.counterOfferValue %}
+                            <button type="button" id='accept' data-action='{{ path('dashboard_offers_accept', { id: entity.id }) }}' class="btn btn-success">Accept</button>
+                            <button type="button" id='counterOffer' data-action='{{ path('dashboard_offers_counter_offer', { id: entity.id }) }}' class="btn btn-secondary">{{ 'Counter offer' | trans }}</button>
+                            <button type="button" id='decline' data-action='{{ path('dashboard_offers_decline', { id: entity.id }) }}' class="btn btn-danger">Decline</button>
+                        {% endif %}  
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    
+    <form id='counterOfferForm' method="post">
+        <input type="hidden" name="counterOfferValue" id="counterOfferValue">
+        <input type="hidden" name="offerId" id="offerId" value="{{ entity.id }}">
+    </form>
+
+    <form id='acceptForm' method="post">
+        <input type="hidden" name="offerId" id="offerId" value="{{ entity.id }}">
+    </form>
+
+    <form id='declineForm' method="post">
+        <input type="hidden" name="offerId" id="offerId" value="{{ entity.id }}">
+    </form>
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	{{ encore_entry_link_tags('dashboard/offers/form') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('dashboard/offers/form') }}
+    <script>
+        var baseUrl = '{{ app.request.baseUrl() }}';
+    </script>
+{% endblock %}

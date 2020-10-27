@@ -1,0 +1,407 @@
+<ul class="sidebar-menu scrollable pos-r">
+	<li class="nav-item">
+		<a class="sidebar-link text-muted" href="{{ path('dashboard_index') }}">
+			<span class="icon-holder">
+				<i class="fas fa-home"></i>
+			</span>
+			<span class="title">Dashboard</span>
+		</a>
+	</li>
+	<li class="nav-item dropdown">
+		<a class="dropdown-toggle" href="javascript:void(0);">
+			<span class="icon-holder">
+				<i class="fas fa-calendar-alt"></i>
+			</span>
+			<span class="title">{{ 'Calendar' | trans }}</span>
+			<span class="arrow">
+				<i class="ti-angle-right"></i>
+			</span>
+		</a>
+		<ul class="dropdown-menu">
+			<li class="nav-item">
+				<a class="sidebar-link" href="{{ path('dashboard_calendar_index') }}">
+					<span class="icon-holder">
+						<i class="fas fa-tasks"></i>
+					</span>
+					<span class="title">{{ 'My Agenda' | trans }}</span>
+				</a>
+			</li>
+		</ul>
+	</li>
+	{% if is_granted('ROLE_AGENT') %}
+		<li class="nav-item dropdown">
+			<a class="dropdown-toggle" href="javascript:void(0);">
+				<span class="icon-holder">
+					<i class="fas fa-calendar-plus"></i>
+				</span>
+				<span class="title">{{ 'Schedule' | trans }}</span>
+				<span class="arrow">
+					<i class="ti-angle-right"></i>
+				</span>
+			</a>
+			<ul class="dropdown-menu">
+				<li class="nav-item">
+					<a class="sidebar-link" href="{{ path('dashboard_schedule_index') }}">
+						<span class="icon-holder">
+							<i class="fas fa-tasks"></i>
+						</span>
+						<span class="title">{{ 'My Diary' | trans }}</span>
+					</a>
+				</li>
+			</ul>
+		</li>	
+	{% endif %}
+	{% if is_granted('ROLE_AGENT') or is_granted('ROLE_TENANT') %}
+		<li class="nav-item">
+			<a class="sidebar-link" href="{{ path('dashboard_booking_index') }}">
+				<span class="icon-holder">
+					<i class="fas fa-clock"></i>
+				</span>
+				<span class="title">{{ 'Booking' | trans }}</span>
+			</a>
+		</li>
+	{% endif %}
+	{% if is_granted('ROLE_TENANT') %}
+		<li class="nav-item">
+			<a class="sidebar-link" href="{{ path('dashboard_tenant_offers_index') }}">
+				<span class="icon-holder fa-layers fa-fw">
+					<i class="fas fa-handshake"></i>
+					<i class="shrink-11 fas fa-pound-sign" data-fa-transform="shrink-5 down-15"></i>
+				</span>
+				<span class="title">{{ 'Offers' | trans }}</span>
+			</a>
+		</li>
+	{% endif %}
+	{% if is_granted('ROLE_AGENT') %}
+		<li class="nav-item">
+			<a class="sidebar-link" href="{{ path('dashboard_offers_index') }}">
+				<span class="icon-holder fa-layers fa-fw">
+					<i class="fas fa-handshake"></i>
+					<i class="shrink-11 fas fa-pound-sign" data-fa-transform="shrink-5 down-15"></i>
+				</span>
+				<span class="title">{{ 'Offers' | trans }}</span>
+			</a>
+		</li>
+	{% endif %}
+
+	{% if is_granted('ROLE_ADMIN') %}
+		<li class="nav-item dropdown">
+			<a class="dropdown-toggle" href="javascript:void(0);">
+				<span class="icon-holder">
+					<i class="fas fa-shopping-cart"></i>
+				</span>
+				<span class="title">{{ 'Sales core' | trans }}</span>
+				<span class="arrow">
+					<i class="ti-angle-right"></i>
+				</span>
+			</a>
+			<ul class="dropdown-menu">
+				<li class="nav-item">
+					<a class="sidebar-link" href="{{ path('dashboard_sales_properties_index') }}">
+						<span class="icon-holder">
+							<i class="fas fa-city"></i>
+						</span>
+						<span class="title">{{ 'Properties' | trans }}</span>
+					</a>
+				</li>
+			</ul>
+		</li>
+	{% endif %}
+	{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_AGENT') or is_granted('ROLE_TENANT') %}
+		<li class="nav-item dropdown">
+			<a class="dropdown-toggle" href="javascript:void(0);">
+				<span class="icon-holder">
+					<i class="fas fa-truck-loading"></i>
+				</span>
+				<span class="title">{{ 'Renting core' | trans }}</span>
+				<span class="arrow">
+					<i class="ti-angle-right"></i>
+				</span>
+			</a>
+			<ul class="dropdown-menu">
+				{% if is_granted('ROLE_ADMIN') %}
+					<li class="nav-item">
+						<a class="sidebar-link" href="{{ path('dashboard_renting_accommodations_index') }}">
+							<span class="icon-holder">
+								<i class="fas fa-city"></i>
+							</span>
+							<span class="title">{{ 'Accommodations' | trans }}</span>
+						</a>
+					</li>
+				{% endif %}
+				{% if is_granted('ROLE_AGENT') or is_granted('ROLE_TENANT') or is_granted('ROLE_ADMIN')%}
+					<li class="nav-item">
+						<a class="sidebar-link" href="{{ path('dashboard_renting_reserves_index') }}">
+							<span class="icon-holder">
+								<i class="fas fa-city"></i>
+							</span>
+							<span class="title">{{ 'Reserves' | trans }}</span>
+						</a>
+					</li>
+				{% endif %}
+			</ul>
+		</li>
+	{% endif %}
+	{% if is_granted('ROLE_AGENT') or is_granted('ROLE_BROKER') %}
+		<li class="nav-item dropdown">
+			<a class="dropdown-toggle" href="javascript:void(0);">
+				<span class="icon-holder">
+					<i class="fas fa-building"></i>
+				</span>
+				<span class="title">{{ 'Projects core' | trans }}</span>
+				<span class="arrow">
+					<i class="ti-angle-right"></i>
+				</span>
+			</a>
+			<ul class="dropdown-menu">
+				<li class="nav-item">
+					<a class="sidebar-link" href="{{ path('dashboard_projects_projects_index') }}">
+						<span class="icon-holder">
+							<i class="fas fa-building"></i>
+						</span>
+						<span class="title">{{ 'Projects' | trans }}</span>
+					</a>
+				</li>
+				{# <li class="nav-item">
+					<a class="sidebar-link" href="{{ path('dashboard_projects_projects_transactions_index') }}">
+						<span class="icon-holder">
+							<i class="fas fa-pound-sign"></i>
+						</span>
+						<span class="title">Transactions</span>
+					</a>
+				</li> #}
+			</ul>
+		</li>
+	{% endif %}
+	{% if is_granted('ROLE_ADMIN') %}
+		<li class="nav-item dropdown">
+			<a class="dropdown-toggle" href="javascript:void(0);">
+				<span class="icon-holder">
+					<i class="fas fa-hotel"></i>
+				</span>
+				<span class="title">{{ 'Assets core' | trans }}</span>
+				<span class="arrow">
+					<i class="ti-angle-right"></i>
+				</span>
+			</a>
+			<ul class="dropdown-menu">
+				<li class="nav-item">
+					<a class="sidebar-link" href="{{ path('dashboard_assets_assets_index') }}">
+						<span class="icon-holder">
+							<i class=""></i>
+						</span>
+						<span class="title">{{ 'Assets' | trans }}</span>
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="sidebar-link" href="{{ path('dashboard_assets_investments_index') }}">
+						<span class="icon-holder">
+							<i class="fas fa-pound-sign"></i>
+						</span>
+						<span class="title">{{ 'Investments' | trans }}</span>
+					</a>
+				</li>
+			</ul>
+		</li>
+	{% endif %}
+
+	{% if is_granted('ROLE_ADMIN') %}
+		<li class="nav-item dropdown">
+			<a class="dropdown-toggle" href="javascript:void(0);">
+				<span class="icon-holder">
+					<i class="fas fa-hotel"></i>
+				</span>
+				<span class="title">{{ 'Projects core' | trans }}</span>
+				<span class="arrow">
+					<i class="ti-angle-right"></i>
+				</span>
+			</a>
+			<ul class="dropdown-menu">
+				<li class="nav-item">
+					<a class="sidebar-link" href="{{ path('dashboard_projects_projects_index') }}">
+						<span class="icon-holder">
+							<i class=""></i>
+						</span>
+						<span class="title">{{ 'Projects' | trans }}</span>
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="sidebar-link" href="{{ path('dashboard_projects_investments_index') }}">
+						<span class="icon-holder">
+							<i class="fas fa-pound-sign"></i>
+						</span>
+						<span class="title">{{ 'Investments' | trans }}</span>
+					</a>
+				</li>
+			</ul>
+		</li>
+	{% endif %}
+
+	{% if is_granted('ROLE_INVESTOR') %}
+		<li class="nav-item dropdown">
+			<a class="dropdown-toggle" href="javascript:void(0);">
+				<span class="icon-holder">
+					<i class="fas fa-building"></i>
+				</span>
+				<span class="title">{{ 'Investor' | trans }}</span>
+				<span class="arrow">
+					<i class="ti-angle-right"></i>
+				</span>
+			</a>
+			<ul class="dropdown-menu">
+				<li class="nav-item">
+					<a class="sidebar-link" href="{{ path('dashboard_investor_assets_index') }}">
+						<span class="icon-holder">
+							<i class="fas fa-building"></i>
+						</span>
+						<span class="title">{{ 'Assets' | trans }}</span>
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="sidebar-link" href="{{ path('dashboard_investor_projects_index') }}">
+						<span class="icon-holder">
+							<i class="fas fa-building"></i>
+						</span>
+						<span class="title">{{ 'Projects' | trans }}</span>
+					</a>
+				</li>
+			</ul>
+		</li>
+	{% endif %}
+
+	{% if is_granted('ROLE_ADMIN') %}
+		<li class="nav-item">
+			<a class="sidebar-link" href="{{ path('dashboard_agents_index') }}">
+				<span class="icon-holder">
+					<i class="fas fa-user-tie"></i>
+				</span>
+				<span class="title">{{ 'Agents' | trans }}</span>
+			</a>
+		</li>
+		<li class="nav-item">
+			<a class="sidebar-link" href="{{ path('dashboard_contractors_index') }}">
+				<span class="icon-holder">
+					<i class="fas fa-hammer"></i>
+				</span>
+				<span class="title">{{ 'Contractors' | trans }}</span>
+			</a>
+		</li>
+		<li class="nav-item">
+			<a class="sidebar-link" href="{{ path('dashboard_engineers_index') }}">
+				<span class="icon-holder">
+					<i class="fas fa-hard-hat"></i>
+				</span>
+				<span class="title">{{ 'Engineers' | trans }}</span>
+			</a>
+		</li>
+		<li class="nav-item dropdown">
+			<a class="dropdown-toggle" href="javascript:void(0);">
+				<span class="icon-holder">
+					<i class="c-green-500 fas fa-pound-sign"></i>
+				</span>
+				<span class="title">{{ 'Balance' | trans }}</span>
+				<span class="arrow">
+					<i class="ti-angle-right"></i>
+				</span>
+			</a>
+			<ul class="dropdown-menu">
+				{% if is_granted('ROLE_ADMIN') %}
+					<li class="nav-item">
+						<a class="sidebar-link" href="{{ path('dashboard_application_balance_index') }}">
+							<span class="icon-holder">
+								<i class=""></i>
+							</span>
+							<span class="title">{{ 'Company balance' | trans }}</span>
+						</a>
+					</li>
+				{% endif %}
+				<li class="nav-item">
+					<a class="sidebar-link" href="{{ path('dashboard_balance_index') }}">
+						<span class="icon-holder">
+							<i class=""></i>
+						</span>
+						<span class="title">{{ 'User Balance' | trans }}</span>
+					</a>
+				</li>
+			</ul>
+		</li>
+		<li class="nav-item dropdown">
+			<a class="dropdown-toggle" href="javascript:void(0);">
+				<span class="icon-holder">
+					<i class="ti-settings"></i>
+				</span>
+				<span class="title">{{ 'Configuration' | trans }}</span>
+				<span class="arrow">
+					<i class="ti-angle-right"></i>
+				</span>
+			</a>
+			<ul class="dropdown-menu">
+				<li class="nav-item">
+					<a class="sidebar-link" href="{{ path('dashboard_config_companies_index') }}">
+						<span class="icon-holder">
+							<i class="fas fa-sliders-h"></i>
+						</span>
+						<span class="title">{{ 'Companies' | trans }}</span>
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="sidebar-link" href="{{ path('dashboard_config_locales_index') }}">
+						<span class="icon-holder">
+							<i class="fa fa-file"></i>
+						</span>
+						<span class="title">{{ 'Locales' | trans }}</span>
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="sidebar-link" href="{{ path('dashboard_config_pages_index') }}">
+						<span class="icon-holder">
+							<i class="fa fa-file"></i>
+						</span>
+						<span class="title">{{ 'Pages' | trans }}</span>
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="sidebar-link" href="{{ path('dashboard_config_categories_index') }}">
+						<span class="icon-holder">
+							<i class="c-indigo-500 ti-list"></i>
+						</span>
+						<span class="title">{{ 'Category' | trans }}</span>
+					</a>
+				</li>
+			</ul>
+		</li>
+	{% endif %}
+	{% if is_granted('ROLE_ADMIN') %}
+        <li class="nav-item dropdown">
+            <a class="dropdown-toggle" href="javascript:void(0);">
+                <span class="icon-holder">
+                    <i class="ti-lock"></i>
+                </span>
+                <span class="title">{{ 'Security' | trans }}</span>
+                <span class="arrow">
+                    <i class="ti-angle-right"></i>
+                </span>
+            </a>
+            <ul class="dropdown-menu">
+                <li class="nav-item">
+                    <a class="sidebar-link" href="{{ path('security_security_users_index') }}">
+                        <span class="icon-holder">
+                            <i class="c-indigo-500 ti-user"></i>
+                        </span>
+                        <span class="title">{{ 'Users' | trans }}</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    {% endif %}
+	{% if is_granted('ROLE_PREVIOUS_ADMIN') %}
+		<li class="nav-item mT-30 actived">
+			<a class="sidebar-link" href="{{ path('dashboard_index', {'_switch_user': '_exit'}) }}">
+				<span class="icon-holder">
+					<i class="fas fa-user-secret"></i>
+				</span>
+				<span class="title">Exit impersonation</span>
+			</a>
+		</li>
+	{% endif %}
+</ul>

@@ -1,0 +1,344 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}
+	Application Settings |
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<a href="#">Dashboard</a>
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">Application settings</li>
+			</ol>
+		</nav>
+	</div>
+	<header role="heading">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-8 col-sm-6 col-xs-6">
+					<h2>
+						Application settings
+					</h2>
+				</div>
+			</div>
+		</div>
+	</header>
+	<fieldset class="section">
+		<div class="container" id="app">
+			<hr>
+			<div class="card">
+				{{ form_start(form, { 'attr': { 'data-parsley-validate': 'true' } }) }}
+				<div class="card-body card-block">
+					{% include 'includes/flashMessages.html.twig' %}
+					{% if not form.vars.valid %}
+						<div class="alert alert-danger alert-dismissible" role="alert">
+							<ul>
+								{% for error in errors %}
+									<li>
+										<p class="text-danger">
+											<b>{{ error.message }}</b>
+										</p>
+									</li>
+								{% endfor %}
+							</ul>
+						</div>
+					{% endif %}
+
+					<ul class="nav nav-tabs" role="tablist">
+						<li role="presentation" class="nav-item">
+							<a href="#tab-general" class="nav-link active" role="tab" data-toggle="tab">Settings</a>
+						</li>
+						<li role="presentation" class="nav-item">
+							<a href="#tab-plans" class="nav-link" role="tab" data-toggle="tab">Plans</a>
+						</li>
+						<li role="presentation" class="nav-item">
+							<a href="#tab-executive-club" class="nav-link" role="tab" data-toggle="tab">
+								Executive club
+							</a>
+						</li>
+						<li role="presentation" class="nav-item">
+							<a href="#tab-investor-profits" class="nav-link" role="tab" data-toggle="tab">
+								Investor profits
+							</a>
+						</li>
+						<li role="presentation" class="nav-item">
+							<a href="#tab-asset-entry-fee" class="nav-link" role="tab" data-toggle="tab">
+								Asset entry fee
+							</a>
+						</li>
+						<li role="presentation" class="nav-item">
+							<a href="#tab-investment-classes" class="nav-link" role="tab" data-toggle="tab">
+								Investment classes
+							</a>
+						</li>
+						<li role="presentation" class="nav-item">
+							<a href="#tab-values" class="nav-link" role="tab" data-toggle="tab">History</a>
+						</li>
+					</ul>
+					<div class="tab-content">
+						<div role="tabpanel" class="tab-pane active" id="tab-general">
+							<div class="row">
+								<div class="col-md-2">
+									{{ form_row(form.companyFee) }}
+								</div>
+								<div class="col-md-2">
+									{{ form_row(form.commissionRate) }}
+								</div>
+								<div class="col-md-2">
+									{{ form_row(form.monthlyFee) }}
+								</div>
+							</div>
+						</div>
+
+						<div role="tabpanel" class="tab-pane" id="tab-plans">
+							<div class="row">
+								<div class="col-md-12 text-right" style="margin-bottom: 5px">
+									<a href="{{ path('dashboard_config_app_plan_create', { 'application_id' : entity.id }) }}" class="btn btn-default btn-sm">
+										<i class="fa fa-plus"></i>
+										New plan
+									</a>
+								</div>
+							</div>
+							{% if entity.id %}
+
+								<ul class="list-group">
+
+									{% for plan in entity.plans %}
+										<li class="list-group-item d-flex justify-content-between align-items-center">
+											<a href="{{ path('dashboard_config_app_plan_edit', { 'plan_id' : plan.id }) }}">
+												<b>{{ plan.name }}</b>
+											</a>
+
+											<span class="badge badge-primary badge-pill">£
+												{{ plan.price | number_format(2) }}</span>
+
+										</li>
+
+
+									{% endfor %}
+								</ul>
+							{% endif %}
+						</div>
+						<div role="tabpanel" class="tab-pane" id="tab-executive-club">
+							<div class="row">
+								<div class="col-md-12 text-right" style="margin-bottom: 5px">
+									<a href="{{ path('dashboard_config_app_executive_club_create', { 'application_id' : entity.id }) }}" class="btn btn-default btn-sm">
+										<i class="fa fa-plus"></i>
+										New Executive club
+									</a>
+								</div>
+							</div>
+							{% if entity.id %}
+
+								<ul class="list-group">
+
+									{% for executiveClub in entity.executiveClubs %}
+										<li class="list-group-item d-flex justify-content-between align-items-center">
+											<a href="{{ path('dashboard_config_app_executive_club_edit', { 'club_id' : executiveClub.id }) }}">
+												<b>{{ executiveClub.description }}</b>
+											</a>
+
+											<span class="badge badge-primary badge-pill text-center">
+												Sales:
+												{% if executiveClub.maxSales %}
+													{{ executiveClub.minSales }}
+													-
+													{{ executiveClub.maxSales }}
+												{% else %}
+													+{{ executiveClub.minSales }}
+												{% endif %}
+
+											</span>
+											<span class="badge badge-primary badge-pill">
+												Company Fee:{{ executiveClub.companyFee * 100}}%
+											</span>
+											<span class="badge badge-primary badge-pill">
+												Agent take home:{{ executiveClub.fee * 100}}%
+											</span>
+										</li>
+									{% endfor %}
+								</ul>
+							{% endif %}
+						</div>
+
+
+						<div role="tabpanel" class="tab-pane" id="tab-investor-profits">
+							<div class="row">
+								<div class="col-md-12 text-right" style="margin-bottom: 5px">
+									<a href="{{ path('dashboard_config_investor_profits_create', { 'application_id' : entity.id }) }}" class="btn btn-default btn-sm">
+										<i class="fa fa-plus"></i>
+										New Investor profit
+									</a>
+								</div>
+							</div>
+							{% if entity.id %}
+								<ul class="list-group">
+									{% for profit in entity.investorProfits %}
+										<li class="list-group-item d-flex justify-content-between align-items-center">
+											<a href="{{ path('dashboard_config_investor_profits_edit', { 'investor_profit_id' : profit.id }) }}">
+												<b>
+													{%- if profit.maxAmount  -%}
+														£{{ profit.minAmount | number_format(2) }}
+														-
+														                                                        £{{ profit.maxAmount | number_format(2) }}
+													{% else %}
+														+  £{{ profit.minAmount | number_format(2) }}
+													{%- endif -%}
+												</b>
+
+
+											</a>
+											<span class="badge badge-primary badge-pill">
+												{{- (profit.profit * 100)  | number_format(2) -}}%</span>
+										</li>
+									{% endfor %}
+								</ul>
+							{% endif %}
+						</div>
+
+						<div role="tabpanel" class="tab-pane" id="tab-asset-entry-fee">
+							<div class="row">
+								<div class="col-md-12 text-right" style="margin-bottom: 5px">
+									<a href="{{ path('dashboard_config_investor_assetentryfee_create', { 'application_id' : entity.id }) }}" class="btn btn-default btn-sm">
+										<i class="fa fa-plus"></i>
+										New Range
+									</a>
+								</div>
+							</div>
+							{% if entity.id %}
+								<ul class="list-group">
+									{% for fee in entity.assetEntryFees %}
+										<li class="list-group-item d-flex justify-content-between align-items-center">
+											<a href="{{ path('dashboard_config_investor_assetentryfee_edit', { 'asset_entry_fee_id' : fee.id }) }}">
+												<b>
+													{%- if fee.max  -%}
+														£{{ fee.min | number_format(2) }}
+														-
+														                                                                                                                                                                        £{{ fee.max | number_format(2) }}
+													{% else %}
+														+  £{{ fee.min | number_format(2) }}
+													{%- endif -%}
+												</b>
+											</a>
+											<span class="badge badge-primary badge-pill">
+												{{- (fee.fee * 100)  | number_format(2) -}}%</span>
+										</li>
+									{% endfor %}
+								</ul>
+							{% endif %}
+						</div>
+
+
+						<div role="tabpanel" class="tab-pane" id="tab-investment-classes">
+							<div class="row">
+								<div class="col-md-12 text-right" style="margin-bottom: 5px">
+									<a href="{{ path('dashboard_config_app_asset_investment_class_create', { 'application_id' : entity.id }) }}" class="btn btn-default btn-sm">
+										<i class="fa fa-plus"></i>
+										New investment class
+									</a>
+								</div>
+							</div>
+							{% if entity.id %}
+
+								<ul class="list-group">
+
+									{% for assetInvestmentClass in entity.assetInvestmentClasses %}
+										<li class="list-group-item d-flex justify-content-between align-items-center">
+											<a href="{{ path('dashboard_config_app_asset_investment_class_edit', { 'investment_class_id' : assetInvestmentClass.id }) }}">
+												<b>{{ assetInvestmentClass.description }}</b>
+											</a>
+											<b>
+												{%- if assetInvestmentClass.maxAmount  -%}
+													£{{ assetInvestmentClass.minAmount | number_format(2) }}
+													-
+													                                                        £{{ assetInvestmentClass.maxAmount | number_format(2) }}
+												{% else %}
+													+  £{{ assetInvestmentClass.minAmount | number_format(2) }}
+												{%- endif -%}
+											</b>
+											<span class="badge badge-info badge-pill">
+												Equity:{{ assetInvestmentClass.equity * 100}}%
+											</span>
+
+										</li>
+
+
+									{% endfor %}
+								</ul>
+							{% endif %}
+						</div>
+
+
+						<div role="tabpanel" class="tab-pane" id="tab-values">
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<th scope="col">Field</th>
+										<th scope="col">Type</th>
+										<th scope="col">Old value</th>
+										<th scope="col">New value</th>
+										<th scope="col">Updated at</th>
+										<th scope="col">User</th>
+									</tr>
+								</thead>
+								<tbody>
+
+									{% for log in logChanges %}
+										<tr>
+											<th scope="row">{{ log.field | from_camel_case }}</th>
+											<td>{{ log.fieldType }}</td>
+											<td>{{ log.oldValue  }}</td>
+											<td>{{ log.newValue }}</td>
+											<td>{{ log.createdAt|format_datetime() }}</td>
+											<td>{{ log.user.email }}</td>
+										</tr>
+									{% endfor %}
+
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+				</div>
+				<div class="card-footer">
+					<button type="submit" class="btn btn-primary btn-sm">
+						<i class="fas fa-save"></i>
+						Save
+					</button>
+					<button type="reset" class="btn btn-secondary btn-sm">
+						<i class="fa fa-eraser"></i>
+						Reset
+					</button>
+				</div>
+				{{ form_end(form) }}
+			</div>
+		</div>
+	</fieldset>
+{% endblock %}
+{% block javascripts %}
+	{{ parent() }}
+	<script>
+		var baseUrl = '{{ app.request.baseUrl() }}';
+
+$('[href="#   {{ tab }}"]').tab('show');
+
+$('#btn-delete').click(function (e) {
+e.preventDefault();
+$("#form-delete").submit();
+return false;
+});
+
+$("#form-delete").on("submit", function () {
+if (confirm(MSG_DELETE_ITEM)) {
+return true;
+} else {
+$('form-delete').find('[type=submit],submit').prop('disabled', false);
+return false;
+}
+});
+	</script>
+{% endblock %}

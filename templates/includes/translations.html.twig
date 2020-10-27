@@ -1,0 +1,7 @@
+<script>
+window.translations = {
+    {% for translation in translations %}
+        "{{ translation.source | raw }}" : "{{ translation.target | raw }}",
+    {% endfor %}              
+ }; 
+</script>

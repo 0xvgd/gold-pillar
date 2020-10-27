@@ -1,0 +1,213 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Renting reserve | {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('dashboard_index') }}">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item">
+                    {% trans %}Renting{% endtrans %}
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    <a href="{{path('dashboard_renting_reserves_index')}}">{% trans %}Reserves{% endtrans %}</a>
+                </li>
+            </ol>
+        </nav>
+    </div>
+    <header role="heading">
+        <div class="container">
+         {% include 'includes/flashMessages.html.twig' %}
+            <div class="row">
+                {% set colSize = 12 %}
+                {% if is_granted('ROLE_ADMIN') %}
+                    <div class="col-md-2 col-sm-2 col-xs-2 btn-action"> 
+                        <a target="_blank" class="btn btn-primary pull-right botao-mobile" href="mailto:?subject=Verify%20Tenants&amp;body={{ emailBody }}">
+                                <i class="fa fa-envelope"></i> {% trans %}Verify tenants{% endtrans %}
+                        </a>
+                    </div>
+                    {% if not entity.processedAt %}
+                        {% set colSize = 2 %}
+                        <div class="col-md-8 col-sm-8 col-xs-8 btn-action text-right"> 
+                            <button type="button" class="btn btn-primary pull-right botao-mobile" data-toggle="modal" data-target="#remove-reserve-modal">
+                                {% trans %}Register payment{% endtrans %}
+                            </button>
+                        </div>
+                    {% else %}
+                        {% set colSize = 10 %}
+                    {% endif %} 
+                {% endif %}
+                
+                <div class="col-md-{{colSize}} col-sm-{{colSize}} col-xs-{{colSize}} btn-action text-right"> 
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="button" id="btn-delete" class="btn btn-danger pull-right botao-mobile">
+                            <span class="glyphicon glyphicon-trash"></span> {% trans %}Remove reserve{% endtrans %}
+                        </button>
+                   
+                </div>
+                <div class="col-12 col-md-12 col-sm-6 col-xs-6">
+                    <h1 class="h2">{% trans %}Reserves{% endtrans %}</h1>
+                    <p class="hidden-xs">{% trans %}Renting reserve{% endtrans %}</p>
+                    <p>{% trans %}Fee{% endtrans %}: <b>£{{ entity.fee.amount | number_format(2, '.', ',')}}</b>{{ entity.processedAt ? ' <i class="fas fa-check text-success"></i>' : ' <i class="fas fa-clock text-warning"></i>' }} </p>
+                    <p>{% trans %}Reserve reference{% endtrans %}: <b>{{ entity.referenceCode }}</b></p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <fieldset class="section">
+        <div class="container" id="app">
+            <div class="card-deck">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        {% trans %}Tenant{% endtrans %}
+                    </div>
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th>{% trans %}Name{% endtrans %}</th>
+                                <td>
+                                    {{ entity.tenant.user.name }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>{% trans %}Phone{% endtrans %}</th>
+                                <td>
+                                    {{ entity.tenant.user.phone }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>{% trans %}E-mail{% endtrans %}</th>
+                                <td>
+                                    {{ entity.tenant.user.email }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>    
+                <div class="card mb-3">
+                    <div class="card-header">
+                        {% trans %}Agent{% endtrans %}
+                    </div>
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th>{% trans %}Name{% endtrans %}</th>
+                                <td>
+                                    {{ entity.accommodation.agent.user.name }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>{% trans %}Phone{% endtrans %}</th>
+                                <td>
+                                    {{ entity.accommodation.agent.user.phone }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>{% trans %}E-mail{% endtrans %}</th>
+                                <td>
+                                    {{ entity.accommodation.agent.user.email }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-header">
+                    {% trans %}Accommodation{% endtrans %}
+                </div>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th>{% trans %}Name{% endtrans %}</th>
+                            <td>
+                                {{ entity.accommodation.name }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Tag</th>
+                            <td>
+                                {{ entity.accommodation.tag }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>{% trans %}Address{% endtrans %}</th>
+                            <td>
+                                {{ entity.accommodation.address }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card mb-3">
+                <div class="card-header">
+                    {% trans %}People to move in{% endtrans %}
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>{% trans %}Name{% endtrans %}</th>
+                            <th>{% trans %}Phone{% endtrans %}</th>
+                            <th>{% trans %}E-mail{% endtrans %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for person in entity.people %}
+                            <tr>
+                                <td>
+                                    {{ person.name }}
+                                </td>
+                                <td>
+                                    {{ person.phone }}
+                                </td>
+                                <td>
+                                    {{ person.email }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </fieldset>
+    {% include 'dashboard/includes/removeReserveModal.html.twig' %}
+    <form id="form-delete" action="{{ path('dashboard_renting_reserves_remove', { id: entity.id }) }}" method="post">
+        <input type="hidden" name="_method" value="DELETE">
+    </form>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+<script>
+    $('#btn-delete').on('click', function (e) {
+        var btn = $(this);
+        if (!btn.data('ok')) {
+            e.preventDefault();
+            swal.fire({
+                title: "Atention",
+                text: "Do you really want to remove this reserve?",
+                type: "warning",
+                showCancelButton: true,
+                cancelButtonText: "No",
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes"
+            }).then((result) => {
+                if (result.value) {
+                    btn.data('ok', 1);
+                    $('#form-delete').submit();
+                }
+            });
+        }
+    });
+</script>
+
+{% endblock %}

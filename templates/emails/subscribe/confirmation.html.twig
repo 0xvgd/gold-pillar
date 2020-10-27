@@ -1,0 +1,21 @@
+{% extends 'emails/base.email.html.twig' %}
+
+{% set confirmation_link = absolute_url(path('frontend_subscribe_confirmation', { email: email, hash: hash})) %}
+
+{% block content %}
+    <section>
+        <h3 style="font-family:Helvetica,sans-serif;color:#333333">
+           You can confirm your account email through the link below:
+        </h3>
+
+        <a href="{{ confirmation_link }}">
+           {{ confirmation_link }}
+        </a>
+        
+        <div style="color:#8a6d3b;font-size:15px"  bgcolor="#fcf8e3">
+            <p>
+                Please do not reply to this automated message.
+            </p>
+        </div>
+    </section>
+{% endblock %}

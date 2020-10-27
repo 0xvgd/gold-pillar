@@ -1,0 +1,101 @@
+{% extends 'report/default.html.twig' %}
+
+{% set showHeader = false %}
+{% set showFooter = false %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/report-media-print.css') }}" media="print">
+    <style>
+        body {
+            margin-left: 2cm;
+        }
+
+        .resumo table tr {
+            height: 70px;
+        }
+
+        table, td:empty, th:empty {
+            border: none !important;
+        }
+
+        table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+            border-bottom: 1px solid #333;
+        }
+
+
+    </style>
+{% endblock %}
+
+{% block pageTitle %}
+    Transactions
+{% endblock%}
+
+{% block body %}
+    {% if transactions|length == 0 %}
+        <div class="alert alert-info">
+            <strong>Empty report</strong>
+            <p>no data.</p>
+        </div>
+    {% else %}
+        {% set k = 0 %}
+        <article>
+            <header>
+                {% include "Report/header.html.twig" with { subtitle: block('company') } %}
+                <div class="header-custom">
+                    <h4>Transactions of month</h4>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <span><b>filter1:</b></span>   
+                    </div>
+                    <div class="col-md-4">
+                        <span><b>filter2:</b></span>   
+                    </div>
+                    <div class="col-md-4 text-right">
+                        <span><b>status:</b></span>  
+                    </div>
+                </div>
+            </header>
+            <section>
+                <p>info</p>
+                <table class="table table-condensed">
+                    <tbody>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Documento</th>
+                            <th>Telefone</th>
+                            <th>Situação</th>
+                            <th>Setor / Número</th>
+                            <th>Data Curso</th>
+                        </tr>
+                        {% for transaction in transactions %}
+                            <tr>
+                                
+                            </tr>
+                         
+                        {% endfor %}
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                             <td>&nbsp;</td>
+                            <td><b>Total: {{ licencas | length }}</b></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            <footer>
+                {% include "Report/footer.html.twig" %}
+                <center>
+                    {#  Report {{ k }} to {{ transactions|length }}#}
+                </center>
+            </footer>
+        </article>
+
+    {% endif %}
+
+
+
+{% endblock %}

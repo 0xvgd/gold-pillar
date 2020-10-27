@@ -1,0 +1,72 @@
+<ul class="sidebar-menu scrollable pos-r">
+	<li class="nav-item">
+		<a class="sidebar-link text-muted" href="{{ path('dashboard_index') }}">
+			<span class="icon-holder">
+				<i class="fas fa-home"></i>
+			</span>
+			<span class="title">Dashboard</span>
+		</a>
+	</li>
+	<li class="nav-item dropdown">
+		<a class="dropdown-toggle" href="javascript:void(0);">
+			<span class="icon-holder">
+				<i class="fas fa-calendar-alt"></i>
+			</span>
+			<span class="title">My Portfolio</span>
+			<span class="arrow">
+				<i class="ti-angle-right"></i>
+			</span>
+		</a>
+		<ul class="dropdown-menu">
+			<li class="nav-item">
+				<a class="sidebar-link" href="{{ path('dashboard_investor_projects_index') }}">
+					<span class="icon-holder"></span>
+					<span class="title">Projects portfolio</span>
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="sidebar-link" href="{{ path('dashboard_investor_assets_index') }}">
+					<span class="icon-holder"></span>
+					<span class="title">Assets portfolio</span>
+				</a>
+			</li>
+		</ul>
+	</li>
+	
+	<li class="nav-item dropdown">
+		<a class="dropdown-toggle" href="javascript:void(0);">
+			<span class="icon-holder">
+				<i class="fas fa-pound-sign"></i>
+			</span>
+			<span class="title">My finance</span>
+			<span class="arrow">
+				<i class="ti-angle-right"></i>
+			</span>
+		</a>
+		<ul class="dropdown-menu">
+			<li class="nav-item">
+				<a class="sidebar-link" href="#">
+					<span class="icon-holder"></span>
+					<span class="title">Project Finances</span>
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="sidebar-link" href="#">
+					<span class="icon-holder"></span>
+					<span class="title">Assets Finances</span>
+				</a>
+			</li>
+		</ul>
+	</li>
+
+	{% if is_granted('ROLE_PREVIOUS_ADMIN') %}
+		<li class="nav-item mT-30 actived">
+			<a class="sidebar-link" href="{{ path('dashboard_index', {'_switch_user': '_exit'}) }}">
+				<span class="icon-holder">
+					<i class="fas fa-user-secret"></i>
+				</span>
+				<span class="title">Exit impersonation</span>
+			</a>
+		</li>
+	{% endif %}
+</ul>

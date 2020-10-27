@@ -1,0 +1,73 @@
+{% extends 'frontend/base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('home') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('home') }}
+{% endblock %}
+
+{% block title %}
+    Gold Pillar &mdash; {% trans %}Here you can Build you Property Portfolio.{% endtrans %}
+{% endblock %}
+
+{% block body %}
+    <div class="page" id="app"v-cloak>
+        <div class="carousel slide carousel-fade" data-ride="carousel" data-interval="5000">
+            <div class="carousel-inner">
+                <div class="carousel-content">
+                    <h1 class="title">{% trans %}BUILD YOUR PROPERTY PORTFOLIO WITH US.{% endtrans %}</h1><br>
+
+                    <h3 class="subtitle">{% trans %}No experience?{% endtrans %} {% trans %}No enough money?{% endtrans %}<br>{% trans %}No worries, we will work with you and help you along the way.{% endtrans %}</h3>
+                    <br>
+                    <a href="{{ path('frontend_learn_more_index') }}" class="button-default button-filled button-large">{% trans %}LEARN MORE{% endtrans %}</a>
+                </div>
+                <div class="carousel-item active">
+                    <img class="d-block w-100 carousel-image" data-src="{{ asset('images/home/tulip.jpg') }}">
+                </div>
+                <div class="carousel-item">
+                    <img class="d-block w-100 carousel-image" data-src="{{ asset('images/home/leadenhall-building-b.jpg') }}">
+                </div>
+                <div class="carousel-item">
+                    <img class="d-block w-100 carousel-image" data-src="{{ asset('images/home/tulip-london-banner-b.jpg') }}">
+                </div>
+            </div>
+        </div>
+        <div class="content pb-0">
+            <div class="row">
+                <div class="col-md-6">
+                    <h2>{% trans %}Start investing with Gold Pillar{% endtrans %}</h2><br>
+                    <p>{% trans %}Invest with the UK's most popular{% endtrans %}<br>
+                        {% trans %}real estate investment platform.{% endtrans %}<br>
+                        <small><span class="text-secondary">{% trans %}Capital at risk.{% endtrans %}</span></small><br><br>
+                    </p>
+                    <a href="{{ path('frontend_subscribe_choose') }}" class="button-default button-large button-filled">{% trans %}START NOW{% endtrans %}</a>
+                </div>
+                <div class="col-md-6" style="z-index: 999;">
+                    <img class="computer-inset" src="{{ asset('images/home/computer.png') }}" width="100%">
+                </div>
+            </div>
+        </div>
+        <div class="content pt-0">
+            <hr>
+            <h1 class="mega-title text-center">{% trans %}Featured properties{% endtrans %}</h1>
+            <div class="row mt-5" v-if="loading">
+                <div class="col-lg-4 col-md-6 mb-4" v-for="i in 10">
+                    <property-item v-bind:item="placeholder" />
+                </div>
+            </div>
+            <div class="mt-5" v-if="!loading && properties.length === 0">
+                <div class="alert alert-warning p-3 text-center" v-text="propertyErrorMessage">
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-lg-4 col-md-6 mb-4"  v-for="item in properties">
+                    <property-item v-bind:item="item"  base-url="{{ path('app_home')}}sales/"/>
+                </div>	
+            </div>
+        </div>
+    </div>
+{% endblock %}

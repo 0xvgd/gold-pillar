@@ -1,0 +1,195 @@
+{% extends 'report/default.html.twig' %}
+{% block company %}
+<p>Project Report</p>
+{% endblock%}
+
+
+{% set showHeader = false %}
+{% set showFooter = false %}
+
+{% block stylesheets %}
+	{{ parent() }}
+
+	<link rel="stylesheet" href="{{ asset('css/report-media-print.css') }}" media="print">
+
+
+	<style>
+		body {
+			margin-left: 2cm;
+		}
+
+		.resumo table tr {
+			height: 70px;
+		}
+
+		table,
+		td:empty,
+		th:empty {
+			border: none !important;
+		}
+
+		table > tbody > tr > td,
+		.table>tbody>tr>th,
+		.table>tfoot>tr>td,
+		.table>tfoot>tr>th,
+		.table>thead>tr>td,
+		.table > thead > tr > th {
+			border-bottom: 1px solid #333;
+		}
+	</style>
+{% endblock %}
+
+{% block pageTitle %}
+Transactions
+{% endblock%}
+
+{% block body %}
+	{% if investors|length == 0 %}
+		<div class="alert alert-info">
+			<strong>Empty report</strong>
+			<p>no data.</p>
+		</div>
+	{% else %}
+		{% set k = 0 %}
+		<article>
+			<header>
+				{% include "report/header.html.twig" with { subtitle: block('company') } %}
+				<div class="header-custom mt-3">
+					<h4>{{ project.name }}
+					</h4>
+					<p>#{{ project.projectCode }}</p>
+				</div>
+			</header>
+			<section>
+				<h5>Investors</h5>
+				<table class="table table-condensed">
+					<tbody>
+						<tr>
+							<th>{% trans %}Name{% endtrans %}</th>
+							<th>Investment</th>
+							<th>Percentage</th>
+							<th>Profit</th>
+							<th>Costs</th>
+							<th>Balance</th>
+							<th>{% trans %}Is paid{% endtrans %}</th>
+						</tr>
+						{% for investor in investors %}
+							<tr>
+								<td>{{ investor.name }}</td>
+								<td>£{{ investor.investment | number_format(2) }}</td>
+								<td>{{ (investor.percentage * 100) | number_format(2)}}%</td>
+								<td>£{{ investor.profit  | number_format(2) }}</td>
+								<td>£{{ investor.cost  | number_format(2) }}</td>
+								<td>£{{ investor.balance  | number_format(2) }}</td>
+								<td>{{ investor.isPaid ? 'Yes': 'No' }}</td>
+							</tr>
+
+						{% endfor %}
+					</tbody>
+				</table>
+
+			</section>
+			<section>
+				<h5>Company results</h5>
+				<table class="table table-condensed">
+					<tbody>
+						<tr>
+							<th>Entry fee</th>
+							<th>Exit fee</th>
+							<th>Company Profit</th>
+							<th>Percentage</th>
+							<th>Advertising reserve</th>
+							<th>Balance</th>
+						</tr>
+						<tr>
+							<td>£{{ companyResults.entryFee | number_format(2) }}</td>
+							<td>£{{ companyResults.exitFee | number_format(2) }}</td>
+							<td>£{{ companyResults.profit | number_format(2) }}</td>
+							<td>{{ (companyResults.percentage * 100) | number_format(2)}}%</td>
+							<td>£{{ companyResults.advertisingReserve | number_format(2) }}</td>
+							<td>£{{ companyResults.balance | number_format(2) }}</td>
+						</tr>
+					</tbody>
+				</table>
+
+			</section>
+			<section>
+				<h5>Contractor</h5>
+				<table class="table table-condensed">
+					<tbody>
+						<tr>
+							<th style="width: 50%">Name</th>
+							<th style="width: 25%">Profit</th>
+							<th style="width: 25%">Percentage</th>
+						</tr>
+						<tr>
+							<td>{{ project.contractor.user.name }}</td>
+							<td>£{{ contractorTransaction.amount | number_format(2) }}</td>
+							<td>{{ (contractorTransaction.fee * 100) | number_format(2)}}%</td>
+						</tr>
+					</tbody>
+				</table>
+			</section>
+            <section>
+				<h5>Engineer</h5>
+				<table class="table table-condensed">
+					<tbody>
+						<tr>
+							<th style="width: 50%">Name</th>
+							<th style="width: 25%">Profit</th>
+							<th style="width: 25%">Percentage</th>
+						</tr>
+						<tr>
+							<td>{{ project.engineer.user.name }}</td>
+							<td>£{{ engineerTransaction.amount | number_format(2) }}</td>
+							<td>{{ (engineerTransaction.fee * 100) | number_format(2)}}%</td>
+						</tr>
+					</tbody>
+				</table>
+			</section>
+		    <section>
+				<h5>Broker</h5>
+				<table class="table table-condensed">
+					<tbody>
+						<tr>
+							<th style="width: 50%">Name</th>
+							<th style="width: 25%">Profit</th>
+							<th style="width: 25%">Percentage</th>
+						</tr>
+						<tr>
+							<td>{{ project.broker.user.name }}</td>
+							<td>£{{ brokerTransaction.amount | number_format(2) }}</td>
+							<td>{{ (brokerTransaction.fee * 100) | number_format(2)}}%</td>
+						</tr>
+					</tbody>
+				</table>
+			</section>
+			 <section>
+				<h5>Agent</h5>
+				<table class="table table-condensed">
+					<tbody>
+						<tr>
+							<th style="width: 50%">Name</th>
+							<th style="width: 25%">Profit</th>
+							<th style="width: 25%">Percentage</th>
+						</tr>
+						<tr>
+							<td>{{ project.agent.user.name }}</td>
+							<td>£{{ agentTransaction.amount | number_format(2) }}</td>
+							<td>{{ (agentTransaction.fee * 100) | number_format(2)}}%</td>
+						</tr>
+					</tbody>
+				</table>
+			</section>
+			<footer>
+				{% include "report/footer.html.twig" %}
+				<center>
+					{#  Report {{ k }} to {{ transactions|length }}#}
+				</center>
+			</footer>
+		</article>
+
+	{% endif %}
+
+
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}
+    Projects |
+    {{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('investor/projects') }}
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('dashboard_index') }}">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    <a href="{{path('dashboard_investor_projects_index')}}">Projects</a>
+                </li>
+            </ol>
+        </nav>
+    </div>
+
+    <header role="heading">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-sm-6 col-xs-6">
+                  
+                </div>
+                <div class="col-md-8 col-sm-6 col-xs-6 btn-action"></div>
+            </div>
+        </div>
+    </header>
+    <fieldset class="section">
+        <div class="container" id="app">
+
+            <hr>
+            <div class="card">
+                <div class="card-header">
+                    Featured
+                    <strong>Projects</strong>
+                </div>
+                <div class="card-body card-block">
+                    {% include 'includes/flashMessages.html.twig' %}
+                    <hr>
+                    <div class="row mt-5">
+                        <div class="col-lg-4 col-md-6 mb-4" v-for="projectitem in projects">
+                        
+                            <project-item base="/dashboard/investor" v-bind:item="projectitem"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    
+                </div>
+
+            </div>
+
+        </div>
+    </fieldset>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('investor/projects') }}
+
+{% endblock %}

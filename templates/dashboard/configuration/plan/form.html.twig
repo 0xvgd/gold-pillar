@@ -1,0 +1,124 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %} User | {{ parent() }}{% endblock %}
+{% set plan = form.vars.data %}
+{% block body %}
+        <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><a href="{{ path('application_config_application_index') }}">Application settings</a></li>
+                 <li class="breadcrumb-item active" aria-current="page">Plans</li>
+            </ol>
+        </nav>
+    </div>
+    <header role="heading">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-sm-6 col-xs-6">
+                    <h2>
+                        <a href="{{ path('security_security_users_index') }}">Plans</a>
+                    </h2>
+
+                </div>
+                {% if plan.id %}
+                    <div class="col-md-4 col-sm-12 col-xs-12 btn-action"> 
+                        <form id="form-delete" action="{{ path('dashboard_config_app_plan_remove', { 'plan_id' : plan.id }) }}" method="post">
+                            <button type="button" id="btn-delete" class="btn btn-danger pull-right botao-mobile" name="_method" value="DELETE">
+                                <span class="fa fa-trash"></span> Remove Plan
+                            </button>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <fieldset class="section">
+        <div class="container" id="app">
+
+            <hr>
+            <div class="card">
+                <div class="card-header">
+
+                </div>
+                {{ form_start(form, { 'attr': { 'data-parsley-validate': 'true' } }) }}
+                <div class="card-body card-block">
+                    {% include 'includes/flashMessages.html.twig' %}
+                    {% if not form.vars.valid %}
+                        <div class="alert alert-danger alert-dismissible" role="alert">
+                            <ul>
+                                {% for error in errors %}
+                                    <li><p class="text-danger"><b>{{ error.message }}</b></p></li>
+                                            {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ form_row(form.name) }}
+                        </div>
+                         <div class="col-md-3">
+                            {{ form_row(form.code) }}
+                        </div>
+                        <div class="col-md-3">
+                            {{ form_row(form.price) }}
+                        </div>
+                        <div class="col-md-3">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 text-right custom-control custom-switch">
+                            {{ form_row(form.active) }}
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary btn-sm pull-right">
+                            <i class="fa fa-save"></i> Save
+                        </button>
+
+                        <a href="{{ path('application_config_application_index', { 'tab':'tab-plans' }) }}" class="btn btn-warning btn-sm">
+                            <i class="fa fa-chevron-left"></i> Go back
+                        </a>
+                        <button type="reset" class="btn btn-secondary btn-sm">
+                            <i class="fa fa-eraser"></i> Reset
+                        </button>
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+
+            </div>
+    </fieldset>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        var baseUrl = '{{ app.request.baseUrl() }}';
+
+
+      
+
+        $('#btn-delete').click(function (e) {
+            e.preventDefault();
+            $("#form-delete").submit();
+
+            return false;
+        });
+
+        $("#form-delete").on("submit", function () {
+            if (confirm(MSG_DELETE_ITEM)) {
+                return true;
+            } else {
+                $('form-delete').find('[type=submit],submit').prop('disabled', false);
+                return false;
+            }
+
+        });
+
+
+    </script>
+    <script src="{{ asset("js/user-form.js") }}"></script>
+{% endblock %}

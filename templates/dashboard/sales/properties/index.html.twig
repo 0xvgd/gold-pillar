@@ -1,0 +1,111 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}{{ 'Properties' | trans }} | {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('dashboard_index') }}">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item">{{ 'Sales' | trans }}</li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    <a href="{{path('dashboard_sales_properties_index')}}">{{ 'Properties' | trans }}</a>
+                </li>
+            </ol>
+        </nav>
+    </div>
+    <header role="heading">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-sm-6 col-xs-6">
+                    <h1 class="h2">{{ 'Properties' | trans }}</h1>
+                    <p class="hidden-xs">{{ 'Properties for sale' | trans }}</p>
+                </div>
+                <div class="col-md-8 col-sm-6 col-xs-6 btn-action">
+                    <div class="d-flex">   
+                        {{ form_start(searchForm, { attr: { 'data-type': 'basic', id: 'search-form', class: 'ml-auto' } }) }}
+                            <div class="form-group">
+                                <div class="input-group">
+                                    {{ form_widget(searchForm.name, { attr: {'id': 'search-primary' } }) }}
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-secondary">
+                                            <span class="fa fa-search"></span>
+                                        </button>
+                                    </span>
+                                </div>
+                                {{ form_widget(searchForm.status) }}
+                            </div>
+                        {{ form_end(searchForm) }}
+                        <div class="pl-3">
+                            <a href="{{ path('dashboard_sales_properties_new') }}" class="btn btn-primary">
+                                <span class="fa fa-plus"></span>
+                                {{ 'New Property' | trans }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <fieldset class="section mt-3">
+        <div class="container">
+            {% include 'includes/flashMessages.html.twig' %}
+            
+            <div class="row p-5">
+                <div class="col-md-12 text-right">
+                    <label>
+                        [
+                        <strong>{{ 'Approved' | trans }}:</strong>
+                        <i class="fa fa-check  c-green-500"></i>
+                        ]
+                    </label>
+                    <label>
+                        [
+                        <strong>{{ 'Denied (contact us)' | trans }}:</strong>
+                        <i class="fas fa-exclamation-triangle c-red-500"></i>
+                        ]
+                    </label>
+                    <label>
+                        [
+                        <strong>{{ 'On Approval' | trans }}:</strong>
+                        <i class="fas fa-clock c-orange-300"></i>
+                        ]
+                    </label>
+                </div>
+            </div>
+            <div class="card">            
+                <div class="table-responsive">
+                    <table id="datatable" class="table" data-url="{{ path("dashboard_sales_properties_index") }}" data-is-admin="{{ is_granted('ROLE_ADMIN') ? 'true' : 'false' }}">
+                        <thead>
+                            <tr>
+                                <th class="bdwT-0 no-sort">{{ 'Photo' | trans }}</th>
+                                <th class="bdwT-0">{{ 'Name' | trans }}</th>
+                                <th class="bdwT-0">{{ 'Price' | trans }}</th>
+                                <th class="bdwT-0">{{ 'Hits' | trans }}</th>
+                                {%- if is_granted('ROLE_ADMIN') -%}
+                                    <th class="bdwT-0">{{ 'Owner' | trans }}</th>
+                                {%- endif -%}
+                                <th class="bdwT-0">{{ 'Post Status' | trans }}</th>
+                                <th class="bdwT-0">{{ 'Property Status' | trans }}</th>
+                                <th class="bdwT-0 no-sort"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('dashboard/sales/properties/index') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('dashboard/sales/properties/index') }}
+{% endblock %}

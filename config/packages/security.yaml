@@ -1,0 +1,65 @@
+security:
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+
+    encoders:
+        App\Entity\Security\User:
+            algorithm: auto
+    
+    providers:
+        app_user_provider:
+            entity:
+                class:  App\Entity\Security\User
+                property: email  
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            remember_me:
+                secret:   '%kernel.secret%'
+                lifetime: 2592000 # 30 days in seconds
+                path:     /
+            guard:
+                authenticators:
+                    - App\Security\LoginAuthenticator
+            logout:
+                path:   /logout
+            anonymous: true
+            security: true
+            switch_user: { role: ROLE_ADMIN }
+            
+            # activate different ways to authenticate
+
+            # http_basic: true
+            # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
+
+            # form_login: true
+            # https://symfony.com/doc/current/security/form_login_setup.html
+
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_USER
+        ROLE_AGENT: ROLE_USER
+        ROLE_BROKER: ROLE_USER
+        ROLE_CONTRACTOR: ROLE_USER
+        ROLE_ENGINEER: ROLE_USER
+        ROLE_INVESTOR: ROLE_USER
+
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+        - { path: ^/security,                 roles: [ ROLE_ADMIN ] }   
+        - { path: ^/(%app.supported_locales%)/dashboard/login,          roles: [ IS_AUTHENTICATED_ANONYMOUSLY ] }
+        - { path: ^/(%app.supported_locales%)/dashboard/config/,        roles: [ ROLE_ADMIN ] }
+        - { path: ^/(%app.supported_locales%)/dashboard/application/,   roles: [ ROLE_ADMIN ] }
+        - { path: ^/(%app.supported_locales%)/dashboard/projects/,      roles: [ ROLE_AGENT, ROLE_BROKER ] }
+        - { path: ^/(%app.supported_locales%)/dashboard/assets/assets/, roles: [ ROLE_AGENT, ROLE_ADMIN ] }
+        - { path: ^/(%app.supported_locales%)/dashboard/investor/,      roles: [ ROLE_INVESTOR ] }
+        - { path: ^/(%app.supported_locales%)/dashboard/,               roles: [ ROLE_USER ] }
+        - { path: ^/subscribe,                roles: [ IS_AUTHENTICATED_ANONYMOUSLY ] }
+        - { path: ^/publish,                  roles: [ IS_AUTHENTICATED_ANONYMOUSLY ] }
+
+        
+    access_decision_manager:
+        # strategy can be: affirmative, unanimous or consensus
+        strategy: affirmative

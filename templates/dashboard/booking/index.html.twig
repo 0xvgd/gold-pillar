@@ -1,0 +1,76 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}{{ 'Booking'| trans }} | {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ 'Booking'| trans }}</li>
+            </ol>
+        </nav>
+    </div>
+    <header role="heading">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-sm-6 col-xs-6">
+                    <h1 class="h2">{{ 'Booked views'| trans }}</h1>
+                    <p class="hidden-xs">{{ 'See your booked views'| trans }}</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <fieldset class="section">
+        <div class="container">
+            <div class="card mb-3">
+                <div class="card-body">
+                    {{ form_start(form, { attr: { id: 'search-form' } }) }}
+                        <div class="row">
+                            <div class="col-12 col-md-4">
+                                {{ form_row(form.startDate )}}
+                            </div>
+                            <div class="col-12 col-md-4">
+                                {{ form_row(form.endDate )}}
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <label class="col-12">&nbsp;</label>
+                                <button type="submit" class="btn btn-primary">
+                                    {{ 'Search'| trans }}
+                                </button>
+                            </div>
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <table id="datatable" class="table" data-url="{{ path('dashboard_booking_index') }}">
+                    <thead>
+                        <tr>
+                            <th>{{ 'Date' | trans }}</th>
+                            <th>{{ 'Start'| trans }}</th>
+                            <th>{{ 'End'| trans }}</th>
+                            <th>{{ 'Resource'| trans }}</th>
+                            <th>{{ 'Agent'| trans }}</th>
+                            <th>{{ 'Customer'| trans }}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </fieldset>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('dashboard/booking') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('dashboard/booking') }}
+{% endblock %}

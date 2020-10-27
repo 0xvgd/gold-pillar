@@ -1,0 +1,25 @@
+<div id="productCarousel" class="frontend-carousel carousel slide" data-ride="carousel" data-interval="5000">
+    <div class="carousel-inner">
+        {% for photo in entity.photos %}
+            <div class="carousel-item {{ loop.index == 1 ? 'active' : ''  }} h-100">
+                <div class="d-block w-100 h-100" style="background-image: url({{ photo }}/thumb:803*400*inset)"></div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="layer-1 backdrop-bottom"></div>
+    <a class="carousel-control-prev layer-2" href="#productCarousel" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">{% trans %}Previous{% endtrans %}</span>
+    </a>
+    <a class="carousel-control-next layer-2" href="#productCarousel" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">{% trans %}Next{% endtrans %}</span>
+    </a>
+    <ol class="carousel-indicators layer-1 mx-auto">
+        {% for photo in entity.photos %}
+            <li {% if loop.index == 1 %} class="active" {% endif %} data-slide-to="{{ loop.index - 1 }}" data-target="#productCarousel">
+                <div class="d-block w-100 h-100" style="background-image: url({{ photo }}/thumb:70*outbound)"></div>
+            </li>
+        {% endfor %}
+    </ol>
+</div>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>{% block title %}Sign In | Gold pillar {% endblock %}</title>
+        <link rel="icon" type="image/png" href="{{ asset('images/favicon/favicon-16x16.png') }}" />
+        <link rel="icon" type="image/x-icon" href="{{ asset('images/favicon/favicon-16x16.png') }}" />
+        <link rel="apple-touch-icon" sizes="57x57" href="{{ asset('images/favicon/apple-icon-57x57.png') }}">
+        <link rel="apple-touch-icon" sizes="60x60" href="{{ asset('images/favicon//apple-icon-60x60.png') }}">
+        <link rel="apple-touch-icon" sizes="72x72" href="{{ asset('images/favicon/apple-icon-72x72.png') }}">
+        <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('images/favicon/apple-icon-76x76.png') }}">
+        <link rel="apple-touch-icon" sizes="114x114" href="{{ asset('images/favicon/apple-icon-114x114.png') }}">
+        <link rel="apple-touch-icon" sizes="120x120" href="{{ asset('images/favicon/apple-icon-120x120.png') }}">
+        <link rel="apple-touch-icon" sizes="144x144" href="{{ asset('images/favicon/apple-icon-144x144.png') }}">
+        <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('images/favicon/apple-icon-152x152.png') }}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/favicon/apple-icon-180x180.png') }}">
+        {% block stylesheets %}
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" rel="stylesheets" type="text/css" />
+            {{ encore_entry_link_tags('main') }}
+            {{ encore_entry_link_tags('login') }}
+        {% endblock %}
+        <style>
+            #loader {
+                transition: all 0.3s ease-in-out;
+                opacity: 1;
+                visibility: visible;
+                position: fixed;
+                height: 100vh;
+                width: 100%;
+                background: #fff;
+                z-index: 90000;
+            }
+
+            #loader.fadeOut {
+                opacity: 0;
+                visibility: hidden;
+            }
+
+            .spinner {
+                width: 40px;
+                height: 40px;
+                position: absolute;
+                top: calc(50% - 20px);
+                left: calc(50% - 20px);
+                background-color: #333;
+                border-radius: 100%;
+                -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
+                animation: sk-scaleout 1.0s infinite ease-in-out;
+            }
+
+            @-webkit-keyframes sk-scaleout {
+                0% { -webkit-transform: scale(0) }
+                100% {
+                    -webkit-transform: scale(1.0);
+                    opacity: 0;
+                }
+            }
+
+            @keyframes sk-scaleout {
+                0% {
+                    -webkit-transform: scale(0);
+                    transform: scale(0);
+                } 100% {
+                    -webkit-transform: scale(1.0);
+                    transform: scale(1.0);
+                    opacity: 0;
+                }
+            }
+
+            .alpha-logo {
+                opacity: 1;
+                filter: alpha(opacity=80); /* For IE8 and earlier */
+            }
+
+
+        </style>
+    </head>
+    <body class="app">
+        <div class="peers ai-s fxw-nw h-100vh">
+            <div class="d-n@sm- peer peer-greed h-100 pos-r bgr-n bgpX-c bgpY-c bgsz-cv" style='background-image: url("{{ asset('images/home/tulip-original.jpg') }}")'>
+                <div class="pos-a centerXY">
+                    <div class="bgc-white bdrs-50p pos-r alpha-logo" style='width: 220px; height: 220px;'>
+                        <a href="{{ path('app_home') }}">
+                            <img class="pos-a centerXY"  style='width: 200px; height: auto;' src="{{asset('images/logo-v2-black.png')}}" alt="">
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 peer pX-40 pY-80 h-100 bgc-white scrollable pos-r" style='min-width: 320px;'>
+                <h4 class="fw-300 c-grey-900 mB-40">Login</h4>
+                {% if error %}
+                    <div class="alert alert-danger">
+                        {{ error.messageKey|trans(error.messageData, 'security')  }} 
+                    </div>
+                {% endif %}
+                <form action="" method="post">
+                    <div class="form-group">
+                        <label class="text-normal text-dark">E-mail</label>
+                        <input type="email" name="email" class="form-control" placeholder="E-mail" autofocus>
+                    </div>
+                    <div class="form-group">
+                        <label class="text-normal text-dark">{% trans %}Password{% endtrans %}</label>
+                        <input type="password" name="password" class="form-control" placeholder="{% trans %}Password{% endtrans %}">
+                    </div>
+                    <div class="form-group">
+                        <div class="peers ai-c jc-sb fxw-nw">
+                            <div class="peer">
+                                <div class="checkbox checkbox-circle checkbox-info peers ai-c">
+                                    <input type="checkbox" id="remember_me" name="_remember_me" class="peer">
+                                    <label for="remember_me" class=" peers peer-greed js-sb ai-c">
+                                        <span class="peer peer-greed">{% trans %}Remember Me{% endtrans %}</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="peer">
+                                <button class="btn btn-primary" type="submit">Login</button>
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="text-right pt-4 d-flex">
+                    <a href="{{ path('app_home') }}">
+                        <i class="fa fa-chevron-left"></i>{% trans %}Go to home{% endtrans %}
+                    </a>
+                    <span class="ml-auto">
+                        <a href="{{ path('frontend_forgot_password_new') }}" class="pl-3">
+                            {% trans %}Forgot password?{% endtrans %}
+                        </a>
+                        <a href="{{ path('frontend_subscribe_choose') }}" class="pl-3">
+                            {% trans %}Create a new account{% endtrans %}
+                        </a>
+                    </span>
+                </div>
+            </div>
+        </div>
+        {% block javascripts %}
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
+            {{ encore_entry_script_tags('main') }}
+            {{ encore_entry_script_tags('login') }}
+        {% endblock %}
+    </body>
+</html>

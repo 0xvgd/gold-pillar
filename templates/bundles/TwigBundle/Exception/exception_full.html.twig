@@ -1,0 +1,12 @@
+{% extends 'frontend/base.html.twig' %}
+
+{% block body -%}
+    {{ parent() }}
+    {% if status_code == 404 %}
+        {% include '@Twig/Exception/error404.html.twig' %}
+    {% elseif  status_code == 403  %}
+        {% include '@Twig/Exception/error403.html.twig' %}
+    {% else %}    
+        {% include '@Twig/Exception/error500.html.twig' %}
+    {% endif %}
+{% endblock %}

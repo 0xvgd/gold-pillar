@@ -1,0 +1,125 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}
+    Categories |
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('dashboard_index') }}">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    <a href="{{path('dashboard_config_categories_index')}}">Categories</a>
+                </li>
+            </ol>
+        </nav>
+    </div>
+
+    <header role="heading">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-sm-6 col-xs-6">
+                    <h2>
+                        Categories
+                    </h2>
+                    <p class="hidden-xs">Collections used by the system</p>
+                </div>
+                {% if entity.id %}
+                    <div class="col-md-4 col-sm-12 col-xs-12 btn-action">
+                        <form id="form-delete" action="{{ path('dashboard_config_categoria_delete', { id: entity.id }) }}" method="post">
+                            <button type="button" id="btn-delete" class="btn btn-danger pull-right botao-mobile" name="_method" value="DELETE">
+                                <span class="fa fa-trash"></span>
+                                Delete category
+                            </button>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+    <fieldset class="section">
+        <div class="container" id="app">
+            <hr>
+            <div class="card">
+                {{ form_start(form, { 'attr': { 'data-parsley-validate': 'true' } }) }}
+                <div class="card-body card-block">
+                    {% include 'includes/flashMessages.html.twig' %}
+                    {% if not form.vars.valid %}
+                        <div class="alert alert-danger alert-dismissible" role="alert">
+                            <ul>
+                                {% for error in errors %}
+                                    <li>
+                                        <p class="text-danger">
+                                            <b>{{ error.message }}</b>
+                                        </p>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="nav-item">
+                            <a href="#tab-general" class="nav-link active" role="tab" data-toggle="tab">Category</a>
+                        </li>
+                        <li role="presentation" class="nav-item">
+                            <a href="#tab-values" class="nav-link" role="tab" data-toggle="tab">category items</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="tab-general">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{ form_row(form.id) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_row(form.description) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="tab-values">
+                            {{ form_row(form.tableValues) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary btn-sm">
+                        <i class="fas fa-save"></i>
+                        Save
+                    </button>
+                    <button type="reset" class="btn btn-secondary btn-sm">
+                        <i class="fa fa-eraser"></i>
+                        Reset
+                    </button>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </fieldset>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        var baseUrl = '{{ app.request.baseUrl() }}';
+
+        $('#btn-delete').click(function (e) {
+            e.preventDefault();
+            $("#form-delete").submit();
+            return false;
+        });
+
+        $("#form-delete").on("submit", function () {
+            if (confirm(MSG_DELETE_ITEM)) {
+                return true;
+            } else {
+                $('form-delete').find('[type=submit],submit').prop('disabled', false);
+                return false;
+            }
+        });
+    </script>
+    <script src="{{ asset("js/dashboard/configuration/categories-form.js") }}"></script>
+{% endblock %}

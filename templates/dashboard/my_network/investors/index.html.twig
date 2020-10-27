@@ -1,0 +1,83 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}
+	My network - Investors |
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+   <style>
+    .google-visualization-orgchart-nodesel {
+        border: none !important;
+    }
+
+    .google-visualization-orgchart-node {
+             border: none !important;
+    }
+   </style>
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<a href="{{ path('dashboard_index') }}">Dashboard</a>
+				</li>
+				<li class="breadcrumb-item">
+					<a href="#">{{ 'My network' | trans }}</a>
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<a href="{{path('dashboard_my_network_investors_index')}}">{{ 'Investors' | trans }}</a>
+				</li>
+			</ol>
+		</nav>
+	</div>
+
+	<header role="heading">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4 col-sm-6 col-xs-6">
+					<h2>
+						{{ 'Investors' | trans }}
+					</h2>{{'See here the investors you are inviting' | trans }}</p>
+				</div>
+				<div class="col-md-8 col-sm-6 col-xs-6 btn-action">
+				</div>
+			</div>
+		</div>
+	</header>
+	<fieldset class="section mt-3">
+		<div class="container">
+			<div class="row">
+				<div class="masonry-item col-md-12">
+					{% include 'includes/flashMessages.html.twig' %}
+					<div class="bd bgc-white">
+						<div class="alert alert-info" style="display:none">
+							<span class="fas fa-info-circle" aria-hidden="true"></span>
+							<span class="sr-only">Info</span>
+							<div id="message"></div>
+						</div>
+						<div id="chart_div"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</fieldset>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script>
+    	var treeData = [];
+	  	var userJson = [];
+	  	var defaultAvatar = '{{ asset('images/nobody_m.original.jpg') }}'
+	  	var data = {{ userJson | json_encode() | raw}};
+	  	if(data.length > 0){
+			userJson = JSON.parse(data) 
+	  	}
+    </script>
+	 {{ encore_entry_script_tags('dashboard/mynetwork/investors/index') }}
+{% endblock %}

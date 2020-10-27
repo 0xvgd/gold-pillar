@@ -1,0 +1,127 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    locale: en_GB
+    app.name: Gold Pillar
+    app.unit: Gold Pillar
+    app.apifiles_url: 'https://files.vixsoftware.com.br/api/v1/files'
+    app.apifiles_key: tHP2Bk0MOqkyBiq3JPOAX4YSqyILe3FrQxLx
+    app_version: 1.0.0
+    swift_mailer.class: \Swift_Mailer
+    app.supported_locales: br|en|
+    app.certDir: "%kernel.project_dir%/cert"
+    cacheDir: "%kernel.project_dir%/var/cache"
+
+    #payment gateway
+    app.paymentgateway.merchantid: '%env(resolve:PG_MERCHANT_ID)%'
+    app.paymentgateway.password: '%env(resolve:PG_PASSWD)%'
+    app.paymentgateway.presharedkey: '%env(resolve:PG_PRESHARED_KEY)%'
+    app.paymentgateway.secretkey: '%env(resolve:PG_SECRET_KEY)%'
+    app.paymentgateway.integrationtype: Direct API
+    app.paymentgateway.hashmethod: SHA1
+    app.paymentgateway.transactiontype: SALE
+    app.paymentgateway.currencycode: GBP
+    app.paymentgateway.hostediframe: true
+    app.paymentgateway.hostedcustomerdetails: true
+    app.paymentgateway.payzoneimages: true
+    app.paymentgateway.orderdetails: true
+ 
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        bind:
+            string $apiUrl: '%app.apifiles_url%'
+            string $apiKey: '%app.apifiles_key%'
+            string $projectDir: '%kernel.project_dir%'
+            string $certDir: '%app.certDir%'
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/*'
+        exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php,Enum}'
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    App\Controller\:
+        resource: '../src/Controller'
+        tags: ['controller.service_arguments']
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones       
+
+    App\Service\HousePriceIndex\ClientInterface: '@App\Service\HousePriceIndex\DatabaseClient'
+
+    App\EntityListener\ApplicationSettingsListener:
+        tags:
+            - { name: doctrine.orm.entity_listener }
+            - { name: doctrine.event_listener, event: onFlush }
+            
+    # App\EntityListener\AgentListener:
+    #     tags:
+    #         - { name: doctrine.orm.entity_listener }
+            
+    App\EntityListener\SubscriptionListener:
+        tags:
+            - { name: doctrine.orm.entity_listener }
+            
+    App\EntityListener\PropertyPhotoListener:
+        tags:
+             - { name: doctrine.orm.entity_listener }
+
+    App\EntityListener\PropertyListener:
+        tags:
+             - { name: doctrine.orm.entity_listener }
+
+    App\EntityListener\Project\ProjectListener:
+        tags:
+             - { name: doctrine.orm.entity_listener }
+
+    App\EntityListener\Project\ProjectPhotoListener:
+        tags:
+             - { name: doctrine.orm.entity_listener }
+
+    App\EntityListener\Asset\AssetListener:
+        tags:
+             - { name: doctrine.orm.entity_listener }           
+
+    App\EntityListener\Asset\AssetPhotoListener:
+        tags:
+             - { name: doctrine.orm.entity_listener }
+   
+    App\EntityListener\ExecutiveClubListener:
+        tags:
+            - { name: doctrine.orm.entity_listener }
+
+    App\EntityListener\Finance\ProjectTransactionListener:
+        tags:
+            - { name: 'doctrine.orm.entity_listener', event: postPersist }
+
+    App\EntityListener\Renting\AccommodationListener:
+        tags:
+             - { name: doctrine.orm.entity_listener }
+
+    App\EntityListener\Renting\AccommodationPhotoListener:
+        tags:
+             - { name: doctrine.orm.entity_listener }
+    
+    # App\EventListener\ExceptionListener:
+    #     tags:
+    #         - { name: kernel.event_listener, event: kernel.exception }
+
+    App\Serializer\EnumNormalizer:
+        tags:
+             - { name: serializer.normalizer }
+
+    App\Serializer\EnumDenormalizer:
+        tags:
+             - { name: serializer.denormalizer }
+
+    App\Translation\CustomLoader:
+        tags:
+            - { name: translation.loader, alias: bin }

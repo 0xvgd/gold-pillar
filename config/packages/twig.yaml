@@ -1,0 +1,12 @@
+twig:
+    default_path: '%kernel.project_dir%/templates'
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
+    globals:
+        title:              "%app.name%"
+        version:            "%env(APP_VERSION)%"
+        build:              "%env(BUILD_NUMBER)%"
+        balance_service:    '@App\Service\BalanceService'
+    form_themes:
+        - 'form/bootstrap.html.twig'
+        - 'form/fields.html.twig'

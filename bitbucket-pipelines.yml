@@ -1,0 +1,69 @@
+image: laertejjunior/php-tools:2.0
+
+pipelines:
+  tags:                         
+    dev*:                
+        - step:
+            caches:
+              - composer
+              - node
+            script: # Modify the commands below to build your repository.
+              - mkdir -p ~/.ssh
+              - echo $KNOWN_HOSTS >> ~/.ssh/known_hosts
+              - echo MAILER_URL=$MAILER_URL >> .env.local
+              - echo DATABASE_URL=$DATABASE_URL >> .env.local
+              - echo APP_SECRET=$APP_SECRET >> .env.local
+              - echo APP_ENV=prod >> .env.local
+              - echo APP_VERSION=$BITBUCKET_TAG >> .env.local
+              - echo BUILD_NUMBER=$BITBUCKET_BUILD_NUMBER >> .env.local
+              - echo PG_MERCHANT_ID=$PG_MERCHANT_ID_DEV >> .env.local
+              - echo PG_PASSWD=$PG_PASSWD_DEV >> .env.local
+              - echo PG_PRESHARED_KEY=$PG_PRESHARED_KEY_DEV >> .env.local
+              - echo PG_SECRET_KEY=$PG_SECRET_KEY_DEV >> .env.local
+              - cat .env.local
+              - (umask 077; echo $SSH_KEY | base64 --decode -i > ~/.ssh/id_rsa)
+              - composer --version
+              - composer self-update
+              - composer install --ignore-platform-reqs
+              - vendor/bin/php-cs-fixer fix --dry-run --diff
+              - vendor/bin/simple-phpunit
+              - yarn install
+              - yarn encore production
+              - mv deployer.phar /usr/local/bin/dep
+              - chmod +x /usr/local/bin/dep
+              - dep chown
+              - dep deploy dev
+              - dep configenv 
+    v*:                
+        - step:
+            caches:
+              - composer
+              - node
+            script: # Modify the commands below to build your repository.
+              - mkdir -p ~/.ssh
+              - echo $KNOWN_HOSTS_P >> ~/.ssh/known_hosts
+              - echo MAILER_URL=$MAILER_URL >> .env.local
+              - echo DATABASE_URL=$DATABASE_URL_PROD >> .env.local
+              - echo APP_SECRET=$APP_SECRET >> .env.local
+              - echo APP_ENV=prod >> .env.local
+              - echo APP_VERSION=$BITBUCKET_TAG >> .env.local
+              - echo BUILD_NUMBER=$BITBUCKET_BUILD_NUMBER >> .env.local
+              - echo PG_MERCHANT_ID=$PG_MERCHANT_ID_PROD >> .env.local
+              - echo PG_PASSWD=$PG_PASSWD_PROD >> .env.local
+              - echo PG_PRESHARED_KEY=$PG_PRESHARED_KEY_PROD >> .env.local
+              - echo PG_SECRET_KEY=$PG_SECRET_KEY_PROD >> .env.local
+              - cat .env.local
+              - sed -i 's|https://files.vixsoftware.com.br/api/v1/files|https://files.goldpillar.global/api/v1/files|g' config/services.yaml
+              - (umask 077; echo $SSH_KEY_P | base64 --decode -i > ~/.ssh/id_rsa)
+              - composer --version
+              - composer self-update
+              - composer install --ignore-platform-reqs
+              - vendor/bin/php-cs-fixer fix --dry-run --diff
+              - vendor/bin/simple-phpunit
+              - yarn install
+              - yarn encore production
+              - mv deployer.phar /usr/local/bin/dep
+              - chmod +x /usr/local/bin/dep
+              - dep chown prod
+              - dep deploy prod
+              - dep configenv-prod prod 

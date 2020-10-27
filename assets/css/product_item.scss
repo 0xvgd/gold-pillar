@@ -1,0 +1,153 @@
+h2,
+h4 {
+  color: rgb(203, 153, 0);
+  margin-bottom: 0px;
+}
+
+.table-bordered td, .table-bordered th {
+    border: 1px solid #cecece;
+}
+
+.overlay {
+  padding: 11px;
+  position:absolute;
+  width: 92%;
+  height: 100%;
+}
+
+.item-percentage {
+  color: rgb(203, 153, 0);
+}
+
+.item-image-box {
+  grid-area: itemBanner;
+  cursor: pointer;
+}
+
+.item-itemCode {
+  margin-top: 2px;
+  padding-top: 2px;
+}
+
+.item-description {
+  grid-area: itemDescription;
+}
+
+.progress {
+  height: 4px;
+  background-color: #eaeef3;
+  border-radius: 4px;
+  margin-bottom: 1px;
+  height: 40px;
+}
+
+.progress-text {
+  color: #000;
+}
+
+.table td, .table th {
+    padding: 0.30rem !important;
+}
+
+.item-button {
+  cursor: pointer;
+  grid-area: itemButton;
+  border: solid 1px rgb(203, 153, 0);
+  color: black;
+  background-color: rgba(255, 205, 53, 0.14);
+}
+
+.item-container {
+  display: grid;
+  grid-template-areas:
+    "itemBanner"
+    "itemDescription"
+    "itemButton";
+}
+
+.item-container-wrapper {
+  border: solid 1px #e7e7e7;
+  padding: 12px;
+}
+
+.item-flag {
+  position: absolute;
+  top: 24px;
+  left: 36px;
+  color: black;
+  background-color: white;
+  padding: 6px 10px;
+  border: solid 1px #ccc;
+  border-radius: 3px;
+}
+
+.item-type {
+  position: relative;
+  bottom: 48px;
+  margin-bottom: -48px;
+  padding: 12px;
+  text-align: center;
+  color: white;
+  background: linear-gradient(transparent, black);
+}
+
+.v-lazy-image {
+  opacity: 0.3;
+  transition: opacity 1s;
+}
+.v-lazy-image-loaded {
+  opacity: 1;
+}
+
+.stamp {
+  z-index: 1;
+  background: white;
+  position: absolute;
+  top: 6.2em;
+  right: 39px;
+  padding: 0.2em 0.5em;
+  text-transform: uppercase;
+  border-radius: 0.3rem;
+  font-family: "Courier";
+}
+
+.is-sold {
+  color: #c51829;
+  background: white;
+  border: 0.1rem solid #c51829;
+  -webkit-mask-position: 13rem 6rem;
+  transform: rotate(-32deg);
+}
+
+.btn-primary-outline {
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.favorite {
+  position: absolute;
+  top: 5px;
+  right: 36px;
+  color: #fff;
+}
+
+.favorite .btn {
+  padding: 0 0;
+  width: 28px;
+  background-color: rgb(203, 153, 0);
+}
+
+.heart {
+  padding-top: 3px;
+  color: #fff;
+  height: 25px;
+  width: 28px;
+  background-color: rgb(203, 153, 0);
+  -webkit-text-stroke: 1px #fff;
+}
+
+@media (max-width: 767px) {
+  h5 {
+    font-size: 1.0rem;
+  }
+}

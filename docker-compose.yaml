@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  database:
+    image: mysql:5.7
+    environment:
+      MYSQL_USER: usrgoldpillar
+      MYSQL_ROOT_PASSWORD: dev!passwd
+      MYSQL_DATABASE: gpdb
+    ports: [3306]
