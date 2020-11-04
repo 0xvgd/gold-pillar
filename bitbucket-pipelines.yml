@@ -4,6 +4,7 @@ pipelines:
   tags:                         
     dev*:                
         - step:
+            deployment: Staging
             caches:
               - composer
               - node
@@ -36,6 +37,7 @@ pipelines:
               - dep configenv 
     v*:                
         - step:
+            deployment: Production
             caches:
               - composer
               - node
