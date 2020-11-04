@@ -35,8 +35,7 @@ class PropertiesController extends AbstractController
      */
     public function index(Request $request)
     {
-        $form = $this
-            ->createFormBuilder()
+        $form = $this->createFormBuilder()
             ->create('', SearchPropertyType::class)
             ->getForm();
 
@@ -50,13 +49,7 @@ class PropertiesController extends AbstractController
      */
     public function search(Request $request, PropertyRepository $repository)
     {
-        $columns = [
-            'e.name',
-            'e.price',
-            'e.hits',
-            'e.owner',
-            'e.postStatus',
-        ];
+        $columns = ['e.name', 'e.price', 'e.hits', 'e.owner', 'e.postStatus'];
 
         $user = $this->getUser();
         $search = $this->searchValues($request);
@@ -83,9 +76,7 @@ class PropertiesController extends AbstractController
         }
 
         if (!$this->isGranted('ROLE_ADMIN') && $user) {
-            $qb
-                ->andWhere('e.owner = :user')
-                ->setParameter('user', $user);
+            $qb->andWhere('e.owner = :user')->setParameter('user', $user);
         }
 
         $query = $qb->getQuery();
@@ -98,8 +89,11 @@ class PropertiesController extends AbstractController
     /**
      * @Route("/new", name="new", methods={"GET", "POST"})
      */
-    public function add(Request $request, PropertyService $service, EntityManagerInterface $em)
-    {
+    public function add(
+        Request $request,
+        PropertyService $service,
+        EntityManagerInterface $em
+    ) {
         $user = $this->getUser();
         $entity = new Entity();
         $entity->setOwner($user);
@@ -121,28 +115,41 @@ class PropertiesController extends AbstractController
     /**
      * @Route("/{id}", name="edit", methods={"GET", "POST"})
      */
-    public function edit(Request $request, PropertyService $service, Entity $entity)
-    {
+    public function edit(
+        Request $request,
+        PropertyService $service,
+        Entity $entity
+    ) {
         return $this->form($request, $service, $entity);
     }
 
-    private function form(Request $request, PropertyService $service, Entity $entity)
-    {
+    private function form(
+        Request $request,
+        PropertyService $service,
+        Entity $entity
+    ) {
         $removeForm = null;
         $errors = null;
 
         if ($entity->getId()) {
-            $removeForm = $this->createForm(RemoveResourceFormType::class, null, [
-                'method' => 'DELETE',
-                'action' => $this->generateUrl('dashboard_sales_properties_remove', [
-                    'id' => $entity->getId(),
-                ]),
-            ]);
+            $removeForm = $this->createForm(
+                RemoveResourceFormType::class,
+                null,
+                [
+                    'method' => 'DELETE',
+                    'action' => $this->generateUrl(
+                        'dashboard_sales_properties_remove',
+                        [
+                            'id' => $entity->getId(),
+                        ]
+                    ),
+                ]
+            );
         }
 
-        $form = $this
-            ->createForm(PropertyType::class, $entity)
-            ->handleRequest($request);
+        $form = $this->createForm(PropertyType::class, $entity)->handleRequest(
+            $request
+        );
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
@@ -150,9 +157,12 @@ class PropertiesController extends AbstractController
 
                 $this->addFlash('success', 'Success!');
 
-                return $this->redirectToRoute('dashboard_sales_properties_edit', [
-                    'id' => $entity->getId(),
-                ]);
+                return $this->redirectToRoute(
+                    'dashboard_sales_properties_edit',
+                    [
+                        'id' => $entity->getId(),
+                    ]
+                );
             } catch (Throwable $ex) {
                 $this->addFlash('error', $ex->getMessage());
             }
@@ -181,31 +191,50 @@ class PropertiesController extends AbstractController
     /**
      * @Route("/{id}", name="remove", methods={"DELETE"})
      */
-    public function remove(Request $request, AgentPaymentsService $agentPaymentsService, Entity $entity)
-    {
-        $form = $this
-            ->createForm(RemoveResourceFormType::class, $entity, [
-                'method' => 'DELETE',
-            ])
-            ->handleRequest($request);
+    public function remove(
+        Request $request,
+        AgentPaymentsService $agentPaymentsService,
+        Entity $entity
+    ) {
+        $form = $this->createForm(RemoveResourceFormType::class, $entity, [
+            'method' => 'DELETE',
+        ])->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        $removalReason = $request->request->get('remove_resource_form')[
+            'removalReason'
+        ];
+        $removalDetails = $request->request->get('remove_resource_form')[
+            'removalDetails'
+        ];
+        if (!$removalDetails) {
+            $this->addFlash('error', 'could not delete record!');
+
+            return $this->redirectToRoute('dashboard_sales_properties_edit', [
+                'id' => $entity->getId(),
+            ]);
+        } else {
             $em = $this->getDoctrine()->getManager();
             $propertyStatus = null;
             $entity->setRemovedAt(new DateTime('now'));
 
-            if ($entity->getRemovalReason()->equals(RemovalReason::MADE_THE_SALE())) {
+            if ($entity
+                    ->getRemovalReason()
+                    ->equals(RemovalReason::MADE_THE_SALE())
+            ) {
                 $propertyStatus = PropertyStatus::SOLD();
 
                 $agentPaymentsService->commissionGenerate($entity);
-            } elseif ($entity->getRemovalReason()->equals(RemovalReason::WONT_SELL_ANYMORE())) {
+            } elseif ($entity
+                    ->getRemovalReason()
+                    ->equals(RemovalReason::WONT_SELL_ANYMORE())
+            ) {
                 $propertyStatus = PropertyStatus::REMOVED();
             }
 
             $entity->setPropertyStatus($propertyStatus);
 
             $em = $this->getDoctrine()->getManager();
-            $em->merge($entity);
+            $em->persist($entity);
 
             $em->flush();
 

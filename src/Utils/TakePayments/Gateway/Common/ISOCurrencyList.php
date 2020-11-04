@@ -2,6 +2,8 @@
 
 namespace App\Utils\TakePayments\Gateway\Common;
 
+use Exception;
+
 class ISOCurrencyList
 {
     private $m_licISOCurrencies;

@@ -48,7 +48,7 @@ class SharedFunctions
             $nIndex = null;
             // look to see if this tag name has the special "[]" array chars
             $szTagNameToFind = SharedFunctions::getArrayNameAndIndex(
-                szString,
+                $szString,
                 $nCurrentIndex
             );
             $nCurrentIndex = $nIndex;
@@ -150,7 +150,7 @@ class SharedFunctions
         $xaXmlAttribute = null;
         $lXmlTagAttributeList = null;
 
-        if (xtlTagList == null) {
+        if (null == $xtlTagList) {
             $szValue = null;
 
             return false;

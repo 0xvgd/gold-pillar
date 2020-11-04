@@ -2,6 +2,8 @@
 
 namespace App\Utils\TakePayments\Gateway\Common;
 
+use Exception;
+
 class XmlParser
 {
     /**
@@ -167,7 +169,7 @@ class XmlParser
 
             // get the attributes
             foreach ($sxiSimpleXMLIterator->current()->attributes()
-            as $szName => $szValue
+ as $szName => $szValue
             ) {
                 $xaXmlAttribute = new XmlAttribute2();
                 $xaXmlAttribute->setName($szName);

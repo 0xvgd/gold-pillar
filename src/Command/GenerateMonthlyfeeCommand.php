@@ -56,16 +56,7 @@ class GenerateMonthlyfeeCommand extends Command
             $subscriptionDay = ($subscription->getSubscribedAt()->format('d'));
             $dueDate = $this->getValidDate($yearRef, $monthRef, $subscriptionDay);
 
-            //monthly_fee
-            $amount = -9.99;
-
-            $this->agentPaymentsService->monthlyFeeGenerate(
-                $subscription,
-                $amount,
-                $monthRef,
-                $yearRef,
-                $dueDate
-            );
+            //TODO
 
             ++$itemsAdded;
         }

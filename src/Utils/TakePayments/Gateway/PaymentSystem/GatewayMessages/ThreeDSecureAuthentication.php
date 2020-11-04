@@ -38,7 +38,7 @@ class ThreeDSecureAuthentication extends GatewayTransaction
         TransactionOutputData &$todTransactionOutputData = null
     ) {
         $boTransactionSubmitted = false;
-        $sSOAPClient;
+        $sSOAPClient = null;
         $lgepGatewayEntryPoints = null;
 
         $todTransactionOutputData = null;

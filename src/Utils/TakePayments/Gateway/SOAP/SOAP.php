@@ -5,6 +5,7 @@ namespace App\Utils\TakePayments\Gateway\SOAP;
 use App\Utils\TakePayments\Gateway\Common\SharedFunctions;
 use App\Utils\TakePayments\Gateway\Common\StringList;
 use App\Utils\TakePayments\Gateway\Common\XmlParser;
+use Exception;
 
 class SOAP
 {
@@ -434,7 +435,7 @@ class SOAP
         $szValue,
         SOAPParamAttributeList $lspaSOAPParamAttributeList = null
     ) {
-        $spSOAPParam;
+        $spSOAPParam = null;
 
         $spSOAPParam = new SOAPParameter(
             $szName,
@@ -452,20 +453,20 @@ class SOAP
      */
     private function addParam2(SOAPParameter $spSOAPParam, $boOverWriteValue)
     {
-        $lszHierarchicalNames;
+        $lszHierarchicalNames = null;
         $nCurrentIndex = 0;
-        $szTagNameToFind;
-        $szString;
+        $szTagNameToFind = null;
+        $szString = null;
         $nCount = 0;
         $nCount2 = 0;
-        $lspParamList;
-        $spWorkingSOAPParam;
-        $spNewSOAPParam;
+        $lspParamList = null;
+        $spWorkingSOAPParam = null;
+        $spNewSOAPParam = null;
         $boFound = false;
-        $lspaAttributeList;
-        $spaAttribute;
-        $spaNewAttribute;
-        $spaSOAPParamAttributeList;
+        $lspaAttributeList = null;
+        $spaAttribute = null;
+        $spaNewAttribute = null;
+        $spaSOAPParamAttributeList = null;
 
         // need to check the name of the incoming item to see if it is a
         // complex soap parameter
@@ -601,9 +602,9 @@ class SOAP
         $szParamAttributeName,
         $szParamAttributeValue
     ) {
-        $spSOAPParam;
-        $lspaSOAPParamAttributeList;
-        $spaSOAPParamAttribute;
+        $spSOAPParam = null;
+        $lspaSOAPParamAttributeList = null;
+        $spaSOAPParamAttribute = null;
 
         if (!is_string($szName) ||
             !is_string($szParamAttributeName) ||
@@ -684,7 +685,7 @@ class SOAP
         SOAPNamespaceList $lsnSOAPNamespaceList = null,
         $certDir
     ) {
-        $snSOAPNamespace;
+        $snSOAPNamespace = null;
         $nCount = 0;
 
         $this->m_szMethod = $szMethod;

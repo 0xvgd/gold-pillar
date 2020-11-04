@@ -31,8 +31,7 @@ class AssetsController extends AbstractController
      */
     public function index()
     {
-        $form = $this
-            ->createFormBuilder()
+        $form = $this->createFormBuilder()
             ->create('', SearchAssetType::class)
             ->getForm();
 
@@ -80,9 +79,7 @@ class AssetsController extends AbstractController
         }
 
         if (!$this->isGranted('ROLE_ADMIN') && $user) {
-            $qb
-                ->andWhere('e.owner = :user')
-                ->setParameter('user', $user);
+            $qb->andWhere('e.owner = :user')->setParameter('user', $user);
         }
 
         $query = $qb->getQuery();
@@ -95,8 +92,11 @@ class AssetsController extends AbstractController
     /**
      * @Route("/new", name="new", methods={"GET", "POST"})
      */
-    public function add(Request $request, AssetService $service, EntityManagerInterface $em)
-    {
+    public function add(
+        Request $request,
+        AssetService $service,
+        EntityManagerInterface $em
+    ) {
         $user = $this->getUser();
         $entity = new Entity();
         $entity->setOwner($user);
@@ -115,19 +115,25 @@ class AssetsController extends AbstractController
     /**
      * @Route("/{id}", name="edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, AssetService $service, Entity $entity)
-    {
+    public function edit(
+        Request $request,
+        AssetService $service,
+        Entity $entity
+    ) {
         return $this->form($request, $service, $entity);
     }
 
-    private function form(Request $request, AssetService $service, Entity $entity)
-    {
+    private function form(
+        Request $request,
+        AssetService $service,
+        Entity $entity
+    ) {
         $removeForm = null;
         $errors = null;
 
-        $form = $this
-            ->createForm(AssetType::class, $entity)
-            ->handleRequest($request);
+        $form = $this->createForm(AssetType::class, $entity)->handleRequest(
+            $request
+        );
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
@@ -146,12 +152,19 @@ class AssetsController extends AbstractController
         }
 
         if ($entity->getId()) {
-            $removeForm = $this->createForm(RemoveResourceFormType::class, null, [
-                'method' => 'DELETE',
-                'action' => $this->generateUrl('dashboard_assets_assets_remove', [
-                    'id' => $entity->getId(),
-                ]),
-            ]);
+            $removeForm = $this->createForm(
+                RemoveResourceFormType::class,
+                null,
+                [
+                    'method' => 'DELETE',
+                    'action' => $this->generateUrl(
+                        'dashboard_assets_assets_remove',
+                        [
+                            'id' => $entity->getId(),
+                        ]
+                    ),
+                ]
+            );
         }
 
         return $this->render('dashboard/assets/assets/form.html.twig', [
@@ -175,15 +188,28 @@ class AssetsController extends AbstractController
     /**
      * @Route("/{id}", name="remove", methods={"DELETE"})
      */
-    public function remove(Request $request, Entity $entity)
+    public function remove(Request $request, Entity $entity, EntityManagerInterface $em)
     {
-        $form = $this
-            ->createForm(RemoveResourceFormType::class, $entity)
-            ->handleRequest($request);
+        $form = $this->createForm(
+            RemoveResourceFormType::class,
+            $entity
+        )->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            //TODO
-            $this->addFlash('success', 'Success!');
+        $removalReason = $request->request->get('remove_resource_form')[
+            'removalReason'
+        ];
+        $removalDetails = $request->request->get('remove_resource_form')[
+            'removalDetails'
+        ];
+
+        if (!$removalDetails) {
+            $this->addFlash('error', 'could not delete record!');
+
+            return $this->redirectToRoute('dashboard_assets_assets_edit', [
+                'id' => $entity->getId(),
+            ]);
+        } else {
+            $this->addFlash('success', 'TODO');
 
             return $this->redirectToRoute('dashboard_assets_assets_index');
         }

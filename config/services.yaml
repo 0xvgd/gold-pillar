@@ -70,10 +70,6 @@ services:
         tags:
             - { name: doctrine.orm.entity_listener }
             
-    App\EntityListener\PropertyPhotoListener:
-        tags:
-             - { name: doctrine.orm.entity_listener }
-
     App\EntityListener\PropertyListener:
         tags:
              - { name: doctrine.orm.entity_listener }
@@ -82,34 +78,18 @@ services:
         tags:
              - { name: doctrine.orm.entity_listener }
 
-    App\EntityListener\Project\ProjectPhotoListener:
-        tags:
-             - { name: doctrine.orm.entity_listener }
-
     App\EntityListener\Asset\AssetListener:
         tags:
              - { name: doctrine.orm.entity_listener }           
 
-    App\EntityListener\Asset\AssetPhotoListener:
-        tags:
-             - { name: doctrine.orm.entity_listener }
-   
     App\EntityListener\ExecutiveClubListener:
         tags:
             - { name: doctrine.orm.entity_listener }
-
-    App\EntityListener\Finance\ProjectTransactionListener:
-        tags:
-            - { name: 'doctrine.orm.entity_listener', event: postPersist }
 
     App\EntityListener\Renting\AccommodationListener:
         tags:
              - { name: doctrine.orm.entity_listener }
 
-    App\EntityListener\Renting\AccommodationPhotoListener:
-        tags:
-             - { name: doctrine.orm.entity_listener }
-    
     # App\EventListener\ExceptionListener:
     #     tags:
     #         - { name: kernel.event_listener, event: kernel.exception }

@@ -2,6 +2,8 @@
 
 namespace App\Utils\TakePayments\Gateway\Common;
 
+use Exception;
+
 class ISOCountry
 {
     private $m_szCountryName;
@@ -56,5 +58,6 @@ class ISOCountry
         $this->m_szCountryName = $szCountryName;
         $this->m_szCountryShort = $szCountryShort;
         $this->m_nListPriority = $nListPriority;
+        $this->m_nISO2Alpha = $nISO2Alpha;
     }
 }

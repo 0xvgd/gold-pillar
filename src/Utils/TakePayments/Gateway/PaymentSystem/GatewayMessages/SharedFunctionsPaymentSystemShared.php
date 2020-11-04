@@ -112,7 +112,7 @@ class SharedFunctionsPaymentSystemShared
             $szName
         )
         ) {
-            if (!$xtTransactionOutputDataXmlTag->getValue(
+            if (!$xtTransactionOutputDataXmlTag->getStringValue(
                 $szXmlFormatString1.
                         $nCount.
                         $szXmlFormatString2.
@@ -158,16 +158,16 @@ class SharedFunctionsPaymentSystemShared
         $szCardTypeDataXMLPath
     ) {
         $ctdCardTypeData = null;
-        $boTempValue;
+        $boTempValue = null;
         $nISOCode = null;
         $boLuhnCheckRequired = null;
         $szStartDateStatus = null;
         $szIssueNumberStatus = null;
-        $szCardType;
+        $szCardType = null;
         $szIssuer = null;
-        $nTemp;
-        $iIssuer;
-        $szCardClass;
+        $nTemp = null;
+        $iIssuer = null;
+        $szCardClass = null;
 
         if (null == $xtGetCardTypeXmlTag) {
             return null;
@@ -237,11 +237,11 @@ class SharedFunctionsPaymentSystemShared
     ) {
         $nTempValue = 0;
         $boAuthorisationAttempted = null;
-        $boTempValue;
+        $boTempValue = null;
         $nPreviousStatusCode = null;
         $szPreviousMessage = null;
         $ptrPreviousTransactionResult = null;
-        $pmgoPaymentMessageGatewayOutput;
+        $pmgoPaymentMessageGatewayOutput = null;
 
         if (null == $xtMessageResultXmlTag) {
             return null;

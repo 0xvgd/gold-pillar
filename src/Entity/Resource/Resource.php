@@ -73,7 +73,7 @@ abstract class Resource implements ResourceInterface
     private $postStatus;
 
     /**
-     * @ORM\Column(type="string", length=20, nullable=true)
+     * @ORM\Column(type="string", length=100, nullable=true)
      * @Groups({"read", "list"})
      */
     private $tag;
@@ -151,6 +151,12 @@ abstract class Resource implements ResourceInterface
      * @Groups({"read"})
      */
     private $agent;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"read", "list"})
+     */
+    private $referenceCode;
 
     /**
      * @var User
@@ -634,6 +640,26 @@ abstract class Resource implements ResourceInterface
                 $document->setResource(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * Get the value of referenceCode.
+     */
+    public function getReferenceCode()
+    {
+        return $this->referenceCode;
+    }
+
+    /**
+     * Set the value of referenceCode.
+     *
+     * @return self
+     */
+    public function setReferenceCode($referenceCode)
+    {
+        $this->referenceCode = $referenceCode;
 
         return $this;
     }

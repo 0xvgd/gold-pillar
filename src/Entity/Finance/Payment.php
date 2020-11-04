@@ -36,6 +36,7 @@ class Payment
      *
      * @ORM\ManyToOne(targetEntity=Resource::class)
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     * @Groups({"list", "read"})
      */
     private $resource;
 

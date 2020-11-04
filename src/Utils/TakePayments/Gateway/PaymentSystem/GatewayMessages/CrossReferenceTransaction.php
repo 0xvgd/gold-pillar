@@ -3,6 +3,7 @@
 namespace App\Utils\TakePayments\Gateway\PaymentSystem\GatewayMessages;
 
 use App\Utils\TakePayments\Gateway\Common\NullableInt;
+use App\Utils\TakePayments\Gateway\Common\SharedFunctions;
 use App\Utils\TakePayments\Gateway\PaymentSystem\Input\CustomerDetails;
 use App\Utils\TakePayments\Gateway\PaymentSystem\Input\OverrideCardDetails;
 use App\Utils\TakePayments\Gateway\PaymentSystem\Input\RequestGatewayEntryPointList;
@@ -63,7 +64,7 @@ class CrossReferenceTransaction extends GatewayTransaction
         TransactionOutputData &$todTransactionOutputData = null
     ) {
         $boTransactionSubmitted = false;
-        $sSOAPClient;
+        $sSOAPClient = null;
         $lgepGatewayEntryPoints = null;
 
         $todTransactionOutputData = null;
@@ -692,7 +693,7 @@ class CrossReferenceTransaction extends GatewayTransaction
                             ->getDateOfBirth()
                 )
                 ) {
-                    $sSOAPClient.
+                    $sSOAPClient->
                         AddParam(
                             'PaymentMessage.CustomerDetails.PrimaryAccountDetails.DateOfBirth',
                             $this->m_cdCustomerDetails

@@ -64,7 +64,7 @@ class CardDetailsTransaction extends GatewayTransaction
         TransactionOutputData &$todTransactionOutputData = null
     ) {
         $boTransactionSubmitted = false;
-        $sSOAPClient;
+        $sSOAPClient = null;
         $lgepGatewayEntryPoints = null;
         $goGatewayOutput = null;
 
@@ -766,7 +766,7 @@ class CardDetailsTransaction extends GatewayTransaction
                             ->getDateOfBirth()
                 )
                 ) {
-                    $sSOAPClient.
+                    $sSOAPClient->
                         AddParam(
                             'PaymentMessage.CustomerDetails.PrimaryAccountDetails.DateOfBirth',
                             $this->m_cdCustomerDetails

@@ -22,7 +22,7 @@
       <div class="item-description text-left p-2">
         <h4>{{ item.name }}</h4>
         <div class="item-itemCode">
-          <small>#{{ item.assetCode }}</small>
+          <small>{{ item.referenceCode }}</small>
         </div>
       </div>
       <div class="row layer mT-15">

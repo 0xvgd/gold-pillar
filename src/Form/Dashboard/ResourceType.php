@@ -17,6 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Validator\Constraints\Count;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Valid;
 
@@ -44,6 +45,7 @@ abstract class ResourceType extends AbstractType
                             'message' => 'Enter name',
                         ]
                     ),
+                    new Length(['max' => 255]),
                 ],
             ])
             ->add('description', TextareaType::class)
@@ -54,6 +56,9 @@ abstract class ResourceType extends AbstractType
             ->add('tag', TextType::class, [
                 'label' => 'Tag',
                 'required' => false,
+                'constraints' => [
+                    new Length(['max' => 100]),
+                ],
             ])
             ->add('mainPhoto', PhotoType::class, [
                 'required' => true,

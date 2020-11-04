@@ -49,6 +49,7 @@ class ProjectService extends ResourceService
 
         if (!$project->getId()) {
             $project->setProjectStatus(ProjectStatus::PENDING());
+            $project->setReferenceCode($this->generateReferenceCode());
             $project->getTotalInvested()->setAmount(0);
             if ($this->authChecker->isGranted('ROLE_BROKER')) {
                 $broker = new Broker();
@@ -56,6 +57,10 @@ class ProjectService extends ResourceService
                 $broker->setDescription('');
                 $project->setBroker($broker);
             }
+        }
+
+        if (!$project->getReferenceCode()) {
+            $project->setReferenceCode($this->generateReferenceCode());
         }
 
         parent::save($project);
@@ -69,5 +74,26 @@ class ProjectService extends ResourceService
     public function getCompanyTransactions(Project $project)
     {
         return [];
+    }
+
+    public function generateReferenceCode()
+    {
+        $referenceCode = null;
+        $codeExists = true;
+
+        while ($codeExists) {
+            $referenceCode = 'PROJ-'.substr(strtoupper(sha1(random_bytes(4))), 0, 8);
+            $reserve = $this->getEntityManager()->getRepository(Project::class)->findOneBy(
+                [
+                    'referenceCode' => $referenceCode,
+                ]
+            );
+
+            if (!$reserve) {
+                $codeExists = false;
+            }
+        }
+
+        return $referenceCode;
     }
 }

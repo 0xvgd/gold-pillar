@@ -48,6 +48,8 @@ datatable.dataTable({
                         currency: data.price.currency
                     });
                     return formatter.format(data.price.amount)
+                } else {
+                    return '--';
                 }
             }
         },

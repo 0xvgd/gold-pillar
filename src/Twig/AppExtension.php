@@ -9,6 +9,8 @@ use Twig\TwigFilter;
 
 class AppExtension extends AbstractExtension
 {
+    private $params;
+
     public function __construct(ParameterBagInterface $params)
     {
         $this->params = $params;

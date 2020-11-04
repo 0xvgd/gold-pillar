@@ -77,8 +77,10 @@ Encore
     .addEntry('investor/assets', './assets/js/dashboard/investor/assets.js')
     .addEntry('investor/view', './assets/js/dashboard/investor/view.js')
     .addEntry('executive-club-form', './assets/js/dashboard/executive-club-form.js')
-    .addEntry('application-balance', './assets/js/dashboard/application-balance.js')
-    .addEntry('user-balance', './assets/js/dashboard/application-balance.js')
+    .addEntry('company-balance', './assets/js/dashboard/company-balance.js')
+    .addEntry('user-balance', './assets/js/dashboard/user-balance.js')
+    .addEntry('dashboard/myfinance/projects/index', './assets/js/dashboard/myfinance/projects/index.js')
+    .addEntry('dashboard/myfinance/assets/index', './assets/js/dashboard/myfinance/assets/index.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     //.splitEntryChunks()

@@ -27,6 +27,7 @@ trait Timestampable
      * @var DateTimeInterface|null
      *
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({"list", "read"})
      */
     private $removedAt;
 

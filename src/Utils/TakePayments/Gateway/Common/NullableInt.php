@@ -2,6 +2,8 @@
 
 namespace App\Utils\TakePayments\Gateway\Common;
 
+use Exception;
+
 class NullableInt extends Nullable
 {
     private $m_nValue;

@@ -1,9 +1,9 @@
 {% if is_granted('ROLE_ADMIN') %}
 	{% include "dashboard/includes/menu.admin.html.twig" %}
-{% elseif is_granted('ROLE_AGENT') %}
-	{% include "dashboard/includes/menu.agent.html.twig" %}
 {% elseif is_granted('ROLE_INVESTOR') %}
 	{% include "dashboard/includes/menu.investor.html.twig" %}
+{% elseif is_granted('ROLE_AGENT') %}
+	 {% include "dashboard/includes/menu.agent.html.twig" %} 
 {% elseif is_granted('ROLE_BROKER') %}
 	{% include "dashboard/includes/menu.broker.html.twig" %}
 {% elseif is_granted('ROLE_TENANT') %}

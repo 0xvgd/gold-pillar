@@ -103,4 +103,9 @@ abstract class ResourceService
 
         return $slug;
     }
+
+    public function getEntityManager()
+    {
+        return $this->em;
+    }
 }

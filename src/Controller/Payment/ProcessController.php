@@ -39,6 +39,7 @@ class ProcessController extends AbstractController
         EntityManagerInterface $em,
         LoggerInterface $logger
     ) {
+        $retorno = null;
         $logger->info('Processando...');
         $baseUrl = $this->generateUrl(
             'app_home',

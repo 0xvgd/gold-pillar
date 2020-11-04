@@ -1,6 +1,8 @@
 {% if removeForm is defined and not removeForm is null %}
     <div class="modal fade" id="remove-modal" tabindex="-1" role="dialog">
+       
         {{ form_start(removeForm, { 'attr': { 'data-parsley-validate': 'true' } }) }}
+           {{ form_errors(removeForm) }}
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">

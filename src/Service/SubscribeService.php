@@ -117,7 +117,7 @@ class SubscribeService
             $mailLogger = new Swift_Plugins_Loggers_ArrayLogger();
             $this->mailer->registerPlugin(new Swift_Plugins_LoggerPlugin($mailLogger));
             $message = (new Swift_Message('Gold Pillar | Confirmation instructions'))
-                ->setFrom('lmercierhomologa@gmail.com')
+                ->setFrom('noreply@goldpillar.global')
                 ->setTo($email)
                 ->setBody($this->getConfirmationMailBody($email, $hash))
                 ->setContentType('text/html');
@@ -149,8 +149,9 @@ class SubscribeService
     {
         /* @var $subscriptionRepository SubscriptionRepository */
         $subscriptionRepository = $this->em->getRepository(\App\Entity\Subscription::class);
-        $subscriptions = $subscriptionRepository->getAllActive();
 
-        return $subscriptions;
+        //TODO
+
+        return null;
     }
 }

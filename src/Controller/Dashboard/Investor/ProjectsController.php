@@ -171,7 +171,12 @@ class ProjectsController extends AbstractController
                 /** @var EntryFee */
                 $entryFee = $transactions['entryFee'];
 
-                $totalPayment = number_format($investment->getAmount() + $entryFee->getAmount(), 2, '.', '');
+                $totalPayment = number_format(
+                    $investment->getAmount() + $entryFee->getAmount(),
+                    2,
+                    '.',
+                    ''
+                );
 
                 $paymentData->setOrderId($investment->getReferenceCode());
 

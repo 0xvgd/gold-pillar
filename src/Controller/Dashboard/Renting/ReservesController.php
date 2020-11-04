@@ -67,6 +67,8 @@ class ReservesController extends AbstractController
      */
     public function view(Request $request, Entity $entity)
     {
+        $removeReserveForm = null;
+
         $emailBody = "Hi,\n\n Can you please verify the tenants below? \n\n";
         foreach ($entity->getPeople() as $person) {
             $emailBody .= "{$person->getName()}, {$person->getEmail()}, {$person->getPhone()}\n";

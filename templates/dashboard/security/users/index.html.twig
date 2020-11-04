@@ -77,6 +77,7 @@
                                         <th class="bdwT-0">Nome</th>
                                         <th class="bdwT-0"></th>
                                         <th class="bdwT-0">E-mail</th>
+                                        <th class="bdwT-0">Roles</th>
                                         <th class="bdwT-0"></th>
                                     </tr>
                                 </thead>
@@ -113,7 +114,19 @@
                     }
                 },
                 {
-                    data: 'email'
+                    data: 'email',
+                },
+                {
+                    data: 'roles',
+                    render: function (data) {
+                        var strReturn = '';
+                        for (var i = 0; i< data.length; i++) {
+                            strReturn += ` <span class="badge badge-info">${data[i]}</span>`;
+                        }
+
+                        return strReturn;
+                    
+                    }
                 },
                 {
                     data: 'id',

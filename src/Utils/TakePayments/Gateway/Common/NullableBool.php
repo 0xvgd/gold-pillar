@@ -2,6 +2,8 @@
 
 namespace App\Utils\TakePayments\Gateway\Common;
 
+use Exception;
+
 class NullableBool extends Nullable
 {
     private $m_boValue;

@@ -18,7 +18,7 @@
       </div>
       <div class="item-description text-left p-2">
         <h4>{{ item.name }}</h4>
-        <div><small>#{{ item.propertyCode }}</small></div>
+        <div><small>{{ item.referenceCode }}</small></div>
       </div>
       <hr>
       <div class="row">

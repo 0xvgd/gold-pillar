@@ -27,7 +27,12 @@ class PropertyService extends ResourceService
         }
 
         if (!$property->getId()) {
+            $property->setReferenceCode($this->generateReferenceCode());
             $property->setPropertyStatus(PropertyStatus::FOR_SALE());
+        }
+
+        if (!$property->getReferenceCode()) {
+            $property->setReferenceCode($this->generateReferenceCode());
         }
 
         parent::save($property);
@@ -40,5 +45,26 @@ class PropertyService extends ResourceService
     public function getTransactions(Property $property)
     {
         return [];
+    }
+
+    public function generateReferenceCode()
+    {
+        $referenceCode = null;
+        $codeExists = true;
+
+        while ($codeExists) {
+            $referenceCode = 'PROP-'.substr(strtoupper(sha1(random_bytes(4))), 0, 8);
+            $reserve = $this->getEntityManager()->getRepository(Property::class)->findOneBy(
+                [
+                    'referenceCode' => $referenceCode,
+                ]
+            );
+
+            if (!$reserve) {
+                $codeExists = false;
+            }
+        }
+
+        return $referenceCode;
     }
 }

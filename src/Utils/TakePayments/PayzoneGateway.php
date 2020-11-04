@@ -19,7 +19,8 @@ class PayzoneGateway
     private $plugin_version = '1.3.4';
     private $debug_mode; //debug mode active
     private $hosted_iframe; //Boolean to check for iframe loading
-    private $hosted_cust_details; //Boolean to check whether to load customer details for hosted form, customer details can be entered or referenced from the merchant site or entered on the payzone site
+    private $hosted_cust_details; //Boolean to check whether to load customer details for hosted form,
+    //customer details can be entered or referenced from the merchant site or entered on the payzone site
 
     private $merchant_id; //Merchant ID -  accessible from the MMS
     private $merchant_password; //Gateway Password -  accessible from the MMS
@@ -43,6 +44,8 @@ class PayzoneGateway
 
     private $payzone_images; //show or hide Payzone Images
 
+    private $order_details;
+
     private $paymentData;
     private $em;
 
@@ -57,7 +60,9 @@ class PayzoneGateway
         //##### DEVELOPER NOTE #####
         //#~~~~~~~~~~~~~~~~~~~~~~~~~~#
         // This Debug function is designed for testing only, using this in a production environment with real data is not recommended.
-        // Debug Mode will stop the forms being generated and submitted in the background and will present the content to the user with a submit button, this mode will potentially expose confidential information if used in a production environment and it is strongly recommended to not use these in production.
+        // Debug Mode will stop the forms being generated and submitted in the background and will present the content to the user with a
+        // submit button, this mode will potentially expose confidential information if used in a production environment and it is strongly
+        // recommended to not use these in production.
         // Debug mode usings the javascript console.log function to output the POST / GET data for review
         //~~~~~~~~~~~~~~~~~~~~~~~~~~#
         //###########################
@@ -68,8 +73,10 @@ class PayzoneGateway
         //~~~~~~~~~~~~~~~~~~~~~~~~~~#
         // The below section, when uncommented will enable a demo database recording function to be used for configuration.
         // Please note you will need to comment out the self::set_____ functions above to ensure that are not duplicated here.
-        // In includes/helpers/dbexample.php you will need to add in your database details, there is a script avaialble in the file to allow to quickly create the demo tables
-        // There are several lines that will need to be uncommented in this file to enable to the DB Example fully, all of the lines are suffixed with #DBExample to enable easy location
+        // In includes/helpers/dbexample.php you will need to add in your database details, there is a script avaialble in the file to
+        // allow to quickly create the demo tables
+        // There are several lines that will need to be uncommented in this file to enable to the DB Example fully, all of the lines
+        // are suffixed with #DBExample to enable easy location
         //~~~~~~~~~~~~~~~~~~~~~~~~~~#
         //###########################
 
@@ -103,7 +110,9 @@ class PayzoneGateway
 
         //#### DEVELOPER NOTE #####
         //~~~~~~~~~~~~~~~~~~~~~~~~~~#
-        // The variables set below in the __construct() function allow configuration of the way the payment gateway operates, these fields can be hardcoded into the __constrcut function as below, or accessed dynamically from a DB etc to set the instance. These fields would be best set in your admin console / functions, stored in a database then retrieved from the below.
+        // The variables set below in the __construct() function allow configuration of the way the payment gateway operates,
+        // these fields can be hardcoded into the __constrcut function as below, or accessed dynamically from a DB etc to set the instance.
+        // These fields would be best set in your admin console / functions, stored in a database then retrieved from the below.
         //###########################
         //
         // Set the variables using a static method
@@ -124,12 +133,14 @@ class PayzoneGateway
         // Set the URLS to be used for passing the information back and forth between the site
         self::setURL('home-page', 'index.php'); //Home page, assigns the base URL to the start of the url
         self::setURL('cart-page', 'cart.php'); //Cart page, assigns the base URL to the start of the url
-        self::setURL('payment-page', 'payment.php'); //Payment page, handles the logic of the payment type, and redirects to the relevant payment processing function
+        self::setURL('payment-page', 'payment.php'); //Payment page, handles the logic of the payment type, and redirects to
+         //the relevant payment processing function
         self::setURL('process-payment', 'payment/process'); //processes the payment as required
         self::setURL('process-refund', 'process-refund.php'); //processes the payment as required
         self::setURL('result-page', 'results.php'); // validates and presents the results
         self::setURL('loading-page', 'assets/loading.html'); // Loading page
-        self::setURL('form-action-payment'); // no variable needed, for hosted this sets the page to the hosted form payment handler (MMS) and for other integrations it changes the the form action to self so the content will be posted back to the same page
+        self::setURL('form-action-payment'); // no variable needed, for hosted this sets the page to the hosted form payment handler
+        // (MMS) and for other integrations it changes the the form action to self so the content will be posted back to the same page
         self::setURL('response-form-handler'); // no variable needed, this accesses the form handler in the MMS
     }
 
@@ -519,6 +530,8 @@ class PayzoneGateway
         $params['CountryCode'] = $CountryCode;
         $params['HashMethod'] = $this->hash_method;
         $params['EmailAddress'] = $EmailAddress;
+
+        $HashDigest = null;
 
         switch ($this->integration_type) {
             case IntegrationType::HOSTED:
@@ -1006,6 +1019,7 @@ class PayzoneGateway
         $post = array_map('strip_tags', $post);
         $get = array_map('strip_tags', $get);
         $refund = isset($get['refund']) ? true : false;
+        $returnarray = null;
 
         if ($refund) {
             $returnarray['Notification']['Refund'] = 'Refund';
@@ -1611,6 +1625,7 @@ class PayzoneGateway
      */
     public function responseCodetoOutcome($code, $v)
     {
+        $return = null;
         switch ($code) {
             case 0:
                 switch ($v) {

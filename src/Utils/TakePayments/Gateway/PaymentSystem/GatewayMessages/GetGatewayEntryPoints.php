@@ -6,6 +6,7 @@ use App\Utils\TakePayments\Gateway\Common\NullableInt;
 use App\Utils\TakePayments\Gateway\PaymentSystem\Input\RequestGatewayEntryPointList;
 use App\Utils\TakePayments\Gateway\PaymentSystem\Output\GetGatewayEntryPointsOutputData;
 use App\Utils\TakePayments\Gateway\PaymentSystem\Output\GetGatewayEntryPointsResult;
+use App\Utils\TakePayments\Gateway\SOAP\SOAP;
 
 class GetGatewayEntryPoints extends GatewayTransaction
 {
@@ -22,13 +23,13 @@ class GetGatewayEntryPoints extends GatewayTransaction
         GetGatewayEntryPointsOutputData &$ggepGetGatewayEntryPointsOutputData = null
     ) {
         $boTransactionSubmitted = false;
-        $sSOAPClient;
-        $lgepGatewayEntryPoints;
+        $sSOAPClient = null;
+        $lgepGatewayEntryPoints = null;
 
         $ggepGetGatewayEntryPointsOutputData = null;
         $goGatewayOutput = null;
 
-        $sSOAPClient = new SOAP\SOAP(
+        $sSOAPClient = new SOAP(
             'GetGatewayEntryPoints',
             GatewayTransaction::getSOAPNamespace()
         );

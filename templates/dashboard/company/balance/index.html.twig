@@ -1,0 +1,172 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}
+	{{ parent() }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	{{ encore_entry_link_tags('company-balance') }}
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<a href="{{ path('dashboard_index') }}">Dashboard</a>
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<a href="{{path('dashboard_company_balance_index')}}">Company balance</a>
+				</li>
+			</ol>
+		</nav>
+	</div>
+	<header role="heading">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-9 col-sm-6 col-xs-6">
+					<h1>
+						Company balance
+					</h1>
+				</div>
+				<div class='col-md-3  p-20'>
+					<div class="layers bd bgc-white p-20">
+						<div class="layer w-100 mB-10">
+							<h6 class="lh-1">Total balance</h6>
+						</div>
+						<div class="layer w-100">
+							<div class="peers ai-sb fxw-nw">
+								<div class="peer peer-greed">
+									<span id="balance-bar-chart"></span>
+								</div>
+								<div class="peer">
+									<h2 id='totalBalance' class="h4 text-muted mb-0 totalBalance">
+										{% set balanceColor =  balance > 0 ? "text-success" : "text-danger" %}
+										<span class='{{ balanceColor }}'>
+											£{{ balance | number_format(2)}}
+										</span>
+									</h2>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</header>
+	<fieldset class="section">
+		<div class="container" id="app">
+			{% include 'includes/flashMessages.html.twig' %}
+			<div id='myResultsDiv'></div>
+			<ul class="nav nav-tabs" role="tablist">
+				<li role="presentation" class="nav-item">
+					<a href="#tab-company-transactions" class="nav-link" role="tab" data-toggle="tab">Company Transactions</a>
+				</li>
+			</ul>
+			<div class="tab-content">
+				<div role="tabpanel" class="tab-pane active" id="tab-company-transactions">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="card">
+								<div class="card-board">
+									<div class="table-responsive">
+
+
+										<table id="datatable" class="table">
+											<thead>
+												<tr>
+													<th class=" bdwT-0">{% trans %}Date{% endtrans %}</th>
+													<th class="bdwT-0">{% trans %}Note{% endtrans %}</th>
+													<th class=" bdwT-0">{% trans %}Transaction ID{% endtrans %}</th>
+													<th class=" bdwT-0">Amount</th>
+													<th class=" bdwT-0 text-right">{% trans %}Status{% endtrans %}</th>
+												</tr>
+											</thead>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+
+	{% endblock %}
+
+	{% block javascripts %}
+		{{ parent() }}
+
+        <script>       
+            datatable = $('#datatable').dataTable({
+                ajax: '{{ path("dashboard_company_balance_search") }}',
+                pageLength: 200,
+                processing: true,
+                serverSide: true,
+                searching: false,
+                columns: [
+                    {
+                        data: 'createdAt'
+                    },
+                    {
+                        data: 'note'
+                    },
+                    {
+                        data: 'transactionId',
+						render: function (data, type, row) {
+							var retorno = null;
+							if(row.verified) {
+							 	retorno = `<span>
+												${data}
+												<i class="fa fa-check text-success" title="Transaction security verified"></i>
+											</span>`;
+							} else {
+								retorno = `<span>
+												${data}
+												<i class="fa fa-exclamation-circle text-danger" title="Transaction security NOT verified"></i>
+											</span>`;
+							}
+
+							return retorno;
+						}
+                    },
+                    {
+                        data: 'amount',
+                        className: 'text-right',
+                        render: function (data) {
+                            var color = 'text-success';
+                            var formatter = new Intl.NumberFormat('uk', {
+                                style: 'currency',
+                                currency: 'GBP'
+                            });
+
+                            if(data < 0) {
+                                color = 'text-danger';
+                            }
+                            
+                            return "<span class='"+ color +"'> £" + formatter.format(data) + "</span>" ;
+                        }
+                    },
+					{
+                        data: 'status',
+						className: 'text-right',
+                        render: function (data, type, row) {
+                        
+							var retorno = null;
+							if(row.status.value == 'processed') {
+							 	retorno = `<span class="badge badge-success">Processed</span>`;
+							} else if(row.status.value == 'created') {
+								retorno = `<span class="badge badge-warning">Created</span>`;
+							} else {
+								retorno = `<span class="badge badge-danger">${row.status.label}</span>`;
+							}
+
+						    return retorno;
+                        }
+                    },
+                ]
+            });
+        </script>
+		
+	{% endblock %}

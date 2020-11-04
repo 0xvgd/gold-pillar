@@ -3,9 +3,11 @@
 namespace App\Utils\TakePayments\Gateway\PaymentSystem\GatewayMessages;
 
 use App\Utils\TakePayments\Gateway\Common\NullableInt;
+use App\Utils\TakePayments\Gateway\Common\SharedFunctions;
 use App\Utils\TakePayments\Gateway\PaymentSystem\Input\RequestGatewayEntryPointList;
 use App\Utils\TakePayments\Gateway\PaymentSystem\Output\GetCardTypeOutputData;
 use App\Utils\TakePayments\Gateway\PaymentSystem\Output\GetCardTypeResult;
+use App\Utils\TakePayments\Gateway\SOAP\SOAP;
 
 class GetCardType extends GatewayTransaction
 {
@@ -43,7 +45,7 @@ class GetCardType extends GatewayTransaction
         GetCardTypeOutputData &$gctodGetCardTypeOutputData = null
     ) {
         $boTransactionSubmitted = false;
-        $sSOAPClient;
+        $sSOAPClient = null;
         $lgepGatewayEntryPoints = null;
         $ctdCardTypeData = null;
 
@@ -55,7 +57,7 @@ class GetCardType extends GatewayTransaction
             GatewayTransaction::getSOAPNamespace(),
             $this->getCertDir()
         );
-        if (!Common\SharedFunctions::isStringNullOrEmpty($this->m_szCardNumber)
+        if (!SharedFunctions::isStringNullOrEmpty($this->m_szCardNumber)
         ) {
             $sSOAPClient->addParam(
                 'GetCardTypeMessage.CardNumber',

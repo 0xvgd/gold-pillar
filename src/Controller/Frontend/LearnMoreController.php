@@ -9,10 +9,17 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/learn-more")
  */
+
+/**
+ * @Route(
+ *  "/{_locale}/learn-more",
+ *  name="frontend_learn_more_",
+ *  requirements={"_locale"="%app.supported_locales%"})
+ */
 class LearnMoreController extends AbstractController
 {
     /**
-     * @Route("/", name="frontend_learn_more_index")
+     * @Route("/", name="index")
      */
     public function index(PageRepository $repository)
     {

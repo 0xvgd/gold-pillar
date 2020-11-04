@@ -99,27 +99,6 @@ class OrderDetailType extends AbstractType
                 'required' => false,
                 'mapped' => false,
             ]);
-
-        // <input type='hidden' name='MerchantID' value='GOLDPI-8112142'/>
-        // <input type='hidden' name='Amount' value='9132'/>
-        // <input type='hidden' name='FullAmount' value='91.32'/>
-        // <input type='hidden' name='CurrencyCode' value='826'/>
-        // <input type='hidden' name='OrderID' value='1601221561'/>
-        // <input type='hidden' name='TransactionType' value='SALE'/>
-        // <input type='hidden' name='TransactionDateTime' value='2020-09-27 15:46:01 +00:00'/>
-        // <input type='hidden' name='OrderDescription' value='Example order processing | Direct API '/>
-        // <input type='hidden' name='CustomerName' value='Geoff Wayne'/>
-        // <input type='hidden' name='Address1' value='113 Glendower Road'/>
-        // <input type='hidden' name='Address2' value=''/>
-        // <input type='hidden' name='Address3' value=''/>
-        // <input type='hidden' name='Address4' value=''/>
-        // <input type='hidden' name='City' value='Birmingham'/>
-        // <input type='hidden' name='State' value='West Midlands'/>
-        // <input type='hidden' name='PostCode' value='B42 1SX'/>
-        // <input type='hidden' name='CountryCode' value='826'/><
-        // input type='hidden' name='HashMethod' value='SHA1'/>
-        // <input type='hidden' name='EmailAddress' value=''/>
-        // <input type='hidden' name='CallbackURL' value='http://localhost:8001/results.php'/>
     }
 
     public function configureOptions(OptionsResolver $resolver)

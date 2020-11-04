@@ -307,7 +307,7 @@
 			<ul class="dropdown-menu">
 				{% if is_granted('ROLE_ADMIN') %}
 					<li class="nav-item">
-						<a class="sidebar-link" href="{{ path('dashboard_application_balance_index') }}">
+						<a class="sidebar-link" href="{{ path('dashboard_company_balance_index') }}">
 							<span class="icon-holder">
 								<i class=""></i>
 							</span>
@@ -358,14 +358,6 @@
 							<i class="fa fa-file"></i>
 						</span>
 						<span class="title">{{ 'Pages' | trans }}</span>
-					</a>
-				</li>
-				<li class="nav-item">
-					<a class="sidebar-link" href="{{ path('dashboard_config_categories_index') }}">
-						<span class="icon-holder">
-							<i class="c-indigo-500 ti-list"></i>
-						</span>
-						<span class="title">{{ 'Category' | trans }}</span>
 					</a>
 				</li>
 			</ul>

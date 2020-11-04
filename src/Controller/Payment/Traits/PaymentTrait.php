@@ -32,14 +32,13 @@ trait PaymentTrait
         string $errorUrl,
         $certDir
     ) {
+        $action = null;
         $paymentData->setTransactionDateTime(date('Y-m-d H:i:s P'));
         $config = $this->getConfiguration();
         $this->payzoneGateway = new PayzoneGateway($paymentData, $em, $config);
 
         if ($request->query->has('pzgact')) {
             $action = $request->query->get('pzgact');
-        } elseif ($request->query->has('PaRes')) {
-            $action = 'threedsecure';
         }
 
         $IntegrationType = $this->payzoneGateway->getIntegrationType();
@@ -47,18 +46,6 @@ trait PaymentTrait
         $HashMethod = $this->payzoneGateway->getHashMethod();
         if (IntegrationType::DIRECT == $IntegrationType) {
             switch ($action) {
-                case 'threedsecure':
-                    $this->threadProcess($this->payzoneGateway, $certDir);
-                    /*<script>
-                    window.parent.postMessage({'option':'iframesrc','value':'three-response'},"<?php echo $this->payzoneHelper->getSiteSecureURL(
-                        'root'
-                    ); ?>");
-                    window.parent.postMessage({'option':'threedresponse','value':'<?php echo json_encode(
-                        $paymentResponse
-                    ); ?>'},"<?php echo $this->payzoneHelper->getSiteSecureURL('root'); ?>");
-                </script>*/
-
-                    break;
                 case 'process':
                     $currencyCode = $this->payzoneGateway->getCurrencyCode();
                     $respobj = [];
@@ -163,9 +150,13 @@ trait PaymentTrait
                     ] = $ShoppingCartHashDigest;
                     if ($ShoppingCartValidation) {
                         $queryObj = $this->payzoneGateway->buildXHRefund();
-                        //Process the transaction
 
-                        //$this->refundProcess($queryObj);
+                        $paymentResponse = $this->refundProcess(
+                            $this->payzoneGateway,
+                            $queryObj,
+                            $certDir
+                        );
+
                         return $paymentResponse;
                     } else {
                         $paymentResponse['ErrorMessage'] =
@@ -567,16 +558,200 @@ trait PaymentTrait
                     // status code of 30 - means an error occurred
                     $paymentResponse['ErrorMessages'] = '';
                     // status code of 30 - means an error occurred
-                    $eCount = $cdtrCardDetailsTransactionResul
+                    $eCount = $tdsarThreeDSecureAuthenticationResult
                         ->getErrorMessages()
                         ->getCount();
                     if ($eCount > 0) {
                         for ($i = 0; $i < $eCount; ++$i) {
                             $paymentResponse[
                                 'ErrorMessages'
-                            ] .= $cdtrCardDetailsTransactionResult
+                            ] .= $tdsarThreeDSecureAuthenticationResult
                                 ->getErrorMessages()
                                 ->getAt($i);
+                        }
+                    }
+                    break;
+                default:
+                    // unhandled status code
+
+                    break;
+            }
+        }
+
+        return $paymentResponse;
+    }
+
+    protected function refundProcess(
+        PayzoneGateway $payzoneGateway,
+        array $queryObj,
+        string $certDir
+    ) {
+        $rgeplRequestGatewayEntryPointList = new RequestGatewayEntryPointList();
+
+        $rgeplRequestGatewayEntryPointList->add(
+            'https://gw1.payzoneonlinepayments.com:4430/',
+            100,
+            1
+        );
+
+        $rgeplRequestGatewayEntryPointList->add(
+            'https://gw2.payzoneonlinepayments.com:4430/',
+            200,
+            1
+        );
+
+        $rgeplRequestGatewayEntryPointList->add(
+            'https://gw3.payzoneonlinepayments.com:4430/',
+            300,
+            1
+        );
+
+        $cdtCardDetailsTransaction = new CrossReferenceTransaction(
+            $rgeplRequestGatewayEntryPointList
+        );
+
+        $cdtCardDetailsTransaction
+            ->getMerchantAuthentication()
+            ->setMerchantID($payzoneGateway->getMerchantID());
+        $cdtCardDetailsTransaction
+            ->getMerchantAuthentication()
+            ->setPassword($payzoneGateway->getMerchantPassword());
+
+        $cdtCardDetailsTransaction
+            ->getMerchantAuthentication()
+            ->setMerchantID($payzoneGateway->getMerchantID());
+
+        $cdtCardDetailsTransaction
+            ->getMerchantAuthentication()
+            ->setPassword($payzoneGateway->getMerchantPassword());
+
+        $cdtCardDetailsTransaction
+            ->getTransactionDetails()
+            ->getMessageDetails()
+            ->setTransactionType('REFUND');
+
+        $cdtCardDetailsTransaction
+            ->getTransactionDetails()
+            ->getAmount()
+            ->setValue($queryObj['Amount']);
+        $cdtCardDetailsTransaction
+            ->getTransactionDetails()
+            ->getCurrencyCode()
+            ->setValue($queryObj['CurrencyCode']);
+
+        $cdtCardDetailsTransaction
+            ->getTransactionDetails()
+            ->setOrderID($queryObj['OrderID']);
+
+        $cdtCardDetailsTransaction
+            ->getTransactionDetails()
+            ->getTransactionControl()
+            ->getDuplicateDelay()
+            ->setValue(60);
+
+        $cdtCardDetailsTransaction
+            ->getTransactionDetails()
+            ->getThreeDSecureBrowserDetails()
+            ->getDeviceCategory()
+            ->setValue(0);
+        $cdtCardDetailsTransaction
+            ->getTransactionDetails()
+            ->getThreeDSecureBrowserDetails()
+            ->setAcceptHeaders('*/*');
+        $cdtCardDetailsTransaction
+            ->getTransactionDetails()
+            ->getThreeDSecureBrowserDetails()
+            ->setUserAgent($_SERVER['HTTP_USER_AGENT']);
+
+        $cdtCardDetailsTransaction
+            ->getTransactionDetails()
+            ->getMessageDetails()
+            ->setCrossReference($queryObj['CrossReference']);
+
+        $cdtCardDetailsTransaction
+            ->getTransactionDetails()
+            ->getTransactionControl()
+            ->getThreeDSecureOverridePolicy()
+            ->setValue(true);
+
+        $boTransactionProcessed = $cdtCardDetailsTransaction->processTransaction(
+            $cdtrCardDetailsTransactionResult,
+            $todTransactionOutputData
+        );
+
+        $paymentResponse = [];
+
+        if (false == $boTransactionProcessed) {
+            // could not communicate with the payment gateway
+            $paymentResponse['Message'] =
+                'Unable to communicate with the payment gateway.';
+            $paymentResponse['StatusCode'] = '99';
+        } else {
+            $paymentResponse[
+                'Message'
+            ] = $cdtrCardDetailsTransactionResult->getMessage();
+            $paymentResponse[
+                'StatusCode'
+            ] = $cdtrCardDetailsTransactionResult->getStatusCode();
+
+            switch ($cdtrCardDetailsTransactionResult->getStatusCode()) {
+                case 0:
+                    // status code of 0 - means transaction successful
+                    $paymentResponse[
+                        'CrossReference'
+                    ] = $todTransactionOutputData->getCrossReference();
+                    break;
+                case 3:
+                    // status code of 3 - means 3D Secure authentication required
+                    $paymentResponse['ThreeDSecure'] = true;
+                    $paymentResponse[
+                        'CrossReference'
+                    ] = $todTransactionOutputData->getCrossReference();
+                    $paymentResponse[
+                        'PaREQ'
+                    ] = $todTransactionOutputData
+                        ->getThreeDSecureOutputData()
+                        ->getPaREQ();
+                    $paymentResponse[
+                        'ACSURL'
+                    ] = $todTransactionOutputData
+                        ->getThreeDSecureOutputData()
+                        ->getACSURL();
+                    $paymentResponse['TermUrl'] = $payzoneGateway->getURL(
+                        'process-payment'
+                    );
+                    break;
+                case 4:
+                case 5:
+                    // status code of 5 - means transaction declined
+                    $paymentResponse[
+                        'CrossReference'
+                    ] = $todTransactionOutputData->getCrossReference();
+                    break;
+                case 20:
+                    // status code of 20 - means duplicate transaction
+                    $paymentResponse[
+                        'CrossReference'
+                    ] = $todTransactionOutputData->getCrossReference();
+                    $paymentResponse[
+                        'PreviousTransactionMessage'
+                    ] = $cdtrCardDetailsTransactionResult
+                        ->getPreviousTransactionResult()
+                        ->getMessage();
+                    $paymentResponse['DuplicateTransaction'] = true;
+                    break;
+                case 30:
+                    $paymentResponse['ErrorMessages'] = '';
+                    // status code of 30 - means an error occurred
+                    $eCount = $cdtrCardDetailsTransactionResult
+                        ->getErrorMessages()
+                        ->getCount();
+                    if ($eCount > 0) {
+                        for ($i = 0; $i < $eCount; ++$i) {
+                            $paymentResponse['ErrorMessages'] .=
+                                $cdtrCardDetailsTransactionResult
+                                    ->getErrorMessages()
+                                    ->getAt($i).'<br>';
                         }
                     }
                     break;
@@ -715,8 +890,7 @@ trait PaymentTrait
             }
 
             if ($showresults) {
-                if (
-                    PayzoneResponseOutcomes::SUCCESS ==
+                if (PayzoneResponseOutcomes::SUCCESS ==
                         $validate['Notification']['Type'] ||
                     PayzoneResponseOutcomes::DECLINED ==
                         $validate['Notification']['Type'] ||
@@ -728,8 +902,7 @@ trait PaymentTrait
                         $validate['Notification']['Type']
                 ) {
                     $responsePage .= '::default';
-                } elseif (
-                    PayzoneResponseOutcomes::ERROR ==
+                } elseif (PayzoneResponseOutcomes::ERROR ==
                     $validate['Notification']['Type']
                 ) {
                     $responsePage .= '::error';

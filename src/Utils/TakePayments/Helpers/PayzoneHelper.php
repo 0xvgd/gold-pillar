@@ -4,7 +4,6 @@ namespace App\Utils\TakePayments\Helpers;
 
 use App\Utils\TakePayments\Helpers\ISO\ISOCountries;
 use App\Utils\TakePayments\Helpers\ISO\ISOCurrencies;
-use App\Utils\TakePayments\Payzone\TransactionResult;
 use Exception;
 
 class PayzoneHelper
@@ -89,7 +88,7 @@ class PayzoneHelper
                 $ReturnString =
                     $ProtocolString.
                     $_SERVER['SERVER_NAME'].
-                   // $PortString .
+                    // $PortString .
                     $_SERVER['SCRIPT_NAME'];
                 $boFinished = false;
                 $LoopIndex = strlen($ReturnString) - 1;
@@ -413,6 +412,8 @@ class PayzoneHelper
         $lilISOCountryList->add('--------------------', '', false); // add a dummy line
         for ($LoopIndex = 0; $LoopIndex < $iclISOCountryList->getCount() - 1; ++$LoopIndex
         ) {
+            $selected = null;
+
             if ($ISOCountry) {
                 $selected =
                     $iclISOCountryList->getISOCountry('Name', $ISOCountry) ==
@@ -538,6 +539,8 @@ class PayzoneHelper
         $CallbackURL,
         $OrderDescription
     ) {
+        $boIncludePreSharedKeyInString = null;
+
         switch ($HashMethod) {
             case 'MD5':
             case 'SHA1':
@@ -648,6 +651,7 @@ class PayzoneHelper
         $HashMethod
     ) {
         $ReturnString = '';
+        $boIncludePreSharedKeyInString = null;
         switch ($HashMethod) {
             case 'MD5':
                 $boIncludePreSharedKeyInString = true;
@@ -777,11 +781,8 @@ class PayzoneHelper
                 );
                 break;
             case 'THREE_D_SECURE':
-                $StringToHash = self::generateStringToHash2(
-                    $aVariables['PaRES'],
-                    $aVariables['CrossReference'],
-                    $SecretKey
-                );
+                $StringToHash = null;
+                //TODO
                 break;
         }
         $CalculatedHash = self::calculateHashDigest(
@@ -819,6 +820,8 @@ class PayzoneHelper
         $HashMethod
     ) {
         $ReturnString = '';
+        $boIncludePreSharedKeyInString = null;
+
         switch ($HashMethod) {
             case 'MD5':
                 $boIncludePreSharedKeyInString = true;
@@ -855,13 +858,13 @@ class PayzoneHelper
      *
      * @method generateStringToTransactionResult
      *
-     * @param [String]                   $MerchantID
-     * @param [String]                   $Password
-     * @param [Object] TransactionResult $trTransactionResult
-     * @param [String]                   $PreSharedKey
-     * @param [String]                   $HashMethod
+     * @param [string]                   $MerchantID
+     * @param [string]                   $Password
+     * @param [object] TransactionResult $trTransactionResult
+     * @param [string]                   $PreSharedKey
+     * @param [string]                   $HashMethod
      *
-     * @return [String] [Prepared string to be passed to hash functions]
+     * @return [string] [Prepared string to be passed to hash functions]
      */
     public static function generateStringToTransactionResult(
         $MerchantID,
@@ -871,6 +874,7 @@ class PayzoneHelper
         $HashMethod
     ) {
         $ReturnString = '';
+        $boIncludePreSharedKeyInString = null;
         switch ($HashMethod) {
             case 'MD5':
                 $boIncludePreSharedKeyInString = true;
@@ -1000,6 +1004,8 @@ class PayzoneHelper
         $Password
     ) {
         $ReturnString = null;
+        $boIncludePreSharedKeyInString = null;
+
         switch ($HashMethod) {
             case 'MD5':
             case 'SHA1':
@@ -1103,6 +1109,7 @@ class PayzoneHelper
         $PaRES
     ) {
         $ReturnString = '';
+        $boIncludePreSharedKeyInString = null;
         switch ($HashMethod) {
             case 'MD5':
             case 'SHA1':
@@ -1207,6 +1214,27 @@ class PayzoneHelper
         $HashDigest = '';
         $OutputMessage = '';
         $boErrorOccurred = false;
+        $Address1 = '';
+        $Address2 = '';
+        $Address3 = '';
+        $Address4 = '';
+        $nStatusCode = null;
+        $Message = null;
+        $nPreviousStatusCode = null;
+        $PreviousMessage = null;
+        $CrossReference = null;
+        $nAmount = null;
+        $nCurrencyCode = null;
+        $OrderID = null;
+        $TransactionType = null;
+        $TransactionDateTime = null;
+        $OrderDescription = null;
+        $CustomerName = null;
+        $City = null;
+        $State = null;
+        $PostCode = null;
+        $nCountryCode = null;
+
         try {
             // hash digest
             if (isset($aFormVariables['HashDigest'])) {

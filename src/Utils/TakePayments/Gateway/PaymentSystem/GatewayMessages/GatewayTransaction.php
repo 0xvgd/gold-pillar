@@ -213,16 +213,16 @@ abstract class GatewayTransaction
         $nOverallGatewayEntryPointCount = 0;
         $nGatewayEntryPointCount = 0;
         $nErrorMessageCount = 0;
-        $rgepCurrentGatewayEntryPoint;
-        $nStatusCode;
+        $rgepCurrentGatewayEntryPoint = null;
+        $nStatusCode = null;
         $szMessage = null;
-        $lszErrorMessages;
-        $szString;
-        $sbXMLString;
-        $szXMLFormatString;
+        $lszErrorMessages = null;
+        $szString = null;
+        $sbXMLString = null;
+        $szXMLFormatString = null;
         $nCount = 0;
-        $szEntryPointURL;
-        $nMetric;
+        $szEntryPointURL = null;
+        $nMetric = null;
         $gepGatewayEntryPoint = null;
 
         $lgepGatewayEntryPoints = null;

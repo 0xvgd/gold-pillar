@@ -28,8 +28,13 @@ class AssetService extends ResourceService
         }
 
         if (!$asset->getId()) {
+            $asset->setReferenceCode($this->generateReferenceCode());
             $asset->setAssetStatus(ProjectStatus::TO_INVEST());
             $asset->getTotalInvested()->setAmount(0);
+        }
+
+        if (!$asset->getReferenceCode()) {
+            $asset->setReferenceCode($this->generateReferenceCode());
         }
 
         /** @var AssetEquity|null $lastEquity */
@@ -64,5 +69,26 @@ class AssetService extends ResourceService
     public function getCompanyTransactions(Asset $asset)
     {
         return [];
+    }
+
+    public function generateReferenceCode()
+    {
+        $referenceCode = null;
+        $codeExists = true;
+
+        while ($codeExists) {
+            $referenceCode = 'ASSE-'.substr(strtoupper(sha1(random_bytes(4))), 0, 8);
+            $reserve = $this->getEntityManager()->getRepository(Asset::class)->findOneBy(
+                [
+                    'referenceCode' => $referenceCode,
+                ]
+            );
+
+            if (!$reserve) {
+                $codeExists = false;
+            }
+        }
+
+        return $referenceCode;
     }
 }

@@ -57,12 +57,10 @@ class AddressType extends AbstractType
                 'choice_translation_locale' => $this->getLocale($locale),
                 'attr' => [
                     'data-field' => 'country',
+                    'class' => 'select2-on',
                 ],
                 'preferred_choices' => ['GB'],
                 'constraints' => [new NotBlank()],
-                'attr' => [
-                    'class' => 'select2-on',
-                ],
             ]);
     }
 

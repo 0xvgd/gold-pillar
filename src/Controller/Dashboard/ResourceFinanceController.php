@@ -90,6 +90,22 @@ class ResourceFinanceController extends AbstractController
         return $this->redirect($request->headers->get('referer'));
     }
 
+    /**
+     * @Route("/{id}/distribute-commission", methods={"POST"})
+     */
+    public function distributeCommission(Request $request, PaymentsService $service, Resource $resource)
+    {
+        try {
+            $service->distributeCommission($this->getUser(), $resource, new DateTime());
+
+            $this->addFlash('success', 'Commission paid successfuly');
+        } catch (Throwable $ex) {
+            $this->addFlash('error', $ex->getMessage());
+        }
+
+        return $this->redirect($request->headers->get('referer'));
+    }
+
     private function getEntitiesBy(Request $request, EntityManagerInterface $em, string $entityClass, array $criteria)
     {
         $maxResults = 15;

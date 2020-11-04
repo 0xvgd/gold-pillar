@@ -32,7 +32,7 @@ class ResourcesController extends AbstractController
     public function view(Resource $resource)
     {
         if ($resource instanceof Property) {
-            return $this->redirectToRBoute('dashboard_sales_properties_edit', [
+            return $this->redirectToRoute('dashboard_sales_properties_edit', [
                 'id' => $resource->getId(),
             ]);
         }
