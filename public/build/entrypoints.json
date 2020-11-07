@@ -1,0 +1,421 @@
+{
+  "entrypoints": {
+    "main": {
+      "js": [
+        "/build/runtime.js",
+        "/build/main.js"
+      ],
+      "css": [
+        "/build/main.css"
+      ]
+    },
+    "frontend": {
+      "js": [
+        "/build/runtime.js",
+        "/build/frontend.js"
+      ],
+      "css": [
+        "/build/frontend.css"
+      ]
+    },
+    "home": {
+      "js": [
+        "/build/runtime.js",
+        "/build/home.js"
+      ],
+      "css": [
+        "/build/home.css"
+      ]
+    },
+    "login": {
+      "js": [
+        "/build/runtime.js",
+        "/build/login.js"
+      ],
+      "css": [
+        "/build/login.css"
+      ]
+    },
+    "assets": {
+      "js": [
+        "/build/runtime.js",
+        "/build/assets.js"
+      ],
+      "css": [
+        "/build/assets.css"
+      ]
+    },
+    "assets/view": {
+      "js": [
+        "/build/runtime.js",
+        "/build/assets/view.js"
+      ],
+      "css": [
+        "/build/assets/view.css"
+      ]
+    },
+    "sales": {
+      "js": [
+        "/build/runtime.js",
+        "/build/sales.js"
+      ],
+      "css": [
+        "/build/sales.css"
+      ]
+    },
+    "sales/view": {
+      "js": [
+        "/build/runtime.js",
+        "/build/sales/view.js"
+      ],
+      "css": [
+        "/build/sales/view.css"
+      ]
+    },
+    "renting": {
+      "js": [
+        "/build/runtime.js",
+        "/build/renting.js"
+      ],
+      "css": [
+        "/build/renting.css"
+      ]
+    },
+    "renting/add": {
+      "js": [
+        "/build/runtime.js",
+        "/build/renting/add.js"
+      ],
+      "css": [
+        "/build/renting/add.css"
+      ]
+    },
+    "renting/view": {
+      "js": [
+        "/build/runtime.js",
+        "/build/renting/view.js"
+      ],
+      "css": [
+        "/build/renting/view.css"
+      ]
+    },
+    "projects": {
+      "js": [
+        "/build/runtime.js",
+        "/build/projects.js"
+      ],
+      "css": [
+        "/build/projects.css"
+      ]
+    },
+    "projects/view": {
+      "js": [
+        "/build/runtime.js",
+        "/build/projects/view.js"
+      ],
+      "css": [
+        "/build/projects/view.css"
+      ]
+    },
+    "selling": {
+      "js": [
+        "/build/runtime.js",
+        "/build/selling.js"
+      ]
+    },
+    "letting": {
+      "js": [
+        "/build/runtime.js",
+        "/build/letting.js"
+      ]
+    },
+    "subscribe": {
+      "js": [
+        "/build/runtime.js",
+        "/build/subscribe.js"
+      ]
+    },
+    "dashboard": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard.js"
+      ],
+      "css": [
+        "/build/dashboard.css"
+      ]
+    },
+    "dashboard/home": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/home.js"
+      ]
+    },
+    "dashboard/calendar": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/calendar.js"
+      ],
+      "css": [
+        "/build/dashboard/calendar.css"
+      ]
+    },
+    "dashboard/booking": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/booking.js"
+      ]
+    },
+    "dashboard/schedule": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/schedule.js"
+      ]
+    },
+    "dashboard/profile/account": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/profile/account.js"
+      ],
+      "css": [
+        "/build/dashboard/profile/account.css"
+      ]
+    },
+    "dashboard/security/users/form": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/security/users/form.js"
+      ],
+      "css": [
+        "/build/dashboard/security/users/form.css"
+      ]
+    },
+    "dashboard/sales/properties/index": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/sales/properties/index.js"
+      ]
+    },
+    "dashboard/sales/properties/form": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/sales/properties/form.js"
+      ],
+      "css": [
+        "/build/dashboard/sales/properties/form.css"
+      ]
+    },
+    "dashboard/offers/index": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/offers/index.js"
+      ]
+    },
+    "dashboard/offers/form": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/offers/form.js"
+      ],
+      "css": [
+        "/build/dashboard/offers/form.css"
+      ]
+    },
+    "dashboard/renting/accommodations/index": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/renting/accommodations/index.js"
+      ]
+    },
+    "dashboard/renting/accommodations/form": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/renting/accommodations/form.js"
+      ],
+      "css": [
+        "/build/dashboard/renting/accommodations/form.css"
+      ]
+    },
+    "dashboard/renting/reserves/index": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/renting/reserves/index.js"
+      ]
+    },
+    "dashboard/tenant/offers": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/tenant/offers.js"
+      ],
+      "css": [
+        "/build/dashboard/tenant/offers.css"
+      ]
+    },
+    "dashboard/projects/projects/index": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/projects/projects/index.js"
+      ]
+    },
+    "dashboard/projects/projects/form": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/projects/projects/form.js"
+      ],
+      "css": [
+        "/build/dashboard/projects/projects/form.css"
+      ]
+    },
+    "dashboard/projects/projects/finance": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/projects/projects/finance.js"
+      ]
+    },
+    "dashboard/engineers/form": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/engineers/form.js"
+      ]
+    },
+    "dashboard/agents/form": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/agents/form.js"
+      ]
+    },
+    "dashboard/contractors/form": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/contractors/form.js"
+      ]
+    },
+    "dashboard/assets/assets/index": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/assets/assets/index.js"
+      ]
+    },
+    "dashboard/assets/assets/form": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/assets/assets/form.js"
+      ],
+      "css": [
+        "/build/dashboard/assets/assets/form.css"
+      ]
+    },
+    "dashboard/assets/assets/finance": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/assets/assets/finance.js"
+      ]
+    },
+    "dashboard/investments/index": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/investments/index.js"
+      ]
+    },
+    "dashboard/investments/view": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/investments/view.js"
+      ]
+    },
+    "dashboard/configuration/companies/index": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/configuration/companies/index.js"
+      ]
+    },
+    "dashboard/configuration/companies/form": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/configuration/companies/form.js"
+      ]
+    },
+    "dashboard/configuration/locales/form": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/configuration/locales/form.js"
+      ]
+    },
+    "dashboard/mynetwork/agents/index": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/mynetwork/agents/index.js"
+      ]
+    },
+    "dashboard/mynetwork/investors/index": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/mynetwork/investors/index.js"
+      ]
+    },
+    "dashboard/mynetwork/tenants/index": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/mynetwork/tenants/index.js"
+      ]
+    },
+    "investor/projects": {
+      "js": [
+        "/build/runtime.js",
+        "/build/investor/projects.js"
+      ],
+      "css": [
+        "/build/investor/projects.css"
+      ]
+    },
+    "investor/assets": {
+      "js": [
+        "/build/runtime.js",
+        "/build/investor/assets.js"
+      ],
+      "css": [
+        "/build/investor/assets.css"
+      ]
+    },
+    "investor/view": {
+      "js": [
+        "/build/runtime.js",
+        "/build/investor/view.js"
+      ]
+    },
+    "executive-club-form": {
+      "js": [
+        "/build/runtime.js",
+        "/build/executive-club-form.js"
+      ],
+      "css": [
+        "/build/executive-club-form.css"
+      ]
+    },
+    "company-balance": {
+      "js": [
+        "/build/runtime.js",
+        "/build/company-balance.js"
+      ],
+      "css": [
+        "/build/company-balance.css"
+      ]
+    },
+    "user-balance": {
+      "js": [
+        "/build/runtime.js",
+        "/build/user-balance.js"
+      ]
+    },
+    "dashboard/myfinance/projects/index": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/myfinance/projects/index.js"
+      ]
+    },
+    "dashboard/myfinance/assets/index": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/myfinance/assets/index.js"
+      ]
+    }
+  }
+}

@@ -3,4 +3,3 @@ var/
 vendor/
 .ssh/
 dump/
-public/*
