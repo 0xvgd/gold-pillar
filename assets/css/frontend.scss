@@ -841,6 +841,10 @@ section.pricing {
         flex-direction: row;
         padding: 40px 0 80px;
 
+        @media (max-width: 640px) {
+            flex-direction: column;
+        }
+
         .image {
             min-width: 220px;
             margin-right: 20px;
