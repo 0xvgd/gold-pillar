@@ -3,6 +3,7 @@
 namespace App\Controller\Dashboard\MyFinance;
 
 use App\Controller\Traits\DatatableTrait;
+use App\Entity\Finance\CommissionPayment;
 use App\Entity\Finance\DividendPayment;
 use App\Entity\Finance\Investment;
 use App\Entity\Person\Investor;
@@ -137,6 +138,36 @@ class AssetsController extends AbstractController
                 'user' => $user,
             ])
             ->orderBy('e.id', 'desc');
+
+        $query = $qb->getQuery();
+
+        return $this->dataTable($request, $query, false, [
+            'groups' => ['list'],
+        ]);
+    }
+
+    /**
+     * @Route("/search_commission.json", name="search_commission", methods={"GET"})
+     */
+    public function searchComission(
+        Request $request,
+        EntityManagerInterface $em
+    ) {
+        $user = $this->getUser();
+
+        $qb = $em
+            ->createQueryBuilder()
+            ->select(['e'])
+            ->from(CommissionPayment::class, 'e')
+            ->join('e.transaction', 't')
+            ->join('t.user', 'u')
+            ->join('e.resource', 'r')
+            ->andWhere('u= :user')
+            ->andWhere(sprintf('r INSTANCE OF %s', Asset::class))
+            ->orderBy('e.id', 'desc')
+            ->setParameters([
+                'user' => $user,
+            ]);
 
         $query = $qb->getQuery();
 

@@ -3,7 +3,9 @@
 namespace App\Controller\Dashboard\MyFinance;
 
 use App\Controller\Traits\DatatableTrait;
+use App\Controller\Traits\UserTrait;
 use App\Entity\Finance\CapitalReturnPayment;
+use App\Entity\Finance\CommissionPayment;
 use App\Entity\Finance\Investment;
 use App\Entity\Finance\ProfitPayment;
 use App\Entity\Person\Investor;
@@ -23,6 +25,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ProjectsController extends AbstractController
 {
     use DatatableTrait;
+    use UserTrait;
 
     /**
      * @Route("/", name="index")
@@ -33,14 +36,11 @@ class ProjectsController extends AbstractController
     ) {
         $user = $this->getUser();
 
-        $userAccount = $user->getAccount();
-
-        if (!$userAccount) {
-            $userAccount = $accountService->createUserAccount($user);
-            $user->setAccount($userAccount);
-            $em->persist($user);
-            $em->flush();
-        }
+        $userAccount = $this->getUserAccount(
+            $this->getUser(),
+            $em,
+            $accountService
+        );
 
         $balance = $userAccount->getBalance();
 
@@ -56,21 +56,6 @@ class ProjectsController extends AbstractController
     public function search(Request $request, EntityManagerInterface $em)
     {
         $user = $this->getUser();
-
-        $search = $request->get('search');
-
-        if (!is_array($search)) {
-            $search = [
-                'basic' => [],
-            ];
-        }
-
-        $search = $this->searchValues($request);
-
-        /** @var Investor */
-        $investor = $em
-            ->getRepository(Investor::class)
-            ->findOneBy(['user' => $user]);
 
         $qb = $em
             ->createQueryBuilder()
@@ -102,21 +87,6 @@ class ProjectsController extends AbstractController
     ) {
         $user = $this->getUser();
 
-        $search = $request->get('search');
-
-        if (!is_array($search)) {
-            $search = [
-                'basic' => [],
-            ];
-        }
-
-        $search = $this->searchValues($request);
-
-        /** @var Investor */
-        $investor = $em
-            ->getRepository(Investor::class)
-            ->findOneBy(['user' => $user]);
-
         $qb = $em
             ->createQueryBuilder()
             ->select(['e'])
@@ -147,21 +117,6 @@ class ProjectsController extends AbstractController
     ) {
         $user = $this->getUser();
 
-        $search = $request->get('search');
-
-        if (!is_array($search)) {
-            $search = [
-                'basic' => [],
-            ];
-        }
-
-        $search = $this->searchValues($request);
-
-        /** @var Investor */
-        $investor = $em
-            ->getRepository(Investor::class)
-            ->findOneBy(['user' => $user]);
-
         $qb = $em
             ->createQueryBuilder()
             ->select(['e'])
@@ -183,7 +138,36 @@ class ProjectsController extends AbstractController
         ]);
     }
 
-    
+    /**
+     * @Route("/search_commission.json", name="search_commission", methods={"GET"})
+     */
+    public function searchComission(
+        Request $request,
+        EntityManagerInterface $em
+    ) {
+        $user = $this->getUser();
+
+        $qb = $em
+            ->createQueryBuilder()
+            ->select(['e'])
+            ->from(CommissionPayment::class, 'e')
+            ->join('e.transaction', 't')
+            ->join('t.user', 'u')
+            ->join('e.resource', 'r')
+            ->andWhere('u= :user')
+            ->andWhere(sprintf('r INSTANCE OF %s', Project::class))
+            ->orderBy('e.id', 'desc')
+            ->setParameters([
+                'user' => $user,
+            ]);
+
+        $query = $qb->getQuery();
+
+        return $this->dataTable($request, $query, false, [
+            'groups' => ['list'],
+        ]);
+    }
+
     /**
      * @Route("/{id}", name="view", methods={"GET"})
      */

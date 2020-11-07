@@ -4,15 +4,11 @@ namespace App\Controller\Dashboard\MyFinance;
 
 use App\Controller\Traits\DatatableTrait;
 use App\Controller\Traits\UserTrait;
-use App\Entity\Finance\CapitalReturnPayment;
-use App\Entity\Finance\Commission;
 use App\Entity\Finance\CommissionPayment;
 use App\Entity\Finance\Investment;
-use App\Entity\Finance\ProfitPayment;
 use App\Entity\Finance\Transaction;
 use App\Entity\Person\Agent;
 use App\Entity\Person\Investor;
-use App\Entity\Resource\Project;
 use App\Entity\Resource\Property;
 use App\Enum\InvestmentStatus;
 use App\Service\Finance\AccountService;
@@ -61,8 +57,7 @@ class PropertiesController extends AbstractController
      */
     public function searchComission(
         Request $request,
-        EntityManagerInterface $em,
-        AccountService $accountService
+        EntityManagerInterface $em
     ) {
         $user = $this->getUser();
 
@@ -76,18 +71,12 @@ class PropertiesController extends AbstractController
 
         $search = $this->searchValues($request);
 
-        /** @var Investor */
+        /** @var Agent */
         $agent = $em->getRepository(Agent::class)->findOneBy(['user' => $user]);
 
         if (!$agent) {
             return $this->redirectToRoute('dashboard_index');
         }
-
-        $userAccount = $this->getUserAccount(
-            $this->getUser(),
-            $em,
-            $accountService
-        );
 
         $qb = $em
             ->createQueryBuilder()
@@ -95,7 +84,6 @@ class PropertiesController extends AbstractController
             ->from(CommissionPayment::class, 'e')
             ->join('e.transaction', 't')
             ->join('t.user', 'u')
-            ->join('t.account', 'ac')
             ->join('e.resource', 'r')
             ->andWhere('u= :user')
             ->andWhere(sprintf('r INSTANCE OF %s', Property::class))

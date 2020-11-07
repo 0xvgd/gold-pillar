@@ -33,40 +33,60 @@
 	<fieldset class="section">
 		<div class="container">
 			{% include 'includes/flashMessages.html.twig' %}
-			<h5>Investments</h5>
-			<div class="card mb-3">
-				<div class="table-responsive">
-					<table id="datatable" class="table" data-url="{{ path('dashboard_my_finance_assets_index') }}">
-						<thead>
-							<tr>
-								<th>{{ 'Date' | trans }}</th>
-								<th>{{ 'Transaction ID' | trans }}</th>
-								<th>{{ 'Amount' | trans }}</th>
-								<th>Transaction Status</th>
-								<th>Invest Status</th>
-								<th>Asset</th>
-								<th></th>
-							</tr>
-						</thead>
-					</table>
+			{% if is_granted('ROLE_INVESTOR') %}
+				<h5>Investments</h5>
+				<div class="card mb-3">
+					<div class="table-responsive">
+						<table id="datatable" class="table" data-url="{{ path('dashboard_my_finance_assets_index') }}">
+							<thead>
+								<tr>
+									<th>{{ 'Date' | trans }}</th>
+									<th>{{ 'Transaction ID' | trans }}</th>
+									<th>{{ 'Amount' | trans }}</th>
+									<th>Transaction Status</th>
+									<th>Invest Status</th>
+									<th>Asset</th>
+									<th></th>
+								</tr>
+							</thead>
+						</table>
+					</div>
 				</div>
-			</div>
-			<h5>Dividend Payment</h5>
-			<div class="card mb-3">
-				<div class="table-responsive">
-					<table id="datatable-dividend-payment" class="table" data-url="{{ path('dashboard_my_finance_assets_index') }}">
-						<thead>
-							<tr>
-								<th>{{ 'Date' | trans }}</th>
-								<th>{{ 'Transaction ID' | trans }}</th>
-								<th>{{ 'Amount' | trans }}</th>
-								<th>Transaction Status</th>
-								<th>Asset</th>
-							</tr>
-						</thead>
-					</table>
+				<h5>Dividend Payment</h5>
+				<div class="card mb-3">
+					<div class="table-responsive">
+						<table id="datatable-dividend-payment" class="table" data-url="{{ path('dashboard_my_finance_assets_index') }}">
+							<thead>
+								<tr>
+									<th>{{ 'Date' | trans }}</th>
+									<th>{{ 'Transaction ID' | trans }}</th>
+									<th>{{ 'Amount' | trans }}</th>
+									<th>Transaction Status</th>
+									<th>Asset</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
 				</div>
-			</div>
+			{% endif %}
+			{% if is_granted('ROLE_AGENT') %}
+				<h5>Commission Payment</h5>
+				<div class="card mb-3">
+					<div class="table-responsive">
+						<table id="datatable-commission-payment" class="table" data-url="{{ path('dashboard_my_finance_projects_index') }}">
+							<thead>
+								<tr>
+									<th>{{ 'Date' | trans }}</th>
+									<th>{{ 'Transaction ID' | trans }}</th>
+									<th>{{ 'Amount' | trans }}</th>
+									<th>Transaction Status</th>
+									<th>Property</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
+			{% endif %}
 		</div>
 	</fieldset>
 {% endblock %}
