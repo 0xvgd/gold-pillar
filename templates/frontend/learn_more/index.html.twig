@@ -16,19 +16,65 @@
     {% endif %}
 {% endif %}
 {% block body %}
-	<div class="page navbar-offset">
-        <div class="container">
+	<div class="page page-learn-more">
+        {# <div class="container">
             <p class="text-white mt-3 mb-5">
              {{ description }}
             </p>
+        </div> #}
+
+        <div class="image-bg">
+            <h1 class="container">This is how we will help you</h1>
         </div>
-        <iframe
+        <div class="page-content">
+            <div class="container">
+                <p style="text-align: center">Welcome to <span class="gp">Gold Pillar</span> your private property members club connecting investors, agents, buyers, sellers and tenants on one exclusibe digital platform. We help our members with all of their real estate needs from A-Z.</p>
+
+                <div class="block">
+                    <div class="image"><img src="{{ asset('images/subscription/tenant.jpg') }}"></img></div>
+                    <div class="text">
+                        <h3>Are you looking to buy, sell or rent a proporty?</h3>
+                        <p>Here at <span class="gp">Gold Pillar</span> we have created an innovated digital platform which allows you to buy, sell or rent your properties stress fee, your dedicated <span class="gp">Gold Pillar</span> agent will take care of the whole process from start to finish.</p>
+                        <a href="{{ path('frontend_subscribe_tenant') }}" class="button-default  btn-block text-center button-filled">{{ 'START HERE' | trans }}</a>
+                    </div>
+                </div>
+                
+                <div class="block">
+                    <div class="image"><img src="{{ asset('images/subscription/investor.jpg') }}"></img></div>
+                    <div class="text">
+                        <h3>Investors Club</h3>
+                        <p><span class="gp">Gold Pillar</span> has access to exclusive profitable deals all over the UK, so not matter if you are an experienced landlord, first time investor or do not have the full capital to make your first investiment we can help start or grow your property portfolio.</p>
+                        <a href="{{ path('frontend_subscribe_investor') }}" class="button-default  btn-block text-center button-filled">{{ 'START HERE' | trans }}</a>
+                    </div>
+                </div>
+
+                <div class="block">
+                    <div class="image"><img src="{{ asset('images/subscription/broker.jpg') }}"></img></div>
+                    <div class="text">
+                        <h3>Introducer Partner</h3>
+                        <p>Have you got property deals but are struggling to get funding? <span class="gp">Gold Pillar</span> works with a large portfolio of global property investors who can fund your property deals. Come on board as a <span class="gp">Gold Pillar</span> Partner and maximise returns for all your deals.</p>
+                        <a href="{{ path('frontend_subscribe_broker') }}" class="button-default  btn-block text-center button-filled">{{ 'START HERE' | trans }}</a>
+                    </div>
+                </div>
+                
+                <div class="block">
+                    <div class="image"><img src="{{ asset('images/subscription/agent.jpg') }}"></img></div>
+                    <div class="text">
+                        <h3>Sales Agent</h3>
+                        <p>Are you looking for a rewarding career as a self-employed sales agent? <span class="gp">Gold Pillar</span> offers a full digital support system which allows you to manage your business and client portfolio online where ever you are in the world.</p>
+                        <a href="{{ path('frontend_subscribe_agent') }}" class="button-default  btn-block text-center button-filled">{{'START HERE' | trans }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# <iframe
             width="100%"
             height="800"
             src="https://www.youtube.com/embed/{{ youtubeUrl|split('?v=')[1] }}"
             frameborder="0"
             allow="encrypted-media; picture-in-picture" allowfullscreen>
-        </iframe>
+        </iframe> #}
 	</div>
 {% endblock %}
 

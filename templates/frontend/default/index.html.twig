@@ -15,8 +15,98 @@
 {% endblock %}
 
 {% block body %}
+    
     <div class="page" id="app"v-cloak>
-        <div class="carousel slide carousel-fade" data-ride="carousel" data-interval="5000">
+        <div class="video-header">
+            <div class="video-header-content">
+                <h1 class="headline">Private Property Members Club</h1>
+                <video class="video-js" controls preload="auto" data-setup="{}" >
+                    <source src="/videos/institucional.mp4" type="video/mp4" />
+                </video>
+            </div>
+        </div>
+
+        <div class="create-account">
+            <div class="container">
+                <h2>START NOW!</h2>
+                <h3>Select Below What You Want:</h3>
+            </div>
+
+            <div class="container">
+				<div class="card-deck">
+					<div class="card mb-5 mb-lg-0">
+						<div class="card-body">
+							<h5 class="text-gold text-uppercase text-center mb-3">{{ 'BUY, SELL OR RENT' | trans }}</h5>
+							<img class="d-block w-100" src="{{ asset('images/subscription/tenant.jpg') }}"></img>
+							<hr>
+                            <div class="card-content">
+                                <ul>
+                                    <li>Are you looking to sell your property?</li>
+                                    <li>Are you looking to rent your property?</li>
+                                    <li>Are you looking to buy a property?</li>
+                                    <li>Are you a tenant looking to rent a new home?</li>
+                                </ul>
+                            </div>
+							<a href="{{ path('frontend_subscribe_tenant') }}" class="button-default  btn-block text-center button-filled">{{ 'START HERE' | trans }}</a>
+						</div>
+					</div>
+					<div class="card mb-5 mb-lg-0">
+						<div class="card-body">
+							<h5 class="text-uppercase text-center mb-3">{{ 'SALES AGENT' | trans }}</h5>
+							<img class="d-block w-100" src="{{ asset('images/subscription/agent.jpg') }}"></img>
+							<hr>
+                            <div class="card-content">
+                                <ul>
+                                    <li>Are you looking to come on board as Gold Pillar Agent?</li>
+                                    <li>Looking to start a rewarding carrer from the confort of your home?</li>
+                                    <li>Start your journey to financial freedom with Gold Pillar.</li>
+                                    <li>Opportunity to build you own property portfolio!</li>
+                                </ul>
+                            </div>
+							<a href="{{ path('frontend_subscribe_agent') }}" class="button-default  btn-block text-center button-filled">{{'START HERE' | trans }}</a>
+						</div>
+					</div>
+					<div class="card mb-5 mb-lg-0">
+						<div class="card-body">
+							<h5 class="text-uppercase text-center mb-3">{{ "INVESTOR'S CLUB" | trans }}</h5>
+                            <img class="d-block w-100" src="{{ asset('images/subscription/investor.jpg') }}"></img>
+							<hr>
+                            <div class="card-content">
+                                <ul>
+                                    <li>Are you looking for exclusibe property deals?</li>
+                                    <li>Looking to get started in property investiment but do not have enough capital?</li>
+                                    <li>Are you looking to expand your property portfolio?</li>
+                                </ul>
+                            </div>
+							<a href="{{ path('frontend_subscribe_investor') }}" class="button-default  btn-block text-center button-filled">{{ 'START HERE' | trans }}</a>
+						</div>
+					</div>
+					<div class="card">
+						<div class="card-body">
+							<h5 class="text-uppercase text-center mb-3">{{ 'INTRODUCER PARTNER' | trans }}</h5>
+                            <img class="d-block w-100" src="{{ asset('images/subscription/broker.jpg') }}"></img>
+							<hr>
+                            <div class="card-content">
+                                <ul>
+                                    <li>Do you have a profitable property deal?</li>
+                                    <li>Are you looking to get funding for your property deals?</li>
+                                    <li>Became out partner and maximise the return on you property deals.</li>
+                                </ul>
+                            </div>
+							<a href="{{ path('frontend_subscribe_broker') }}" class="button-default  btn-block text-center button-filled">{{ 'START HERE' | trans }}</a>
+						</div>
+					</div>
+				</div>
+
+                <div class="learn-more">
+                    <a href="{{ path('frontend_learn_more_index') }}" class="button-default button-filled button-large">{% trans %}LEARN MORE{% endtrans %}</a>
+                </div>
+			</div>
+        </div>
+
+
+
+        {# <div class="carousel slide carousel-fade" data-ride="carousel" data-interval="5000">
             <div class="carousel-inner">
                 <div class="carousel-content">
                     <h1 class="title">{% trans %}BUILD YOUR PROPERTY PORTFOLIO WITH US{% endtrans %}</h1><br>
@@ -50,7 +140,7 @@
                     <img class="computer-inset" src="{{ asset('images/home/computer.png') }}" width="100%">
                 </div>
             </div>
-        </div>
+        </div> #}
         <div class="content pt-0">
             <hr>
             <h1 class="mega-title text-center">{% trans %}Featured properties{% endtrans %}</h1>
