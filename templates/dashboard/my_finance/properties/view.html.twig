@@ -1,0 +1,168 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Project Investments | {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item">Projects</li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    <a href="{{ path('dashboard_projects_investments_index') }}">Investments</a>
+                </li>
+            </ol>
+        </nav>
+    </div>
+
+    <header role="heading">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-4 col-sm-6 col-xs-6">
+                    <h1 class="h2">Investments</h1>
+                    <p class="hidden-xs">Projects investments</p>
+                </div>
+                <div class="col-12 col-md-8 col-sm-6 col-xs-6 btn-action">
+                    <div class="d-flex justify-content-around">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <fieldset class="section">
+        <div class="container">
+            {% include 'includes/flashMessages.html.twig' %}
+            <div class="card mb-3">
+                <div class="row no-gutters">
+                    <div class="col-md-3">
+                        <img src="{{ entity.resource.mainPhoto }}" class="card-img" alt="">
+                    </div>
+                    <div class="col-md-9">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ entity.resource.name }}</h5>
+                            <p class="card-text">{{ entity.resource.address }}</p>
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    <b>Tag:</b> {{ entity.resource.tag }}
+                                </small>
+                                <br>
+                                <small class="text-muted">
+                                    <b>Agent:</b> {{ entity.resource.agent }}
+                                </small>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-deck">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        Investment
+                    </div>
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th>{{ 'Date' | trans }}</th>
+                                <td>{{ entity.createdAt|format_datetime() }}</td>
+                            </tr>
+                            <tr>
+                                <th>{{ 'Status' | trans }}</th>
+                                <td>
+                                    {% if entity.status.value == 'approved' %}
+                                        <span class="badge badge-success">Approved</span>
+                                    {% elseif entity.status.value == 'denied' %}
+                                        <span class="badge badge-danger">Denied</span>
+                                    {% else %}
+                                        <span class="badge badge-warning">{{ entity.status.label }}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>{{ 'Amount' | trans }}</th>
+                                <td>{{ entity.amount|number_format(2) }}</td>
+                            </tr>
+                            <tr>
+                                <th>Fee</th>
+                                <td>{{ entity.fee|number_format(2) }}</td>
+                            </tr>
+                            {% if entity.approvedAt %}
+                                <tr>
+                                    <th>Approval date</th>
+                                    <td>{{ entity.approvedAt|format_datetime() }}</td>
+                                </tr>
+                            {% endif %}
+                            {% if entity.deniedAt %}
+                                <tr>
+                                    <th>Denial date</th>
+                                    <td>{{ entity.approvedAt|format_datetime() }}</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-header">
+                    Transaction
+                </div>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th>ID</th>
+                            <td>
+                                {{ entity.transaction.transactionId }}
+                                {% if entity.transaction.verified %}
+                                    <i class="fa fa-check text-success" title="Transaction security verified"></i>
+                                {% else %}
+                                    <i class="fa fa-exclamation-circle text-danger" title="Transaction security NOT verified"></i>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>{{ 'Status' | trans }}</th>
+                            <td>
+                                {% if entity.transaction.status.value == 'processed' %}
+                                    <span class="badge badge-success">Processed</span>
+                                {% elseif entity.transaction.status.value == 'cancelled' %}
+                                    <span class="badge badge-danger">Cancelled</span>
+                                {% else %}
+                                    <span class="badge badge-warning">{{ entity.transaction.status.label }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>{{ 'Amount' | trans }}</th>
+                            <td>£{{ entity.transaction.amount|number_format(2) }}</td>
+                        </tr>
+                        {% if entity.transaction.processedAt %}
+                            <tr>
+                                <th>Processing date</th>
+                                <td>{{ entity.transaction.processedAt|format_datetime() }}</td>
+                            </tr>
+                        {% endif %}
+                        {% if entity.transaction.cancelledAt %}
+                            <tr>
+                                <th>Cancellation date</th>
+                                <td>{{ entity.transaction.cancelledAt|format_datetime() }}</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </fieldset>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('dashboard/investments/view') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('dashboard/investments/view') }}
+{% endblock %}

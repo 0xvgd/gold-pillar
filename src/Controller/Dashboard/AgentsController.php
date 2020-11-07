@@ -101,6 +101,8 @@ class AgentsController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
+
+                $entity->getUser()->addRole('ROLE_AGENT');
                 $service->save($entity);
 
                 $this->addFlash('success', 'Item saved successfully.');

@@ -5,11 +5,9 @@ namespace App\Controller\Dashboard\MyFinance;
 use App\Controller\Traits\DatatableTrait;
 use App\Entity\Finance\DividendPayment;
 use App\Entity\Finance\Investment;
-use App\Entity\Finance\Transaction;
 use App\Entity\Person\Investor;
 use App\Entity\Resource\Asset;
-use App\Enum\InvestmentStatus;
-use App\Service\Finance\TransactionService;
+use App\Service\Finance\AccountService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,11 +26,21 @@ class AssetsController extends AbstractController
     /**
      * @Route("/", name="index")
      */
-    public function index()
-    {
+    public function index(
+        EntityManagerInterface $em,
+        AccountService $accountService
+    ) {
         $user = $this->getUser();
 
         $userAccount = $user->getAccount();
+
+        if (!$userAccount) {
+            $userAccount = $accountService->createUserAccount($user);
+            $user->setAccount($userAccount);
+            $em->persist($user);
+            $em->flush();
+        }
+
         $balance = $userAccount->getBalance();
 
         return $this->render('dashboard/my_finance/assets/index.html.twig', [
@@ -71,8 +79,14 @@ class AssetsController extends AbstractController
             ->createQueryBuilder()
             ->select(['e'])
             ->from(Investment::class, 'e')
+            ->join('e.transaction', 't')
+            ->join('t.user', 'u')
             ->join('e.resource', 'r')
-            ->where(sprintf('r INSTANCE OF %s', Asset::class))
+            ->andWhere('u= :user')
+            ->andWhere(sprintf('r INSTANCE OF %s', Asset::class))
+            ->setParameters([
+                'user' => $user,
+            ])
             ->orderBy('e.id', 'desc');
 
         $query = $qb->getQuery();
@@ -85,8 +99,10 @@ class AssetsController extends AbstractController
     /**
      * @Route("/search_dividend_payment.json", name="search_dividend_payment", methods={"GET"})
      */
-    public function searchDividendPayment(Request $request, EntityManagerInterface $em)
-    {
+    public function searchDividendPayment(
+        Request $request,
+        EntityManagerInterface $em
+    ) {
         $user = $this->getUser();
 
         $search = $request->get('search');
@@ -112,8 +128,14 @@ class AssetsController extends AbstractController
             ->createQueryBuilder()
             ->select(['e'])
             ->from(DividendPayment::class, 'e')
+            ->join('e.transaction', 't')
+            ->join('t.user', 'u')
             ->join('e.resource', 'r')
-            ->where(sprintf('r INSTANCE OF %s', Asset::class))
+            ->andWhere('u= :user')
+            ->andWhere(sprintf('r INSTANCE OF %s', Asset::class))
+            ->setParameters([
+                'user' => $user,
+            ])
             ->orderBy('e.id', 'desc');
 
         $query = $qb->getQuery();
@@ -139,59 +161,6 @@ class AssetsController extends AbstractController
     public function justToReturn(Investment $investment)
     {
         // if the form was submitted without inform _method (PUT or DELETE), just redirect to view
-        return $this->redirectToRoute('dashboard_assets_investments_view', [
-            'id' => $investment->getId(),
-        ]);
-    }
-
-    /**
-     * @Route("/{id}/transaction", methods={"PUT"})
-     */
-    public function confirmTransaction(
-        TransactionService $service,
-        Investment $investment
-    ) {
-        $service->process($investment->getTransaction(), function (
-            EntityManagerInterface $em,
-            Transaction $transaction
-        ) use ($investment) {
-            $investment
-                ->setApprovedAt($transaction->getProcessedAt())
-                ->setStatus(InvestmentStatus::APPROVED());
-
-            $em->persist($investment);
-            $em->flush();
-        });
-
-        return $this->redirectToRoute('dashboard_assets_investments_view', [
-            'id' => $investment->getId(),
-        ]);
-    }
-
-    /**
-     * @Route("/{id}/transaction", methods={"DELETE"})
-     */
-    public function cancelTransaction(
-        TransactionService $service,
-        Investment $investment
-    ) {
-        $service->cancel($investment->getTransaction(), function (
-            EntityManagerInterface $em,
-            Transaction $transaction
-        ) use ($investment) {
-            $investment
-                ->setApprovedAt($transaction->getCancelledAt())
-                ->setStatus(InvestmentStatus::DENIED());
-
-            // reenable investment amount
-            $resource = $investment->getResource();
-            $resource->getTotalInvested()->sub($investment->getAmount());
-
-            $em->persist($investment);
-            $em->persist($resource);
-            $em->flush();
-        });
-
         return $this->redirectToRoute('dashboard_assets_investments_view', [
             'id' => $investment->getId(),
         ]);

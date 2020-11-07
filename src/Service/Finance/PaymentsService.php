@@ -148,7 +148,7 @@ class PaymentsService
                     }
 
                     $dividendAmount = $individualInvested * $yield;
-                    $note = 'Dividend ref resource #'.$resource->getTag();
+                    $note = 'Dividend ref resource #' . $resource->getTag();
 
                     $this->transactionService->requestTransfer(
                         $user,
@@ -159,11 +159,7 @@ class PaymentsService
                         function (
                             EntityManagerInterface $em,
                             Transaction $transaction
-                        ) use (
-                            $resource,
-                            $dividend,
-                            $note
-                        ) {
+                        ) use ($resource, $dividend, $note) {
                             $payment = new DividendPayment($resource);
                             $payment
                                 ->setDividend($dividend)
@@ -248,7 +244,8 @@ class PaymentsService
                 $individualInvested = 0;
                 /** @var Investment $investment */
                 foreach ($investor->getInvestments() as $investment) {
-                    if ($investment->getResource()->getId() ===
+                    if (
+                        $investment->getResource()->getId() ===
                         $resource->getId()
                     ) {
                         $individualInvested += $investment->getAmount();
@@ -289,11 +286,7 @@ class PaymentsService
                         function (
                             EntityManagerInterface $em,
                             Transaction $transaction
-                        ) use (
-                            $resource,
-                            $capitalReturn,
-                            $note
-                        ) {
+                        ) use ($resource, $capitalReturn, $note) {
                             $payment = new CapitalReturnPayment($resource);
                             $payment
                                 ->setCapitalReturn($capitalReturn)
@@ -308,7 +301,7 @@ class PaymentsService
                         }
                     );
 
-                    $note = 'Profit ref resource #'.$resource->getTag();
+                    $note = 'Profit ref resource #' . $resource->getTag();
                     $this->transactionService->requestTransfer(
                         $user,
                         $account,
@@ -318,11 +311,7 @@ class PaymentsService
                         function (
                             EntityManagerInterface $em,
                             Transaction $transaction
-                        ) use (
-                            $resource,
-                            $profit,
-                            $note
-                        ) {
+                        ) use ($resource, $profit, $note) {
                             $payment = new ProfitPayment($resource);
                             $payment
                                 ->setProfit($profit)
@@ -434,7 +423,7 @@ class PaymentsService
             $executiveClub = $this->getExecutiveClubLevel($totalSales);
             $commissionRate = $resource->getCommissionRate();
 
-            if ($totalCommission < 0) {
+            if (floatval($totalCommission) <= 0) {
                 throw new InsufficientBalanceException();
             }
 
@@ -462,8 +451,7 @@ class PaymentsService
             $distributableValue =
                 $totalCommission * $executiveClub->getDistributableValue();
 
-            //remunera o parent user 1
-            if ($resource->getAgent()) {
+            if ($resource->getAgent() && floatval($account->getBalance()) > 0) {
                 $agentUser = $resource->getAgent()->getUser();
                 if ($parentUser = $agentUser->getParentUser()) {
                     $this->userCommissionPayment(
@@ -471,7 +459,7 @@ class PaymentsService
                         $em,
                         $account,
                         $distributableValue,
-                        0.70,
+                        0.7,
                         $parentUser,
                         'Agent level 1 commission'
                     );
@@ -483,7 +471,7 @@ class PaymentsService
                             $em,
                             $account,
                             $distributableValue,
-                            0.20,
+                            0.2,
                             $parentUser->getParentUser(),
                             'Agent level 2 commission'
                         );
@@ -571,12 +559,7 @@ class PaymentsService
             function (
                 EntityManagerInterface $em,
                 Transaction $transaction
-            ) use (
-                $resource,
-                $amount,
-                $note,
-                $fee
-            ) {
+            ) use ($resource, $amount, $note, $fee) {
                 $commission = new Commission();
                 $commission
                     ->setResource($resource)
@@ -693,11 +676,7 @@ class PaymentsService
             function (
                 EntityManagerInterface $em,
                 Transaction $transaction
-            ) use (
-                $payment,
-                $process,
-                $fn
-            ) {
+            ) use ($payment, $process, $fn) {
                 $payment->setTransaction($transaction);
                 $em->persist($payment);
                 $em->flush();
@@ -727,11 +706,7 @@ class PaymentsService
             function (
                 EntityManagerInterface $em,
                 Transaction $transaction
-            ) use (
-                $payment,
-                $process,
-                $fn
-            ) {
+            ) use ($payment, $process, $fn) {
                 $payment->setTransaction($transaction);
                 $em->persist($payment);
                 $em->flush();

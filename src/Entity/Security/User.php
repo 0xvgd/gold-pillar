@@ -239,8 +239,9 @@ class User implements UserInterface
         return $this->passwordUpdateAt;
     }
 
-    public function setPasswordUpdateAt(\DateTimeInterface $passwordUpdateAt): self
-    {
+    public function setPasswordUpdateAt(
+        \DateTimeInterface $passwordUpdateAt
+    ): self {
         $this->passwordUpdateAt = $passwordUpdateAt;
 
         return $this;
@@ -282,7 +283,9 @@ class User implements UserInterface
 
     public function addRole($role)
     {
-        $this->roles[] = $role;
+        if (!in_array($role, $this->roles)) {
+            $this->roles[] = $role;
+        }
 
         return $this;
     }

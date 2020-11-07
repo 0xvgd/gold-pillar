@@ -89,7 +89,7 @@ datatable.dataTable({
 });
 
 datatableProfitPayment.dataTable({
-    ajax: `${baseUrl}search_comission.json`,
+    ajax: `${baseUrl}search_profit_payment.json`,
     processing: true,
     serverSide: true,
     searching: false,
