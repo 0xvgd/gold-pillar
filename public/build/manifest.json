@@ -25,6 +25,7 @@
   "build/dashboard/investments/view.js": "/build/dashboard/investments/view.js",
   "build/dashboard/myfinance/assets/index.js": "/build/dashboard/myfinance/assets/index.js",
   "build/dashboard/myfinance/projects/index.js": "/build/dashboard/myfinance/projects/index.js",
+  "build/dashboard/myfinance/properties/index.js": "/build/dashboard/myfinance/properties/index.js",
   "build/dashboard/mynetwork/agents/index.js": "/build/dashboard/mynetwork/agents/index.js",
   "build/dashboard/mynetwork/investors/index.js": "/build/dashboard/mynetwork/investors/index.js",
   "build/dashboard/mynetwork/tenants/index.js": "/build/dashboard/mynetwork/tenants/index.js",

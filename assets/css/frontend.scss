@@ -741,14 +741,15 @@ section.pricing {
         width: 80%;
 
         h1 {
-            color: #c6a139;
+            color: #0c0c0c;
             font-size: 42px;
             text-align: left;
-            background: #0c0c0c;
+            // background: #0c0c0c;
             display: inline;
             padding: 4px;
+            font-weight: bold;
 
-            @media (max-width: 640px) { font-size: 24px; }
+            @media (max-width: 640px) { font-size: 32px; }
         }
 
         .video-js {
@@ -855,3 +856,25 @@ section.pricing {
 
 span.gp { font-weight: bold; color: #c6a139; }
 .text-gold { color: #c6a139; }
+
+.logos {
+    padding: 20px 0px;
+    background-color: #FFF;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    @media (max-width: 640px) {
+        // flex-direction: column;
+    }
+
+    img {
+        height: 80px;
+        margin: 0 40px;
+        @media (max-width: 640px) {
+            height: 40px;
+            margin: 10px;
+        }
+    }
+}

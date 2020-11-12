@@ -405,16 +405,22 @@
         "/build/user-balance.js"
       ]
     },
+    "dashboard/myfinance/assets/index": {
+      "js": [
+        "/build/runtime.js",
+        "/build/dashboard/myfinance/assets/index.js"
+      ]
+    },
     "dashboard/myfinance/projects/index": {
       "js": [
         "/build/runtime.js",
         "/build/dashboard/myfinance/projects/index.js"
       ]
     },
-    "dashboard/myfinance/assets/index": {
+    "dashboard/myfinance/properties/index": {
       "js": [
         "/build/runtime.js",
-        "/build/dashboard/myfinance/assets/index.js"
+        "/build/dashboard/myfinance/properties/index.js"
       ]
     }
   }
