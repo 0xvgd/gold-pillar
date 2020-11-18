@@ -92,7 +92,6 @@ class ProjectType extends ResourceType
                 },
             ])
             ->add('saleRealPrice', MoneyType::class, [
-                'disabled' => !$isAdmin,
                 'required' => false,
             ])
             ->add('projectType', ChoiceType::class, [
