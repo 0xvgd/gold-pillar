@@ -72,10 +72,8 @@ class ProjectType extends ResourceType
                 },
             ])
             ->add('salePriceProjection', MoneyType::class, [
-                'disabled' => !$isAdmin,
             ])
             ->add('constructionCost', MoneyType::class, [
-                'disabled' => !$isAdmin,
             ])
             ->add('engineer', EntityType::class, [
                 'disabled' => !$isAdmin,
