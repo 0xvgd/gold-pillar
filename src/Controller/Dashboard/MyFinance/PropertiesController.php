@@ -8,7 +8,6 @@ use App\Entity\Finance\CommissionPayment;
 use App\Entity\Finance\Investment;
 use App\Entity\Finance\Transaction;
 use App\Entity\Person\Agent;
-use App\Entity\Person\Investor;
 use App\Entity\Resource\Property;
 use App\Enum\InvestmentStatus;
 use App\Service\Finance\AccountService;
@@ -28,6 +27,7 @@ class PropertiesController extends AbstractController
 {
     use DatatableTrait;
     use UserTrait;
+
     /**
      * @Route("/", name="index")
      */

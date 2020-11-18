@@ -148,7 +148,7 @@ class PaymentsService
                     }
 
                     $dividendAmount = $individualInvested * $yield;
-                    $note = 'Dividend ref resource #' . $resource->getTag();
+                    $note = 'Dividend ref resource #'.$resource->getTag();
 
                     $this->transactionService->requestTransfer(
                         $user,
@@ -301,7 +301,7 @@ class PaymentsService
                         }
                     );
 
-                    $note = 'Profit ref resource #' . $resource->getTag();
+                    $note = 'Profit ref resource #'.$resource->getTag();
                     $this->transactionService->requestTransfer(
                         $user,
                         $account,
