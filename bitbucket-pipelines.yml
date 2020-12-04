@@ -26,7 +26,6 @@ pipelines:
               - composer --version
               - composer self-update
               - composer install --ignore-platform-reqs
-              - vendor/bin/php-cs-fixer fix --dry-run --diff
               - vendor/bin/simple-phpunit
               - yarn install
               - yarn encore production
@@ -60,7 +59,6 @@ pipelines:
               - composer --version
               - composer self-update
               - composer install --ignore-platform-reqs
-              - vendor/bin/php-cs-fixer fix --dry-run --diff
               - vendor/bin/simple-phpunit
               - yarn install
               - yarn encore production
