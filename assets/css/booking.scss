@@ -1,0 +1,96 @@
+$default:#cb9900;
+$grey : #a5a5a5;
+.booking-page {
+    .form-control.has-error {
+        border: solid 1px red;
+    }
+    .custom-carousel-wrapper {
+        .booking-carousel {
+            display: flex;
+            width: 100%;
+            .carousel-inner {
+                background: transparent;
+                .carousel-item {
+                    .item {
+                        &>div {
+                            width: 2rem;
+                            height: 2rem;
+                            border: solid 1px $grey;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            border-radius: 3px;
+                            color: $default;
+                            font-size: 1.2rem;
+                            padding: 1.2rem;
+                            cursor: pointer;
+                            &.active,&:hover {
+                                color: white;
+                                background: $default;
+                                border-color: $default;
+                                font-weight: bold;
+                            }
+                        }
+
+                    }
+                }
+            }
+            .carousel-action {
+                position: unset;
+                margin-top: 1.25rem;
+                &>svg {
+                    color: $default;
+                    height: 2rem;
+                }
+            }
+        }
+
+    }
+    .booking-carousel.vert {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .carousel-action {
+            margin-top: 0;
+        }
+        .carousel-item {
+            .item {
+                min-width: 200px;
+                border: solid 1px $default;
+                padding: 5px;
+                margin: 1px;
+                cursor: pointer;
+                &:not(.disabled).active,&:not(.disabled):hover {
+                    background-color: $default;
+                    color: white;
+                    font-weight: bold;
+                }
+                &.disabled {
+                    background-color: $grey;
+                    border-color: $grey;
+                    cursor: not-allowed;
+                }
+            }
+        }
+    }
+
+    .vert .carousel-item-next.carousel-item-left,
+    .vert .carousel-item-prev.carousel-item-right {
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+    }
+
+    .vert .carousel-item-next,
+    .vert .active.carousel-item-right {
+        -webkit-transform: translate3d(0, 100%, 0);
+        transform: translate3d(0, 100% 0);
+    }
+
+    .vert .carousel-item-prev,
+    .vert .active.carousel-item-left {
+        -webkit-transform: translate3d(0,-100%, 0);
+        transform: translate3d(0,-100%, 0);
+    }
+
+
+}

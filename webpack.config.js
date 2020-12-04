@@ -40,6 +40,7 @@ Encore
     .addEntry('selling', './assets/js/frontend/selling/index.js')
     .addEntry('letting', './assets/js/frontend/letting/index.js')
     .addEntry('subscribe', './assets/js/frontend/subscribe.js')
+    .addEntry('booking', './assets/js/frontend/booking.js')
     // dashboard
     .addEntry('dashboard', './assets/js/dashboard/app.js')
     .addEntry('dashboard/home', './assets/js/dashboard/home.js')

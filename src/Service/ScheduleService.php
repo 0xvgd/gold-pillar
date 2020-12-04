@@ -151,6 +151,71 @@ class ScheduleService
         return $times;
     }
 
+    /**
+     * @param Schedule $schedule
+     * @param DateTime $date
+     * @return array
+     */
+    public function getAvailableTimesFixed(Schedule $schedule, DateTime $date): array
+    {
+        $shifts = $schedule->getShifts();
+        $weekDay = (int) ($date->format('N') - 1);
+        $times = [];
+        $events = $this->getBookedEvents($schedule, $date);
+        $times_str = [];
+        $interval = null;
+        /** @var Shift $shift */
+        foreach ($shifts as $shift) {
+            $duration = $shift->getDuration();
+            $interval = new DateInterval("PT{$duration}M");
+            /** @var Day $day */
+            $day = $shift->getDays()->get($weekDay);
+            if ($day->isEnabled()) {
+                /** @var DateTime $startTime */
+                $startTime = clone $day->getStartTime();
+                /** @var DateTime $endTime */
+                $endTime = clone $day->getEndTime();
+                while ($startTime < $endTime) {
+                    $free = true;
+                    /** @var Event $event */
+                    foreach ($events as $event) {
+                        $str = $startTime->format('H:i');
+                        if ($str >= $event->getStart()->format('H:i') && $str < $event->getEnd()->format('H:i')) {
+                            $free = false;
+                            break;
+                        }
+                    }
+                    $timeStr = clone $startTime;
+                    $timeStr = $timeStr->format('H:i');
+                    if(in_array($timeStr,$times_str) === false){
+                        $times_str[] = $timeStr;
+                        $times[] = ['val' => $timeStr,'free' => $free?1:0 ];
+                    }
+                    $startTime->add($interval);
+                }
+            }
+
+
+        }
+        if(count($times) >0 ){
+            $times = array_chunk($times,5);
+            $len = count($times);
+            if(count($times[$len-1]) < 5 && $interval != null){
+                $len_item = count($times[$len-1]);
+                $value = $times[$len-1][$len_item-1]['val'];
+                $started  = new DateTime($value);
+                for($i = 0;$i<5-$len_item;$i++){
+                    $started->add($interval);
+                    $temp = clone $started;
+                    $times[$len-1][] = array('val' =>$temp->format('H:i'),'free' =>0);
+                }
+            }
+
+        }
+        return $times;
+    }
+
+
     public function getBookedEvents(Schedule $schedule, DateTime $date): array
     {
         $user = $schedule->getAgent()->getUser();
@@ -175,5 +240,61 @@ class ScheduleService
             ->findOneBy(['agent' => $agent]);
 
         return $schedule;
+    }
+
+    public function addMonth($date, $month = 1)
+    {
+        $cal = new DateTime($date);
+        $count = 'P' . $month . 'M';
+        $interval = new DateInterval($count);
+        $cal->add($interval);
+        return $cal->format('Y-m-d');
+    }
+
+    public function subMonth($date, $month = 1)
+    {
+        $cal = new DateTime($date);
+        $count = 'P' . $month . 'M';
+        $interval = new DateInterval($count);
+        $cal->sub($interval);
+        return $cal->format('Y-m-d');
+    }
+
+    public function addDays($date, $day = 1)
+    {
+        $cal = new DateTime($date);
+        if($day < 0) {
+            $day = abs($day);
+        }
+        $count = 'P' . $day . 'D';
+        $interval = new DateInterval($count);
+        $cal->add($interval);
+        return $cal->format('Y-m-d');
+    }
+
+    public function subDays($date, $day = 1)
+    {
+        $cal = new DateTime($date);
+        $count = 'P' . $day . 'D';
+        $interval = new DateInterval($count);
+        $cal->sub($interval);
+        return $cal->format('Y-m-d');
+    }
+
+    public function get35DayPeriod($start){
+
+        $date_at = $start;
+        $result = [];
+        for($i = 0;$i<5;$i++){
+            $days = [];
+            for($j=0;$j<7;$j++){
+                $days[] = ['text' => intval(date('d',strtotime($date_at))),'full' => date('F j, Y',strtotime($date_at)),'value' => $date_at,'week' => substr(date('D',strtotime($date_at)),0,1)];
+                $date_at = $this->addDays($date_at);
+            }
+            $result[] = ['name'=>date('F Y',strtotime($date_at)),'days' => $days];
+        }
+
+        return $result;
+
     }
 }
