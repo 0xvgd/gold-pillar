@@ -44,7 +44,7 @@ pipelines:
             script: # Modify the commands below to build your repository.
               - mkdir -p ~/.ssh
               - echo $KNOWN_HOSTS_P >> ~/.ssh/known_hosts
-              - echo MAILER_URL=$MAILER_URL >> .env.local
+              - echo MAILER_URL=$MAILER_URL_PROD >> .env.local
               - echo DATABASE_URL=$DATABASE_URL_PROD >> .env.local
               - echo APP_SECRET=$APP_SECRET >> .env.local
               - echo APP_ENV=prod >> .env.local
