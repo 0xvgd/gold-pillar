@@ -212,7 +212,7 @@
 						</div>
 						<div class="request text-center p-3 border-top">
                         	<div class="px-2 pb-1 pt-3">
-								<a href="#{{ is_granted('ROLE_USER') ? 'book-a-view-modal' : 'sign-in-modal' }}" class="btn btn-primary btn-block" data-toggle="modal">
+								<a href="{{ path('app_booking_assign',{id:entity.id,type:0}) }}" class="btn btn-primary btn-block" >
 									{% trans %}Book a meeting{% endtrans %}
 								</a>
 							</div>
@@ -238,7 +238,7 @@
 		</div>
 	</div>
     
-    {{ render(controller('App\\Controller\\Frontend\\BookingController::modal', { resource: entity.id, livingInfo: false })) }}
+   {# {{ render(controller('App\\Controller\\Frontend\\BookingController::modal', { resource: entity.id, livingInfo: false })) }}#}
 {% endblock %}
 
 {% macro agent_info(entity) %}

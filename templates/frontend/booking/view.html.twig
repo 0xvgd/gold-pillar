@@ -13,6 +13,7 @@
 					<input type="hidden" id="login_path" value="{{ path('app_booking_login', { id: id }) }}">
 					<input type="hidden" id="check_path" value="{{ path('app_booking_check') }}">
 					<input type="hidden" id="sign_path" value="{{ path('app_booking_sign',{id: id}) }}">
+					<input type="hidden" id="book_type" value="{{ type }}">
 					<div class="row">
 						<div class="col-12">
 							<button type="button" class="btn btn-primary btn-block">Step 1 Date and Time</button>
@@ -69,6 +70,7 @@
 									<div class="alert alert-info">Not Available </div>
 								</div>
 							</div>
+							{% if type == 1 %}
 							<div ng-show="bookingTimeValue != ''" class="custom-carousel-wrapper  d-flex align-items-center flex-column p-3">
 								<h4 class="caption text-center">{{ '{{ bookingTimeValue }}'}}</h4>
 								<h4 class="caption text-center mt-4">Date wish to move in </h4>
@@ -95,13 +97,14 @@
 								<h4 class="caption text-center mt-4">How many people want to move in? </h4>
 								<input type="number" ng-model="bookingCount" class="form-control" id="booking_number" min="1">
 							</div>
+							{% endif %}
 						</div>
 						{% if is_granted('ROLE_USER') %}
 						<div class="col-12">
 							<button type="button" class="btn btn-primary btn-block" ng-click="saveBookingAuth()" ng-disabled="bookingMoveValue === ''">Submit</button>
 						</div>
 						{% else %}
-							<div class="col-12" ng-show="bookingMoveValue !== ''">
+							<div class="col-12" {% if type == 1 %} ng-show="bookingMoveValue !== ''" {% else %} ng-show="bookingTimeValue !==''" {% endif %}>
 								<button type="button" class="btn btn-primary btn-block">Step 2 Login Or Register</button>
 								<p class="p-2">To confirm the booking we need a few basic details.
 									If you haven't signed up yet please register for free.</p>

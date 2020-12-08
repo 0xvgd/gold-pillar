@@ -94,6 +94,7 @@ class BookingController extends AbstractController
 
 
     /**
+     * //todo old one should remove
      * @Route("/{id}", name="add", methods={"POST"})
      */
     public function add(Request $request, BookingService $service, Resource $resource)
@@ -152,6 +153,12 @@ class BookingController extends AbstractController
         return $this->redirect($request->headers->get('referer'));
     }
 
+    /**
+     * @param Resource $resource
+     * @param bool $livingInfo
+     * @return \Symfony\Component\HttpFoundation\Response
+     * //todo old one should remove
+     */
     public function modal(Resource $resource, bool $livingInfo = true)
     {
         $view = new View();
@@ -171,14 +178,14 @@ class BookingController extends AbstractController
     }
 
     /**
-     * @Route("/assign/{id}", name="assign", methods={"GET"})
+     * @Route("/assign/{id}/{type}",defaults={"type"=1}, name="assign", methods={"GET"})
      */
-    public function booking($id, ScheduleService $service)
+    public function booking($id,$type, ScheduleService $service)
     {
         $current = date('Y-m-d');
         $availDays = $service->get35DayPeriod($current);
         $countrys = Countries::getNames();
-        return $this->render('frontend/booking/view.html.twig', ['id' => $id, 'items' => $availDays, 'countrys' => $countrys]);
+        return $this->render('frontend/booking/view.html.twig', ['id' => $id,'type' => $type, 'items' => $availDays, 'countrys' => $countrys]);
     }
 
     /**
