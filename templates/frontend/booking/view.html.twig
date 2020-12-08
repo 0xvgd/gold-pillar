@@ -101,7 +101,7 @@
 						</div>
 						{% if is_granted('ROLE_USER') %}
 						<div class="col-12">
-							<button type="button" class="btn btn-primary btn-block" ng-click="saveBookingAuth()" ng-disabled="bookingMoveValue === ''">Submit</button>
+							<button type="button" class="btn btn-primary btn-block" ng-click="saveBookingAuth()" {% if type == 1 %} ng-disabled="bookingMoveValue === ''" {% else %} ng-disabled="bookingTimeValue === ''"  {% endif %}>Submit</button>
 						</div>
 						{% else %}
 							<div class="col-12" {% if type == 1 %} ng-show="bookingMoveValue !== ''" {% else %} ng-show="bookingTimeValue !==''" {% endif %}>
