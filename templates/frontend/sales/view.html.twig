@@ -147,9 +147,12 @@
 						</div>
 						<div class="request text-center p-3 border-top">
                         <div class="px-2 pb-1 pt-3">
-							<a href="#{{ is_granted('ROLE_USER') ? 'book-a-view-modal' : 'sign-in-modal' }}" class="btn btn-primary btn-block" data-toggle="modal">
+							<a href="{{ path('app_booking_assign',{id:entity.id}) }}" class="btn btn-primary btn-block" >
 								{% trans %}Book a view{% endtrans %}
 							</a>
+							{#<a href="#{{ is_granted('ROLE_USER') ? 'book-a-view-modal' : 'sign-in-modal' }}" class="btn btn-primary btn-block" data-toggle="modal">
+								{% trans %}Book a view{% endtrans %}
+							</a>#}
 							</div>
                             <div class="px-2 pb-1 pt-3">
 								<a href="#{{ is_granted('ROLE_USER') ? 'make-an-offer-modal' : 'sign-in-modal' }}" class="btn btn-primary btn-block" data-toggle="modal">
@@ -173,7 +176,7 @@
 		</div>
 	</div>
 
-	{{ render(controller('App\\Controller\\Frontend\\BookingController::modal', { resource: entity.id })) }}
+	{#{{ render(controller('App\\Controller\\Frontend\\BookingController::modal', { resource: entity.id })) }}#}
 {% endblock %}
 
 {% macro agent_avatar(entity) %}

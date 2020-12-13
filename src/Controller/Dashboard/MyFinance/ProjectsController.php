@@ -8,7 +8,6 @@ use App\Entity\Finance\CapitalReturnPayment;
 use App\Entity\Finance\CommissionPayment;
 use App\Entity\Finance\Investment;
 use App\Entity\Finance\ProfitPayment;
-use App\Entity\Person\Investor;
 use App\Entity\Resource\Project;
 use App\Service\Finance\AccountService;
 use Doctrine\ORM\EntityManagerInterface;

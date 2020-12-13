@@ -1,0 +1,243 @@
+{% extends 'frontend/base.html.twig' %}
+
+{% set currentPath = absolute_url(path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params'))) %}
+
+{% block body %}
+	<div class="page navbar-offset booking-page p-md-4" >
+		<div class="container" ng-app="myApp" ng-controller="bookCtrl">
+			<div class="row">
+				<div class="offset-md-2 offset-lg-3 col-md-8 col-lg-6">
+					<input type="hidden" id="shift_id" value="{{ id }}">
+					<input type="hidden" id="book_path" value="{{ path('app_booking_auth', { id: id }) }}">
+					<input type="hidden" id="bath_path" value="{{ path('app_booking_available_days', { id: id }) }}">
+					<input type="hidden" id="login_path" value="{{ path('app_booking_login', { id: id }) }}">
+					<input type="hidden" id="check_path" value="{{ path('app_booking_check') }}">
+					<input type="hidden" id="sign_path" value="{{ path('app_booking_sign',{id: id}) }}">
+					<input type="hidden" id="book_type" value="{{ type }}">
+					<div class="row">
+						<div class="col-12">
+							<button type="button" class="btn btn-primary btn-block">Step 1 Date and Time</button>
+							<div class="custom-carousel-wrapper d-flex align-items-center flex-column p-3">
+								<h4 class="caption">{{ '{{monthValue}}' }}</h4>
+								<div id="bookCarousel" class="carousel booking-carousel slide w-100" data-ride="carousel"  data-interval="false">
+									<a class="carousel-control-prev carousel-action" href="#bookCarousel" role="button" data-slide="prev">
+										<span class="carousel-control-prev-icon fa fa-3x fa-chevron-left" aria-hidden="true"></span>
+										<span class="sr-only">Previous</span>
+									</a>
+									<div class="carousel-inner">
+										{% for item in items %}
+											<div class="carousel-item  {{ loop.index==1?'active':'' }}" data-value="{{ item['name'] }}">
+												<div class="d-flex align-items-center justify-content-around">
+													{% for one in item['days'] %}
+														<div class="item d-flex flex-column align-items-center">
+															<span>{{ one['week'] }}</span>
+															<div  data-value="{{ one['value'] }}" data-text="{{ one['full'] }}">{{ one['text'] }}</div>
+														</div>
+													{% endfor %}
+												</div>
+											</div>
+										{% endfor %}
+									</div>
+									<a class="carousel-control-next carousel-action" href="#bookCarousel" role="button" data-slide="next">
+										<span class="carousel-control-next-icon fa fa-3x fa-chevron-right" aria-hidden="true"></span>
+										<span class="sr-only">Next</span>
+									</a>
+								</div>
+							</div>
+							<div class="custom-carousel-wrapper " ng-show="bookingDateValue != ''">
+								<h4 class="caption text-center">{{ '{{bookingDateTxt}}' }}</h4>
+								<div ng-show="bookingTimes.length > 0" id="bookCarousel_hour" class="carousel booking-carousel vert slide" data-ride="carousel"  data-interval="false">
+									<a class="carousel-control-prev carousel-action" href="#bookCarousel_hour" role="button" data-slide="prev">
+										<span class="carousel-control-prev-icon fa fa-3x fa-chevron-up" aria-hidden="true"></span>
+										<span class="sr-only">Previous</span>
+									</a>
+									<div class="carousel-inner">
+											<div class="carousel-item " ng-repeat="(ind,bookTime) in bookingTimes" ng-class="ind == 0?'active':''" >
+												<div class="d-flex flex-column align-items-center justify-content-around">
+													<div ng-repeat="time in bookTime" class="item d-flex justify-content-center align-items-center" data-value="{{ '{{ time.val }}' }}" ng-class="time.free==1?'':'disabled'">
+														<span>{{ '{{time.val}}' }}</span>
+													</div>
+												</div>
+											</div>
+
+									</div>
+									<a class="carousel-control-next carousel-action" href="#bookCarousel_hour" role="button" data-slide="next">
+										<span class="carousel-control-next-icon fa fa-3x fa-chevron-down" aria-hidden="true"></span>
+										<span class="sr-only">Next</span>
+									</a>
+								</div>
+								<div ng-hide="bookingTimes.length > 0">
+									<div class="alert alert-info">Not Available </div>
+								</div>
+							</div>
+							{% if type == 1 %}
+							<div ng-show="bookingTimeValue != ''" class="custom-carousel-wrapper  d-flex align-items-center flex-column p-3">
+								<h4 class="caption text-center">{{ '{{ bookingTimeValue }}'}}</h4>
+								<h4 class="caption text-center mt-4">Date wish to move in </h4>
+								<div id="bookCarousel_date" class="carousel  booking-carousel slide w-100" data-ride="carousel" data-interval="false">
+									<a class="carousel-control-prev carousel-action" href="#bookCarousel_date" role="button" data-slide="prev">
+										<span class="carousel-control-prev-icon fa fa-3x fa-chevron-left" aria-hidden="true"></span>
+										<span class="sr-only">Previous</span>
+									</a>
+									<div class="carousel-inner">
+											<div ng-repeat="(index,moveDt) in bookingMoveDates" class="carousel-item" ng-class="index == 0?'active':''">
+												<div class="d-flex align-items-center justify-content-around">
+														<div ng-repeat="dt in moveDt.days" class="item d-flex flex-column align-items-center">
+															<span>{{ '{{dt.week}}' }}</span>
+															<div data-value="{{ '{{dt.value}}' }}">{{ '{{dt.text}}' }}</div>
+														</div>
+												</div>
+											</div>
+									</div>
+									<a class="carousel-control-next carousel-action" href="#bookCarousel_date" role="button" data-slide="next">
+										<span class="carousel-control-next-icon fa fa-3x fa-chevron-right" aria-hidden="true"></span>
+										<span class="sr-only">Next</span>
+									</a>
+								</div>
+								<h4 class="caption text-center mt-4">How many people want to move in? </h4>
+								<input type="number" ng-model="bookingCount" class="form-control" id="booking_number" min="1">
+							</div>
+							{% endif %}
+						</div>
+						{% if is_granted('ROLE_USER') %}
+						<div class="col-12">
+							<button type="button" class="btn btn-primary btn-block" ng-click="saveBookingAuth()" {% if type == 1 %} ng-disabled="bookingMoveValue === ''" {% else %} ng-disabled="bookingTimeValue === ''"  {% endif %}>Submit</button>
+						</div>
+						{% else %}
+							<div class="col-12" {% if type == 1 %} ng-show="bookingMoveValue !== ''" {% else %} ng-show="bookingTimeValue !==''" {% endif %}>
+								<button type="button" class="btn btn-primary btn-block">Step 2 Login Or Register</button>
+								<p class="p-2">To confirm the booking we need a few basic details.
+									If you haven't signed up yet please register for free.</p>
+								<div class="d-flex justify-content-around">
+									<button type="button" ng-class="authType=='login'?'btn-primary':'btn-dark'" class="mx-2 mt-2 btn btn-block text-lowercase" ng-click="setAuthType('login')">Login</button>
+									<button type="button" ng-class="authType=='sign' || authType =='location'?'btn-primary':'btn-dark'" class="mx-2 btn btn-primary btn-block text-lowercase" ng-click="setAuthType('sign')">Sign Up</button>
+								</div>
+
+							</div>
+							<div class="col-12 p-4" ng-show="authType=='login'">
+								<div class="form-group">
+									<label>Email</label>
+									<input type="email" class="form-control" id="login_email">
+								</div>
+								<div class="form-group">
+									<label>Password</label>
+									<input type="password" class="form-control" id="login_pass">
+								</div>
+								<button type="button" class="btn btn-block btn-primary" ng-click="bookingWithLogin()">Submit</button>
+							</div>
+							<div class="col-12 p-4" ng-show="authType=='sign'" id="sign_form_1">
+								<div class="form-group">
+									<label>Name</label>
+									<input  class="form-control" id="reg_name">
+								</div>
+								<div class="form-group">
+									<label>Phone number</label>
+									<input  class="form-control" id="reg_phone">
+								</div>
+								<div class="form-group">
+									<label>Email</label>
+									<input type="email" class="form-control" id="reg_email">
+								</div>
+								<div class="form-group">
+									<label>Password</label>
+									<input type="password" class="form-control" id="reg_pass">
+								</div>
+								<div class="form-group">
+									<label>Password Confirm</label>
+									<input type="password" class="form-control" id="reg_conf">
+								</div>
+								<button type="button" class="btn btn-block btn-primary" ng-click="bookingSignCheck()">Next</button>
+							</div>
+							<div class="col-12 my-3" ng-show="authType=='location'" id="sign_form_2">
+								<button type="button" class="btn btn-primary btn-block mb-3">Step 3 Location Setting</button>
+								<div class="form-group">
+									<label>Address Line 1</label>
+									<input  class="form-control" id="registration_address_addressLine1" >
+								</div>
+								<div class="form-group">
+									<label>Address Line 2</label>
+									<input  class="form-control"  id="registration_address_addressLine2">
+								</div>
+								<div class="row">
+									<div class="col-12 col-md-6">
+										<div class="form-group">
+											<label>Post Code</label>
+											<input  class="form-control" id="registration_address_postcode">
+										</div>
+									</div>
+									<div class="col-12 col-md-6">
+										<div class="form-group">
+											<label>City</label>
+											<input  class="form-control" id="registration_address_city">
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label>Country</label>
+									<select  class="form-control" id="registration_address_country">
+										{% for count_val,country_name in countrys %}
+											<option value="{{ count_val }}">{{ country_name }}</option>
+										{% endfor %}
+									</select>
+								</div>
+								<button type="button" class="btn btn-primary btn-block" ng-click="bookingWithSign()">Submit</button>
+							</div>
+						{% endif %}
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+
+{% macro agent_avatar(entity) %}
+	{% set blank = asset('images/nobody_m.original.jpg') %}
+	{% set avatar = null %}
+	{% if entity.agent and entity.agent.user %}
+		{% set avatar = entity.agent.user.avatar %}
+	{% endif %}
+	{{ entity.agent.user.avatar|default(blank) }}
+{% endmacro %}
+
+{% macro agent_info(entity) %}
+	<div class="bg-light p-2">
+		{% if entity.agent %}
+			<p class="p-2">
+				<strong>{% trans %}To view this property or request more details, contact:{% endtrans %}</strong>
+			</p>
+			<div class="d-flex">
+				<div class="p-2">
+					<img src="{{ _self.agent_avatar(entity) }}" alt="" style="width: 100px">
+				</div>
+				<div class="p-2">
+					<a title="{{ entity.agent.user.name }}" rel="nofollow" href="#">
+						<strong>{{ entity.agent.user.name }}</strong>
+					</a>
+					<address class="pad-0">{{ entity.agent.user.address }}</address>
+					<a href="tel:{{ entity.agent.user.phone }}" class="branch-telephone-number">
+						<strong>{{ entity.agent.user.phone }}</strong>
+					</a>
+				</div>
+			</div>
+		{% endif %}
+	</div>
+{% endmacro %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<style>
+		.nav-primary-color {
+			background: #000;	
+		}
+	</style>
+	{{ encore_entry_link_tags('booking') }}
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('booking') }}
+	{{ encore_entry_script_tags('subscribe') }}
+	<script src="/js/booking.js"></script>
+{% endblock %}

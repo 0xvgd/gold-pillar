@@ -187,6 +187,7 @@
         {% block javascripts %}
             {{ render(controller('App\\Controller\\Frontend\\DefaultController::getTranslations')) }}
             <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
+            <script src="/js/angular.min.js"></script>
             {{ encore_entry_script_tags('main') }}
             {{ encore_entry_script_tags('frontend') }}
             <script>
