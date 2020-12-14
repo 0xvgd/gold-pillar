@@ -60,6 +60,7 @@ new Vue({
             loadingHour:false,
             loadingDay:false,
             isSubmitted:false,
+            advancedFilter:false,
             errors:[],
             resultMsg:'',
             login:{email:'',password:''},

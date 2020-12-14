@@ -62,6 +62,7 @@ new Vue({
             errors:[],
             resultMsg:'',
             login:{email:'',password:''},
+            advancedFilter:false,
             register:{email:'',password:'',conf:'',name:'',phone:'',address1:'',address2:'',postcode:'',city:'',country:''},
         }
     },

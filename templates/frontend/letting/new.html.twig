@@ -21,7 +21,7 @@
 {% endmacro %}
 
 {% block body %}
-    <div class="letting selling-letting booking-page" id="app"
+    <div class="letting selling-letting booking-page"  id="app"
          data-authenticated="{{ is_granted('ROLE_USER') ? 1 : 0 }}"
          data-find-tenant-fee="499"
          data-find-only-charge="0.015"
@@ -31,7 +31,7 @@
          data-query-code-url="{{ path('app_letting_postcode') }}"
          data-save-url="{{ path('app_letting_save') }}"
          data-agents-url="{{ path('app_letting_agents') }}">
-        <div class="filters">
+        <div class="filters" >
             {% embed 'frontend/includes/page-banners.html.twig' with { 'search_form': _self.search_form('desktop') } %}
                 {% block content %}
                     {{ search_form }}
