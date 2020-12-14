@@ -1,0 +1,58 @@
+$default:#cb9900;
+$grey : #a5a5a5;
+.selling-letting {
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #e2dbdbd4;
+    z-index: 9999;
+    display: none;
+    &.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .content {
+      background: white;
+      border-radius: 8px;
+      min-width: 25rem;
+    }
+  }
+  .custom-carousel-wrapper .booking-carousel.address .carousel-inner .carousel-item .item {
+    width: 100%;
+    margin: 3px;
+  }
+  .agent-carousel-wrapper {
+    overflow-x: auto;
+    .item {
+      width: 15rem;
+      min-width: 15rem;
+      .card-header {
+        padding: 0;
+        background-color: transparent!important;
+        img {
+          width: 100%;
+          height: 12rem;
+          object-fit: scale-down;
+        }
+      }
+      .card-content {
+        &>span {
+          display: block;
+          text-align: center;
+          &.name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            min-height: 3.3rem;
+          }
+        }
+      }
+    }
+  }
+  .font-1rem {
+    font-size: 1.2rem;
+  }
+}

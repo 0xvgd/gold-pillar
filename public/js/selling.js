@@ -1,9 +1,7 @@
 
 
 $(() => {
-    $('.carousel.booking-carousel').carousel({
-        interval: false,
-    })
+
 });
 const baseUrl = $('#bath_path').val();
 const loginUrl = $('#login_path').val();
@@ -25,15 +23,18 @@ app.controller('bookCtrl', function ($scope, $http, $compile) {
     $scope.bookingTimeValue = '';
     $scope.bookingMoveValue = '';
     $scope.bookingCount = 1;
-    $scope.loadingHour = false;
-    $scope.submitted = false;
     angular.element(document).ready(function () {
-        let cItem = $('#bookCarousel .carousel-item.active')[0].dataset.value;
-        $scope.$apply(function () {
-            $scope.monthValue = cItem;
-        })
 
     });
+
+    $('.search-form').on('submit',function (e) {
+        e.stopPropagation();
+        console.log('this submit');
+    })
+   /* $(document).on('submit', '.search-form button[type=submit]', function () {
+
+
+    });*/
 
     $(document).on('click', '#bookCarousel .carousel-action', function () {
         let cItem = $('#bookCarousel .carousel-item.active')[0].dataset.value;
@@ -66,14 +67,13 @@ app.controller('bookCtrl', function ($scope, $http, $compile) {
     });
 
     $scope.getAvailableItems = function (val) {
-        $scope.loadingHour = true;
+
         $http({
             method: 'get',
             url: `${baseUrl}/${val}`,
             dataType: 'json',
             headers: {"Content-Type": "application/json;charset=utf-8"}
         }).then(function successCallback(resp) {
-            $scope.loadingHour = false;
             $scope.bookingTimes = resp.data.times;
             $scope.bookingMoveDates = resp.data.moves;
         });
@@ -89,10 +89,8 @@ app.controller('bookCtrl', function ($scope, $http, $compile) {
     });
 
     $scope.saveBookingAuth = function(){
-        $scope.submitted = true;
         let param = $scope.getBookingInfo();
         $.post(authUrl,param,function (resp) {
-            $scope.submitted = false;
             if(resp.result === true){
                 alert('booking set successfully');
                 window.location.href = '/';
@@ -132,9 +130,7 @@ app.controller('bookCtrl', function ($scope, $http, $compile) {
             return false;
         param.email = email;
         param.password = password;
-        $scope.submitted = true;
         $.post(loginUrl,param,function (resp) {
-            $scope.submitted = false;
             if(resp.result === true){
                 alert('booking set successfully');
                 window.location.href = '/';
@@ -147,7 +143,6 @@ app.controller('bookCtrl', function ($scope, $http, $compile) {
     }
 
     $scope.bookingSignCheck = function () {
-
         let forms = $('#sign_form_1 .form-control');
         forms.each(function (i,j) {
             if($(j).val() == ''){
@@ -163,14 +158,12 @@ app.controller('bookCtrl', function ($scope, $http, $compile) {
         if(valid > 0)
             return false;
         let email = $('#reg_email').val();
-        $scope.submitted = true;
         $http({
             method: 'get',
             url: `${checkUrl}/${email}`,
             dataType: 'json',
             headers: {"Content-Type": "application/json;charset=utf-8"}
         }).then(function successCallback(resp) {
-            $scope.submitted = false;
             if(resp.data.result === true)
                 $scope.authType = 'location';
             $('#reg_email').addClass('has-error');
@@ -199,9 +192,7 @@ app.controller('bookCtrl', function ($scope, $http, $compile) {
         param.postcode = $('#registration_address_postcode').val();
         param.city = $('#registration_address_city').val();
         param.country = $('#registration_address_country').val();
-        $scope.submitted = true;
         $.post(signUrl,param,function (resp) {
-            $scope.submitted = false;
             if(resp.result === true){
                 alert('booking set successfully');
                 window.location.href = '/';

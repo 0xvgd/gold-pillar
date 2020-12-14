@@ -588,6 +588,9 @@ section.pricing {
     .nav-primary-color {
         background: #000;
     }
+    .content {
+        padding: 20px;
+    }
 }
 
 @media screen and (max-width: 449px) {
@@ -877,4 +880,21 @@ span.gp { font-weight: bold; color: #c6a139; }
             margin: 10px;
         }
     }
+}
+
+@keyframes spinner-border {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+span.btn-loading {
+    display: inline-block;
+    width: 1.2rem;
+    height: 1.2rem;
+    vertical-align: middle;
+    border: 0.15rem solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spinner-border .75s linear infinite;
 }

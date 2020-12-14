@@ -1,6 +1,5 @@
 import '../../../css/sales.scss'
 import 'jquery-zoom';
-
 const createMap = (id) => {
     const elem = document.getElementById(id)
     const center = new google.maps.LatLng(elem.dataset.lat, elem.dataset.lng)

@@ -30,4 +30,13 @@ class AgentService
             throw $e;
         }
     }
+
+    public function getById($id)
+    {
+        $agent = $this->em->getRepository(Agent::class)->findOneBy([
+            'id' => $id,
+        ]);
+
+        return $agent;
+    }
 }

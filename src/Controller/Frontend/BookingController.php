@@ -53,9 +53,10 @@ class BookingController extends AbstractController
      */
     public function daysFromAgent(Request $request, ScheduleService $service, Agent $agent)
     {
-        $days = $service->getNext30AvailableDaysFromNow($agent);
-        $days = $service->getUniqueDaysAsString($days);
-
+        /*$days = $service->getNext30AvailableDaysFromNow($agent);
+        $days = $service->getUniqueDaysAsString($days);*/
+        $current = date('Y-m-d');
+        $days = $service->get35DayPeriod($current);
         return $this->json($days);
     }
 
@@ -86,8 +87,10 @@ class BookingController extends AbstractController
     {
         $dt = DateTime::createFromFormat('Y-m-d', $day);
         $schedule = $service->getSchedule($agent);
-        $hours = $service->getAvailableTimes($schedule, $dt);
-        $hours = $service->getUniqueTimesAsString($hours);
+        if($schedule == null)
+            return $this->json([]);
+        $hours = $service->getAvailableTimesFixed($schedule, $dt);
+       // $hours = $service->getUniqueTimesAsString($hours);
 
         return $this->json($hours);
     }
@@ -236,7 +239,7 @@ class BookingController extends AbstractController
     {
         $userRepo = $userService->getRepository();
         $user = new User();
-        //user register
+        //user register todo need to use user service create method
         try {
 
             $email = $request->get('email');
@@ -270,7 +273,7 @@ class BookingController extends AbstractController
             $em->persist($tenant);
             $em->flush();
 
-            //$userService->sendConfirmationMail($user);
+            $userService->sendConfirmationMail($user);
 
 
         } catch (Exception $e){
@@ -296,7 +299,7 @@ class BookingController extends AbstractController
     {
         $userRepo = $userService->getRepository();
         $user = $userRepo->findOneBy(['email' => $email]);
-        if (!$user != null)
+        if ($user != null)
             return $this->json(['result' => true]);
         return $this->json(['result' => false]);
     }

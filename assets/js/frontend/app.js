@@ -111,3 +111,4 @@ $(document).ready(() => {
         $('.page-loader').remove()
     })
 })
+

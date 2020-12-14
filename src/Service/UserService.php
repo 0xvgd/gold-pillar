@@ -2,6 +2,8 @@
 
 namespace App\Service;
 
+use App\Entity\Address;
+use App\Entity\Person\Tenant;
 use App\Entity\Security\User;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -9,6 +11,7 @@ use Exception;
 use Hashids\Hashids;
 use Swift_Mailer;
 use Swift_Message;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Twig\Environment;
 
 /**
@@ -215,5 +218,52 @@ class UserService
         }
 
         return $id;
+    }
+
+    public function create($request, UserPasswordEncoderInterface $passwordEncoder)
+    {
+
+        $user = new User();
+        try {
+            $email = $request->get('email');
+            $userRepo = $this->getRepository();
+            $user_o = $userRepo->findOneBy(['email' => $email]);
+            if (null != $user_o) {
+                return ['result' => false, 'msg' => 'Email already taken'];
+            }
+            $phone = $request->get('phone');
+            $plainPass = $request->get('password');
+            $encodedPass = $passwordEncoder->encodePassword($user, $plainPass);
+            $name = $request->get('name');
+            $address1 = $request->get('address1');
+            $address2 = $request->get('address2');
+            $postcode = $request->get('postcode');
+            $city = $request->get('city');
+            $country = $request->get('country');
+            $address = new Address();
+            $address
+                ->setPostcode($postcode)
+                ->setAddressLine1($address1)
+                ->setAddressLine2($address2)
+                ->setCountry($country)
+                ->setCity($city);
+            $user
+                ->setName($name)
+                ->setEmail($email)
+                ->setPhone($phone)
+                ->setPassword($encodedPass)
+                ->setAddress($address)
+                ->setRoles(['ROLE_TENANT']);
+
+            $tenant = new Tenant();
+            $tenant->setUser($user);
+
+            $this->em->persist($tenant);
+            $this->em->flush();
+
+            return ['result' => true, 'msg' => $user];
+        } catch (Exception $e) {
+            return ['result' => false, 'msg' => $e->getMessage()];
+        }
     }
 }

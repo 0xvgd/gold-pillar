@@ -30,6 +30,10 @@ $grey : #a5a5a5;
                                 border-color: $default;
                                 font-weight: bold;
                             }
+                            @media screen and (max-height: 768px){
+                                font-size: 0.9rem;
+                                padding: 0.9rem;
+                            }
                         }
 
                     }
@@ -41,10 +45,12 @@ $grey : #a5a5a5;
                 &>svg {
                     color: $default;
                     height: 2rem;
+                    @media screen and (max-height: 768px){
+                        height: 1.2rem;
+                    }
                 }
             }
         }
-
     }
     .booking-carousel.vert {
         display: flex;
@@ -90,6 +96,18 @@ $grey : #a5a5a5;
     .vert .active.carousel-item-left {
         -webkit-transform: translate3d(0,-100%, 0);
         transform: translate3d(0,-100%, 0);
+    }
+    .loading-part {
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f1f1f1;
+        z-index: 9;
+        min-height: 100px;
     }
 
 
