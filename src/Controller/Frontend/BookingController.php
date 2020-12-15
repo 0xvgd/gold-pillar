@@ -14,6 +14,7 @@ use App\Form\Frontend\ViewType;
 use App\Form\Subscribe\RegistrationType;
 use App\Service\BookingService;
 use App\Service\ScheduleService;
+use App\Service\SubscribeService;
 use App\Service\UserService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -68,9 +69,10 @@ class BookingController extends AbstractController
         $dt = DateTime::createFromFormat('Y-m-d', $day);
         $agent = $resource->getAgent();
         $hours = [];
-
         if ($agent) {
             $schedule = $service->getSchedule($agent);
+            if($schedule == null)
+                return $this->json([]);
             $hours = $service->getAvailableTimesFixed($schedule, $dt);
             // $hours = $service->getUniqueTimesAsString($hours);
         }
@@ -235,7 +237,7 @@ class BookingController extends AbstractController
     /**
      * @Route("/assign/{id}/sign", name="sign", methods={"POST"})
      */
-    public function bookingWithSign(Request $request, Resource $resource, BookingService $bookingService, UserService $userService, UserPasswordEncoderInterface $passwordEncoder,EntityManagerInterface $em)
+    public function bookingWithSign(Request $request, Resource $resource, BookingService $bookingService,SubscribeService $subscribeService, UserService $userService, UserPasswordEncoderInterface $passwordEncoder,EntityManagerInterface $em)
     {
         $userRepo = $userService->getRepository();
         $user = new User();
@@ -273,7 +275,7 @@ class BookingController extends AbstractController
             $em->persist($tenant);
             $em->flush();
 
-            $userService->sendConfirmationMail($user);
+            $subscribeService->sendConfirmationMail($user);
 
 
         } catch (Exception $e){
@@ -300,7 +302,7 @@ class BookingController extends AbstractController
         $userRepo = $userService->getRepository();
         $user = $userRepo->findOneBy(['email' => $email]);
         if ($user != null)
-            return $this->json(['result' => true]);
-        return $this->json(['result' => false]);
+            return $this->json(['result' => false]);
+        return $this->json(['result' => true]);
     }
 }
