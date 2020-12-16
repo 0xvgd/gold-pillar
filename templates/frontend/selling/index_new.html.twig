@@ -1,6 +1,6 @@
 {% extends 'frontend/base.html.twig' %}
 
-{% set pageTitle = 'Selling' %}
+{% set pageTitle = 'Never was selling your property so easy!' %}
 
 {% macro search_form(className) %}
     <form class="search-form {{ className }}" action="{{ path('app_selling_index') }}" method="get">
@@ -81,24 +81,26 @@
                                         </a>
                                     </div>
                                     <div v-if="currentAddr.hasOwnProperty('text')" class="text-center my-3">
-                                        <h4 class="font-weight-bold">{{ '{{ currentAddr.text }}' }}</h4>
-                                        <div style="font-size: 1.5rem" class="mb-3 mb-md-5">
-                                            <p class="my-3"> {{ 'Simulate here how much would it be to sell your property with us'| trans }}</p>
+
+                                        <div style="font-size: 1.5rem" class="my-3 mb-md-5">
+                                            <p>ESTIMATED VALUE </p>
                                             <currency-input v-model="valuation" class="valuation"
                                                             style="text-align: center; color: #cb9900" currency="GBP"
                                                             locale="en-gb"/>
                                         </div>
+                                        <h4 class="font-weight-bold">{{ '{{ currentAddr.text }}' }}</h4>
+                                        <p class="my-3" style="font-size: 1.5rem"> {{ 'Simulate here how much would it be to sell your property with us'| trans }}</p>
                                         {% verbatim %}
 
                                     <div class="card-deck">
                                         <div class="card">
                                             <div class="card-header text-center">
-                                                {{ 'How much it costs me' | trans }}
+                                                {{ 'How much it would cost me' | trans }}
                                             </div>
                                             <div class="card-body text-center">
                                                 <h3 class="card-title">{{formattedCharge}}%</h3>
 
-                                                {{ "Gold Pillar will charge you ONLY when your house is sold." | trans }}
+                                                {{ "Gold Pillar will only charge you when your house is sold." | trans }}
                                                 <hr>
                                                 <h2>
                                                     {{goldpillarValue|currency}}
@@ -122,7 +124,7 @@
                                     </div>
                                     <div class="p-4 text-center">
 
-                                        <p class="text-primary">Please select here one of our Professional Agents that will be with you on your side during the entire process.</p>
+                                        <p class="text-primary">Please choose your agent who will assist you every step of the way. </p>
 
                                         <button type="button" class="btn btn-secondary" @click="fetchAgents" :disabled="showAgents || loading"  v-if="!showAgent">
                                              {{ "Choose your agent now" | trans }}
@@ -370,9 +372,8 @@
         <div class="overlay" v-bind:class="queryPostCodePending?'active':''">
             <div class="content">
                 <div class="text-center">
-                    <span class="fa-question-circle fa fa-3x"></span>
-                    <h3 class="my-2">Are you sure?</h3>
-                    <h3 class="my-3 mb-md-5">Post code : <b>{{ '{{ queryPostCode }}' }}</b></h3>
+                    <h3 class="my-2">Please confirm postcode</h3>
+                    <h3 class="my-3 mb-md-5 p-1" style="border: solid 2px">Post code : <b>{{ '{{ queryPostCode }}' }}</b></h3>
                 </div>
                 <div class="actions d-flex">
                     <button type="button" @click="fetchPostCodes()" class="btn btn-primary btn-block mr-1">Confirm
