@@ -79,11 +79,11 @@ class PropertyService extends ResourceService
             foreach ($result as $one){
                 $value = $one['line_1'];
                 if($one['line_2'] != "")
-                    $value .=" ".$one['line_2'];
+                    $value .=" - ".$one['line_2'];
                 if($one['line_3'] != "")
-                    $value .=" ".$one['line_3'];
+                    $value .=" - ".$one['line_3'];
                 $addr = $value;
-                $value .= $one['post_town'].' '.$one['postcode'];
+                $value .= " - ".$one['post_town'].' - '.$one['postcode'];
                 $item = ['text' =>$value,'addr' => $addr,'city' =>$one['post_town'],'county' => $one['county']];
                 $items[] = $item;
             }
