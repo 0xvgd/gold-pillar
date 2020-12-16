@@ -19,8 +19,8 @@
       </div>
       <div class="item-description text-left p-2">
         <h4>{{ item.name }}</h4>
-        <div v-if="item.propertyCode">
-          <small>#{{ item.propertyCode }}</small>
+        <div class="item-itemCode">
+          <small>{{ item.referenceCode }}</small>
         </div>
       </div>
       <hr>
