@@ -27,7 +27,12 @@ class RentingService extends ResourceService
         }
 
         if (!$accommodation->getId()) {
+            $accommodation->setReferenceCode($this->generateReferenceCode());
             $accommodation->setStatus(AccommodationStatus::TO_RENT());
+        }
+
+        if (!$accommodation->getReferenceCode()) {
+            $accommodation->setReferenceCode($this->generateReferenceCode());
         }
 
         parent::save($accommodation);
@@ -40,5 +45,26 @@ class RentingService extends ResourceService
     public function getTransactions(Accommodation $accommodation)
     {
         return [];
+    }
+
+    public function generateReferenceCode()
+    {
+        $referenceCode = null;
+        $codeExists = true;
+
+        while ($codeExists) {
+            $referenceCode = 'RENT-'.substr(strtoupper(sha1(random_bytes(4))), 0, 8);
+            $reserve = $this->getEntityManager()->getRepository(Accommodation::class)->findOneBy(
+                [
+                    'referenceCode' => $referenceCode,
+                ]
+            );
+
+            if (!$reserve) {
+                $codeExists = false;
+            }
+        }
+
+        return $referenceCode;
     }
 }
