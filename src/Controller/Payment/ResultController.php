@@ -8,6 +8,7 @@ use App\Utils\TakePayments\PayzoneGateway;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
+
 class ResultController extends AbstractController
 {
     use PaymentTrait;
